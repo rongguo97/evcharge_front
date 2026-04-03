@@ -1,0 +1,3 @@
+/* 여기는 공통 css 영역입니다. */
+@import "tailwindcss";
+@import "rc-pagination/assets/index.css";
