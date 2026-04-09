@@ -9,7 +9,7 @@ function Layout() {
     <div id="wrapper">
       {/* 2. 소문자 <header /> 대신 대문자 <Header /> 사용 */}
       <Header />
-      <Home />
+      
 
       {/* 지도가 화면에 꽉 차게 나오길 원하신다면 
          className에서 'mx-auto'나 'px-3'을 제거하거나 조절할 수 있습니다. 
