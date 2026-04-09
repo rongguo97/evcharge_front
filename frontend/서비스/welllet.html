@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차카지(CHARCAGE) - 지갑 충전</title>
+    <link rel="stylesheet" href="../servi2/css/wellet.css">
+    <link rel="stylesheet" href="../servi2/css/header.css">
+    <link rel="alternate" href="../servi2/css/footer.css" type="application/atom+xml" title="Atom">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container nav-wrapper">
+            <div class="logo">CHARCAGE</div>
+            
+            <input type="checkbox" id="menu-trigger" class="menu-trigger">
+            <label for="menu-trigger" class="menu-btn">
+                <span></span><span></span><span></span>
+            </label>
+
+            <nav class="gnb">
+                <ul class="main-menu">
+                    <li>
+                        <a href="#">CHARCAGE</a>
+                        <ul class="mobile-only-sub">
+                            <li><a href="#">브랜드 소개</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">충전소 찾기</a>
+                        <ul class="mobile-only-sub">
+                            <li><a href="#">충전소 찾기</a></li>
+                            <li><a href="#">충전소 종류</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="active">서비스</a>
+                        <ul class="mobile-only-sub">
+                            <li><a href="welllet.html">지갑 충전하기</a></li>
+                            <li><a href="cash.html">요금 알아보기</a></li>
+                            <li><a href="app.html">APP 소개</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">고객지원</a>
+                        <ul class="mobile-only-sub">
+                            <li><a href="#">공지사항</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">뉴스</a></li>
+                            <li><a href="#">고객센터</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="mega-menu-panel">
+                    <div class="panel-content">
+                        <div class="panel-column"><ul><li><a href="#">브랜드 소개</a></li></ul></div>
+                        <div class="panel-column"><ul><li><a href="#">충전소 찾기</a></li><li><a href="#">충전소 종류</a></li></ul></div>
+                        <div class="panel-column"><ul><li><a href="welllet.html">지갑 충전하기</a></li><li><a href="cash.html">요금 알아보기</a></li><li><a href="app.html">APP 소개</a></li></ul></div>
+                        <div class="panel-column"><ul><li><a href="#">공지사항</a></li><li><a href="#">FAQ</a></li><li><a href="#">뉴스</a></li><li><a href="#">고객센터</a></li></ul></div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header-util-space"></div>
+        </div>
+        <div class="menu-overlay"></div>
+    </header>
+
+            <aside class="side-quick-menu">
+            <a href="mypage.html" class="quick-btn my-page">M Y P A G E</a>
+            <a href="#" class="quick-btn admin-page">관리자페이지</a>
+            </aside>
+
+
+            <div class="header-util-space"></div>
+        </div>
+    </header>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+<main class="payment-wrapper">
+    <div class="payment-bg-overlay"></div>
+
+    <section class="payment-content">
+        <div class="payment-header-text">
+            <h2>Charging Wallet</h2>
+            <br>
+            <p>충전 금액의 10%를 포인트로 돌려드려요!</p>
+            <p> 행복한 드라이브 되세요.</p>
+        </div>
+        <br>
+        <div class="glass-card status-card">
+        <div class="status-box-item">
+            <span class="status-label">보유 충전금</span>
+            <div class="status-value-group">
+                <span class="status-value">0</span>
+                <span class="status-unit">원</span>
+            </div>
+        </div>
+        <div class="status-v-line"></div>
+        <div class="status-box-item">
+            <span class="status-label">포인트 잔액</span>
+            <div class="status-value-group">
+                <span class="status-value purple">20,000</span>
+                <span class="status-unit">P</span>
+            </div>
+        </div>
+    </div>
+        <div class="glass-card payment-main-card">
+            <div class="payment-group center-align">
+                <label class="group-title">충전 금액 선택</label>
+
+                <div class="amount-grid">
+                    <button type="button" class="amt-btn" data-value="10000" onclick="selectAmt(this)">10,000원</button>
+                    <button type="button" class="amt-btn" data-value="30000" onclick="selectAmt(this)">30,000원</button>
+                    <button type="button" class="amt-btn" data-value="50000" onclick="selectAmt(this)">50,000원</button>
+                    <button type="button" class="amt-btn active" data-value="100000" onclick="selectAmt(this)">100,000원</button>
+                </div>
+                <br>
+                <div class="input-wrapper center-input">
+                    <input type="number" id="chargeInput" class="no-spin" value="100000" placeholder="직접 금액 입력" oninput="manualInput()">
+                </div>
+            </div>
+
+            <div class="calc-section">
+                <div class="calc-row bonus">
+                    <span>적립 예정 보너스 (10%)</span>
+                    <span id="bonusVal">10,000 P</span>
+                </div>
+                
+                <div class="calc-row use-point-row">
+                    <label class="group-title">보유 포인트 사용 <small id="userPointBalance">(잔액: 20,000 P)</small></label>
+                    <div class="point-input-container">
+                        <input type="number" id="usePointInput" class="no-spin" placeholder="0" oninput="calculateTotal()">
+                        <button type="button" class="inline-use-all-btn" onclick="useAllPoints()">전액사용</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="final-summary center-align">
+                <div class="summary-item">
+                    <span>최종 입금액</span>
+                    <h3 id="finalPriceDisplay">100,000원</h3>
+                </div>
+                <button type="button" class="pay-submit-btn" onclick="showBankDetail()">충전하기</button>
+            </div>
+
+            <div id="bankDetail" class="bank-info-panel" style="display: none;">
+                <div class="bank-card">
+                    <p class="bank-name">차카지은행 <span>(주)차카지</span></p>
+                    <p class="bank-account" id="accNumber">1234-123-456789</p>
+                    <div class="bank-footer">
+                        <span>입금 기한: <strong id="limitDate"></strong></span>
+                        <button type="button" class="premium-copy-btn" onclick="copyAccount()">계좌 복사</button>
+                    </div>
+                </div>
+                <p class="bank-notice">※ 입금자명과 회원명이 일치해야 빠른 처리가 가능합니다.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const MY_POINTS = 20000; // 서버에서 받아올 실제 보유 포인트 예시
+
+    // 1. 금액 버튼 클릭 시
+    function selectAmt(btn) {
+        // 모든 버튼 비활성화 후 클릭된 버튼 활성화
+        document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // 입력창에 값 세팅 후 계산
+        document.getElementById('chargeInput').value = btn.getAttribute('data-value');
+        calculateTotal();
+    }
+
+    // 2. 금액 직접 입력 시
+    function manualInput() {
+        // 직접 입력 시 버튼 활성화 해제
+        document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('active'));
+        calculateTotal();
+    }
+
+    // 3. 포인트 전액 사용 클릭 시
+    function useAllPoints() {
+        document.getElementById('usePointInput').value = MY_POINTS;
+        calculateTotal();
+    }
+
+    // 4. 핵심 계산 로직 (충전금액 - 포인트 사용액)
+    function calculateTotal() {
+        const chargeAmt = parseInt(document.getElementById('chargeInput').value) || 0;
+        let usePoint = parseInt(document.getElementById('usePointInput').value) || 0;
+
+        // 포인트가 보유량보다 많으면 보유량으로 고정
+        if (usePoint > MY_POINTS) {
+            usePoint = MY_POINTS;
+            document.getElementById('usePointInput').value = MY_POINTS;
+        }
+
+        // 보너스 포인트 계산 (충전금액의 10%)
+        const bonus = Math.floor(chargeAmt * 0.1);
+        document.getElementById('bonusVal').innerText = bonus.toLocaleString() + " P";
+
+        // 최종 금액 계산 (충전금액 - 사용포인트)
+        const finalPrice = chargeAmt - usePoint;
+        const result = finalPrice < 0 ? 0 : finalPrice;
+
+        document.getElementById('finalPriceDisplay').innerText = result.toLocaleString() + "원";
+        
+        
+        // calculateTotal 함수 마지막 부분에 추가
+        const submitBtn = document.querySelector('.pay-submit-btn');
+        if (finalPrice <= 0) {
+        submitBtn.innerText = "포인트로 결제하기";
+        } 
+        else {
+        submitBtn.innerText = "충전하기";
+        }
+    }
+
+    // 5. 결제 정보 노출
+    function showBankDetail() {
+        const bankPanel = document.getElementById('bankDetail');
+        bankPanel.style.display = 'block';
+
+        // 입금 기한 설정 (내일 날짜)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('limitDate').innerText = tomorrow.toLocaleDateString() + " 23:59";
+
+        // 스크롤 이동
+        bankPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 초기 계산 실행
+    window.onload = calculateTotal;
+        // 계좌 복사 기능
+
+    function copyAccount() {
+        const accNum = document.getElementById('accNumber').innerText;
+        navigator.clipboard.writeText(accNum).then(() => {
+        alert("계좌번호가 복사되었습니다!");
+        const btn = document.querySelector('.premium-copy-btn');
+        btn.innerText = "복사완료!";
+        setTimeout(() => { btn.innerText = "계좌 복사"; }, 2000);
+
+        
+    });
+}
+
+        // 나머지 함수들(selectAmt, calculateTotal 등)은 이전과 동일하게 사용하시면 됩니다.
+</script>
+</body>
+</html>
