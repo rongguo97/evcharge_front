@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StationService from "../services/StationService"; 
 import type { IStation } from "../types/IStation";
 
 const StationList = () => {
   const [map, setMap] = useState<any>(null);
   const [stations, setStations] = useState<IStation[]>([]);
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
+  const markersRef = useRef<any[]>([]); // 생성된 마커들을 저장하고 지우기 위한 참조
 
   // 1. 지도 초기화 (카카오맵 로드)
   useEffect(() => {
@@ -15,7 +17,7 @@ const StationList = () => {
         if (!container) return;
 
         const options = {
-          center: new kakao.maps.LatLng(37.5665, 126.9780), // 초기 서울 중심
+          center: new kakao.maps.LatLng(37.5665, 126.9780),
           level: 3 
         };
 
@@ -41,7 +43,6 @@ const StationList = () => {
     const fetchStations = () => {
       StationService.getAll("", 0, 100) 
         .then((response: any) => {
-          // 데이터 구조에 따른 안전한 배열 추출
           const data = response.data.result || response.data.content || response.data;
           if (Array.isArray(data)) {
             setStations(data);
@@ -53,12 +54,26 @@ const StationList = () => {
     if (map) fetchStations();
   }, [map]);
 
-  // 3. 데이터 로드 시 마커 생성
+  // 3. 검색 필터링 및 중복 제거 로직
+const filteredStations = stations
+  .filter((s) => s.stationName.toLowerCase().includes(searchTerm.toLowerCase()))
+  .filter((station, index, self) =>
+    // stationName과 address가 모두 같은 데이터가 뒤에 또 있다면 제외합니다.
+    index === self.findIndex((t) => (
+      t.stationName === station.stationName && t.address === station.address
+    ))
+  );
+
+  // 4. 필터링된 데이터 로드 시 마커 생성
   useEffect(() => {
     const { kakao } = window as any;
-    if (!map || !kakao || stations.length === 0) return;
+    if (!map || !kakao) return;
 
-    stations.forEach((station) => {
+    // [중요] 기존 마커들을 모두 지도에서 제거
+    markersRef.current.forEach(marker => marker.setMap(null));
+    markersRef.current = [];
+
+    filteredStations.forEach((station) => {
       if (!station.lat || !station.lng) return;
 
       const marker = new kakao.maps.Marker({
@@ -74,16 +89,63 @@ const StationList = () => {
       kakao.maps.event.addListener(marker, 'click', () => {
         infowindow.open(map, marker);
       });
+
+      // 마커 배열에 추가 (다음에 지우기 위함)
+      markersRef.current.push(marker);
     });
-  }, [map, stations]);
+  }, [map, filteredStations]); // 검색어가 바뀌어서 리스트가 바뀔 때마다 실행
+
+  // 5. 리스트 항목 클릭 시 이동 함수
+  const handleLocationClick = (lat: number, lng: number) => {
+    const { kakao } = window as any;
+    if (map && kakao) {
+      const moveLatLon = new kakao.maps.LatLng(lat, lng);
+      map.panTo(moveLatLon); // 부드럽게 이동
+    }
+  };
 
   return (
-    <div className="map-wrapper" style={{ width: "100%", height: "600px", padding: "20px", boxSizing: "border-box" }}>
+    <div className="station-container" style={{ display: "flex", width: "100%", height: "650px", padding: "20px", boxSizing: "border-box" }}>
+      
+      {/* 검색창 사이드바 */}
+      <aside style={{ width: "300px", display: "flex", flexDirection: "column", marginRight: "20px" }}>
+        <div style={{ marginBottom: "15px" }}>
+          <h3 style={{ margin: "0 0 10px 0" }}>🔎 충전소 검색</h3>
+          <input 
+            type="text"
+            placeholder="충전소 이름을 입력하세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }}
+          />
+        </div>
+
+        {/* 검색 결과 리스트 */}
+        <div style={{ flex: 1, overflowY: "auto", border: "1px solid #eee", borderRadius: "5px" }}>
+          {filteredStations.length > 0 ? (
+            filteredStations.map((s) => (
+              <div 
+                key={s.stationId} 
+                onClick={() => handleLocationClick(s.lat, s.lng)}
+                style={{ padding: "12px", borderBottom: "1px solid #eee", cursor: "pointer", fontSize: "14px" }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9f9f9")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+              >
+                <strong>{s.stationName}</strong>
+                <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>{s.address}</div>
+              </div>
+            ))
+          ) : (
+            <div style={{ padding: "20px", textAlign: "center", color: "#999" }}>검색 결과가 없습니다.</div>
+          )}
+        </div>
+      </aside>
+
       {/* 지도 영역 */}
       <div 
         id="map" 
         style={{ 
-          width: "100%", 
+          flex: 1,
           height: "100%", 
           borderRadius: "10px", 
           border: '1px solid #ddd' 
