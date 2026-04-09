@@ -1,134 +1,34 @@
-<>
-  <meta charSet="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link rel="stylesheet" href="../../css/header.css" />
-  <header className="main-header">
-    <div className="container nav-wrapper">
-      <div className="logo">
-        <a href="../webapp/index.html">CHARCAGE</a>
-      </div>
-      <input type="checkbox" id="menu-trigger" className="menu-trigger" />
-      <label htmlFor="menu-trigger" className="menu-btn">
-        <span />
-        <span />
-        <span />
-      </label>
-      <nav className="gnb">
-        <ul className="main-menu">
-          <li>
-            <a href="#">CHARCAGE</a>
-            <ul className="mobile-only-sub">
-              <li>
-                <a href="#">브랜드 소개</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#">충전소 찾기</a>
-            <ul className="mobile-only-sub">
-              <li>
-                <a href="../webapp/charge-find.html">충전소 찾기</a>
-              </li>
-              <li>
-                <a href="../webapp/charge-kind.html">충전소 종류</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#" className="active">
-              서비스
-            </a>
-            <ul className="mobile-only-sub">
-              <li>
-                <a href="#">지갑 충전하기</a>
-              </li>
-              <li>
-                <a href="#">요금 알아보기</a>
-              </li>
-              <li>
-                <a href="#">APP 소개</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#">고객지원</a>
-            <ul className="mobile-only-sub">
-              <li>
-                <a href="#">공지사항</a>
-              </li>
-              <li>
-                <a href="#">FAQ</a>
-              </li>
-              <li>
-                <a href="#">뉴스</a>
-              </li>
-              <li>
-                <a href="#">고객센터</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <div className="mega-menu-panel">
-          <div className="panel-content">
-            <div className="panel-column">
-              <ul>
-                <li>
-                  <a href="#">브랜드 소개</a>
-                </li>
-              </ul>
-            </div>
-            <div className="panel-column">
-              <ul>
-                <li>
-                  <a href="../webapp/charge-find.html">충전소 찾기</a>
-                </li>
-                <li>
-                  <a href="../webapp/charge-kind.html">충전소 종류</a>
-                </li>
-              </ul>
-            </div>
-            <div className="panel-column">
-              <ul>
-                <li>
-                  <a href="#">지갑 충전하기</a>
-                </li>
-                <li>
-                  <a href="#">요금 알아보기</a>
-                </li>
-                <li>
-                  <a href="#">APP 소개</a>
-                </li>
-              </ul>
-            </div>
-            <div className="panel-column">
-              <ul>
-                <li>
-                  <a href="#">공지사항</a>
-                </li>
-                <li>
-                  <a href="#">FAQ</a>
-                </li>
-                <li>
-                  <a href="#">뉴스</a>
-                </li>
-                <li>
-                  <a href="#">고객센터</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+import { Link } from 'react-router-dom'; // 페이지 이동을 위해 Link 사용 권장
+import '../css/main.css'
+
+
+const Header = () => {
+  return (
+    <header className="header-container">
+      {/* 로고 텍스트 */}
+      <div className="nav-logo">CHARCAGE</div>
+
+      {/* 내비게이션 메뉴 */}
+      <nav className="nav-links">
+        {/* 일반 a 태그 대신 리액트 라우터의 Link를 사용하면 새로고침 없이 이동합니다 */}
+        <Link to="/" className="nav-item active">CHARCAGE</Link>
+        <Link to="/find" className="nav-item">충전소찾기</Link>
+        <Link to="/membership" className="nav-item">멤버십</Link>
+        <Link to="/support" className="nav-item">고객지원</Link>
       </nav>
-      {/* 사이드 메뉴 */}
-      <aside className="side-quick-menu">
-        <a href="#" className="quick-btn my-page">
-          마 이 페 이 지
-        </a>
-        <a href="#" className="quick-btn admin-page">
-          관 리 자 페 이 지
-        </a>
-      </aside>
-    </div>
-  </header>
-</>
+
+      {/* 마이페이지/로고 이미지 영역 */}
+      <div className="nav-mypage">
+        {/* 이미지 경로는 public 폴더 기준일 경우 아래와 같이 작성합니다 */}
+        <img 
+            src="/차카지로고(누끼).png" 
+            alt="메인로고(누끼)" 
+            width="100" 
+        />
+      </div>
+    </header>
+  );
+};
+
+
+export default Header;
