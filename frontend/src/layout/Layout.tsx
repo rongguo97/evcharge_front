@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "../layout/Header"; // 1. Header 컴포넌트 임포트
-import Home from "./Home";
+import Footer from "./Footer";
 
 
 // 홈페이지 구조를 표시하는 곳: 머리말, 본문, 꼬리말
@@ -9,17 +9,17 @@ function Layout() {
     <div id="wrapper">
       {/* 2. 소문자 <header /> 대신 대문자 <Header /> 사용 */}
       <Header />
-      <Home />
-
+      
+    
       {/* 지도가 화면에 꽉 차게 나오길 원하신다면 
          className에서 'mx-auto'나 'px-3'을 제거하거나 조절할 수 있습니다. 
       */}
       <div className="content-area">
         {/* 본문: 메뉴를 클릭하면 Outlet 위치에 본문 화면이 표시됩니다. */}
+    
         <Outlet />
       </div>
-
-      {/* 3. 꼬리말 공간 (나중에 Footer 추가 시 여기에 배치) */}
+  <Footer/>
     </div>
   );
 }

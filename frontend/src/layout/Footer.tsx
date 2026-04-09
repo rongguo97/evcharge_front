@@ -1,3 +1,7 @@
+import '../css/main.css'
+
+const Footer = () => {
+   return (
 <footer className="white-footer">
   <div className="container footer-flex">
     <div className="footer-logo">
@@ -24,3 +28,7 @@
     </div>
   </div>
 </footer>
+  );
+};
+
+export default Footer;

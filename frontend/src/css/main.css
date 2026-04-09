@@ -1,217 +1,267 @@
-/* ===========================
-   CSS 
-   =========================== */
-:root {
-  --navy-dark: #0b0d1a;
-  --navy-mid: #111630;
-  --purple-muted: #2a2650;
-  --purple-glow: #6b5be2;
-  --pink-glow: #c84b8e;
-  --orange-warm: #e8703a;
-  --sky-blue: #4a90d9;
-  --white: #ffffff;
-  --white-60: rgba(255, 255, 255, 0.6);
-  --white-30: rgba(255, 255, 255, 0.3);
-  --white-10: rgba(255, 255, 255, 0.1);
-}
-
-/* ===========================
-  전체설정 
-   =========================== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html,
-body {
-  width: 100%;
-  height: auto;
-  overflow: hidden;
-  font-family: "Noto Sans KR", sans-serif;
-  background: var(--navy-dark);
-  color: var(--white);
-}
-
-/* ===========================
-  상단 메뉴바 
-   =========================== */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  padding: 18px 48px;
-  background: transparent;
-}
-
-.nav-logo {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: 0.12em;
-  color: var(--white);
-  text-transform: uppercase;
-  margin-right: 64px;
-  flex-shrink: 0;
-}
-
-.nav-links {
-  display: flex;
-  gap: 36px;
-  flex: 1;
-}
-
-.nav-item {
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  color: var(--white-60);
-  transition: color 0.2s;
-  position: relative;
-}
-
-.nav-item.active {
-  color: var(--white);
-  font-weight: 500;
-}
-
-.nav-item.active::after {
-  content: "";
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--white);
-  border-radius: 2px;
-}
-
-.nav-item:hover {
-  color: var(--white);
-}
-
-.nav-mypage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  font-family: "Montserrat", sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  line-height: 1.1;
-  color: var(--white);
-  backdrop-filter: blur(4px);
-}
-
-/* ===========================
-  메인 동영상 
-   =========================== */
-.hero {
-  position: relative;
-  width: 100%;
-  height: auto;
-  overflow-y: auto !important;
-  display: flex;
-  align-items: center;
-}
-
-
-@keyframes chargerAppear {
-  to {
-    opacity: 1;
+  /* ===========================
+    CSS 
+    =========================== */
+  :root {
+    --navy-dark: #0b0d1a;
+    --navy-mid: #111630;
+    --purple-muted: #2a2650;
+    --purple-glow: #6b5be2;
+    --pink-glow: #c84b8e;
+    --orange-warm: #e8703a;
+    --sky-blue: #4a90d9;
+    --white: #ffffff;
+    --white-60: rgba(255, 255, 255, 0.6);
+    --white-30: rgba(255, 255, 255, 0.3);
+    --white-10: rgba(255, 255, 255, 0.1);
   }
-}
 
-/* ===========================
-   동영상 문구 
-   =========================== */
-.hero-content {
-  position: absolute;
-  left: 6%;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
-  animation: textFade 1.6s ease forwards;
-  opacity: 0;
-}
-
-@keyframes textFade {
-  0% {
-    opacity: 0;
-    transform: translateY(calc(-50% + 20px));
+  /* ===========================
+    전체설정 
+    =========================== */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(-50%);
+
+  html,
+  body {
+    width: 100%;
+    height: auto; /* auto 대신 100% */
+    overflow-y: auto; /* hidden에서 auto로 변경 */
+    overflow-x: hidden; /* 가로 스크롤만 방지 */
+    font-family: "Noto Sans KR", sans-serif;
+    background: var(--navy-dark);
+    color: var(--white);
   }
-}
 
-.hero-title {
-  font-family: "Noto Sans KR", sans-serif;
-  font-size: clamp(28px, 3.5vw, 52px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: var(--white);
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
-  margin-bottom: 12px;
-  white-space: nowrap;
-}
-
-.hero-sub {
-  font-family: "Montserrat", sans-serif;
-  font-size: clamp(13px, 1.4vw, 18px);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.75);
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
-}
-/* 3. 지도 섹션이 동영상 아래에 오도록 설정 */
-.map-section {
-  position: relative;
-  width: 100%;
-  background-color: white;
-  z-index: 10; /* 지도가 동영상보다 위에 오도록 설정 */
-}
-
-/* ===========================
-  반응형 웹 / PC, 테블릿 
-   =========================== */
-@media (max-width: 768px) {
+  /* ===========================
+    상단 메뉴바 
+    =========================== */
   .navbar {
-    padding: 14px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 18px 48px;
+    background: transparent;
   }
 
   .nav-logo {
-    font-size: 15px;
-    margin-right: 24px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0.12em;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-right: 64px;
+    flex-shrink: 0;
   }
 
   .nav-links {
-    gap: 16px;
+    display: flex;
+    gap: 36px;
+    flex: 1;
   }
 
   .nav-item {
-    font-size: 11px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--white-60);
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-item.active {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .nav-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--white);
+    border-radius: 2px;
+  }
+
+  .nav-item:hover {
+    color: var(--white);
+  }
+
+  .nav-mypage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+    color: var(--white);
+    backdrop-filter: blur(4px);
+  }
+
+  /* ===========================
+    메인 동영상 
+    =========================== */
+  .hero {
+    position: relative;
+    width: 100%; /* 화면 전체 너비 */
+    height: 100vh; /* 화면을 꽉 채우는 높이 고정 */
+    overflow: hidden; /* 비디오가 컨테이너를 벗어나지 않게 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .video-background{
+    width: 100%;
+    height: 100%;
+  }
+  .video-background video {
+    width: 100%;
+    height: 100%;
+    /* 핵심 속성: 비디오 비율을 유지하면서 컨테이너를 가득 채움 */
+    object-fit: cover; 
+    /* 비디오의 어느 부분을 중심으로 보여줄지 설정 (가운데 권장) */
+    object-position: center; 
+  }
+
+
+  @keyframes chargerAppear {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* ===========================
+    동영상 문구 
+    =========================== */
+  .hero-content {
+    position: absolute;
+    left: 6%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    animation: textFade 1.6s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes textFade {
+    0% {
+      opacity: 0;
+      transform: translateY(calc(-50% + 20px));
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(-50%);
+    }
   }
 
   .hero-title {
-    font-size: clamp(22px, 5.5vw, 34px);
-    white-space: normal;
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--white);
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    margin-bottom: 12px;
+    white-space: nowrap;
+    text-align: center;
   }
 
+  .hero-sub {
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(13px, 1.4vw, 18px);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.75);
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+  }
+  /* 3. 지도 섹션이 동영상 아래에 오도록 설정 */
+  .map-section {
+    position: relative;
+    width: 100%;
+    background-color: white;
+    z-index: 10; /* 지도가 동영상보다 위에 오도록 설정 */
+  }
+  /* --- 푸터 (흰색 배경) --- */
+  .white-footer { 
+      background: var(--white); 
+      padding: 60px 0; 
+      border-top: 1px solid #eee; }
+  .footer-flex { 
+      display: flex; 
+      justify-content:space-between; 
+      align-items: center;  }
+  .footer-logo img { 
+      width: 300px; }
+  .footer-info { flex: 1; 
+      margin: 0 150px; 
+      color: #888; 
+      font-size: 1rem; 
+      line-height: 1.6; }
+  .footer-contact strong { 
+      display: block; 
+      font-size: 1.1rem; 
+      color: var(--black); 
+      margin-top: 5px; }
 
-}
+  /* ===========================
+    반응형 웹 / PC, 테블릿 
+    =========================== */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 14px 20px;
+    }
+
+    .nav-logo {
+      font-size: 15px;
+      margin-right: 24px;
+    }
+
+    .nav-links {
+      gap: 16px;
+    }
+
+    .nav-item {
+      font-size: 11px;
+    }
+
+    .hero-title {
+      font-size: clamp(22px, 5.5vw, 34px);
+      white-space: normal;
+    }
+
+  @media (max-width: 480px) {
+      /* 컨텐츠 레이아웃 조정 */
+      .hero-section { height: 350px; padding-top: 70px; }
+      .footer-flex { flex-direction: column; text-align: center; gap: 30px; }
+      .footer-info { margin: 0; }
+      .side-quick-menu { display: none; }
+
+      /* --- 반응형 대응 --- */
+
+      .app-hero-flex { flex-direction: column; text-align: center; }
+      .hero-text h1 { font-size: 2.2rem; }
+      .hero-image { margin-top: 50px; }
+      .phone-mockup { transform: rotate(0); width: 250px; height: 500px; }
+      .footer-contact { flex-direction: column; gap: 20px; }
+  }
+  }
