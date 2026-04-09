@@ -10,6 +10,7 @@ export interface IRegionData {
 }
 
 export interface IStation {
+    stat: string;
     lat: any;
     lng: any;
     id: number;                    // id
