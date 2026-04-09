@@ -1,0 +1,553 @@
+/* ===========================
+   CSS 
+   =========================== */
+:root {
+  --navy-dark: #0b0d1a;
+  --navy-mid: #111630;
+  --purple-muted: #2a2650;
+  --purple-glow: #6b5be2;
+  --pink-glow: #c84b8e;
+  --orange-warm: #e8703a;
+  --sky-blue: #4a90d9;
+  --white: #ffffff;
+  --white-60: rgba(255, 255, 255, 0.6);
+  --white-30: rgba(255, 255, 255, 0.3);
+  --white-10: rgba(255, 255, 255, 0.1);
+}
+
+/* ===========================
+  전체설정 
+   =========================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Noto Sans KR", sans-serif;
+  /* background: var(--navy-dark); */
+  background-color: hsl(270, 17%, 91%);
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  /* color: var(--white); */
+}
+
+/* ===========================
+  상단 메뉴바 
+   =========================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 18px 48px;
+  background: transparent;
+}
+
+.nav-logo {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 40px;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  text-transform: uppercase;
+  margin-right: 74px;
+  flex-shrink: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 95px;
+  flex: 1;
+}
+
+.nav-links > a {
+  font-size: 27px;
+  font-weight: 500px;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+  margin-right: 20px;
+  transform: translateX(130px);
+}
+
+.nav-item {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--white-60);
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-item.active {
+  color: var(--white);
+  font-weight: 500;
+}
+
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--white);
+  border-radius: 2px;
+}
+
+.nav-item:hover {
+  color: var(--white);
+}
+
+.nav-mypage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  color: var(--white);
+  backdrop-filter: blur(4px);
+}
+
+/* ===========================
+  메인 동영상 
+   =========================== */
+.hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  /* overflow: hidden; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero video,
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+@keyframes chargerAppear {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===========================
+   동영상 문구 
+   =========================== */
+.hero-content {
+  position: absolute;
+  left: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  animation: textFade 1.6s ease forwards;
+  opacity: 0;
+}
+
+@keyframes textFade {
+  0% {
+    opacity: 0;
+    transform: translateY(calc(-50% + 20px));
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%);
+  }
+}
+
+.hero-title {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--white);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+  margin-bottom: 12px;
+  white-space: nowrap;
+}
+
+.hero-sub {
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.75);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* ===========================
+  반응형 웹 / PC, 테블릿 
+   =========================== */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 14px 20px;
+  }
+
+  .nav-logo {
+    font-size: 15px;
+    margin-right: 24px;
+  }
+
+  .nav-links {
+    gap: 16px;
+  }
+
+  .nav-item {
+    font-size: 11px;
+  }
+
+  .hero-title {
+    font-size: clamp(22px, 5.5vw, 34px);
+    white-space: normal;
+  }
+}
+
+/* 여기서 부터 지도맵 page */
+.section-map {
+  background-color: hsl(249, 54%, 97%);
+  /* background-image: url(../배경이미지.png); */
+  height: 100vh;
+}
+
+.container {
+  position: relative; /*  기준점 (중요) */
+  width: 100%;
+  height: 100%;
+  margin: 5px;
+  margin-left: 30px;
+}
+
+/* 지도 맵 */
+#map {
+  width: 970px;
+  height: 800px;
+  margin: 20px;
+  margin-top: 6px;
+  border-radius: 5px;
+  z-index: 1;
+}
+/* 
+.leaflet-tile-pane {
+    filter: invert(100%) hue-rotate(220deg) brightness(110%) contrast(90%) sepia(20%)
+    } */
+
+/* 4. 지도의 타일 이미지가 보이도록 강제 설정 */
+.leaflet-tile {
+  background-color: transparent !important;
+}
+
+/* 검색 */
+.search {
+  position: relative;
+  top: 65px;
+  transform: translateX(890px);
+  left: 155px;
+  display: flex;
+  gap: 15px;
+}
+
+.search-box {
+  width: 630px;
+  padding: 15px;
+  border: none;
+  background-color: rgb(255, 255, 255);
+  font-size: 16px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgba(37, 37, 37, 0.3);
+}
+
+button[name="searchButton"] {
+  width: 90px;
+  padding: 15px;
+  border: none;
+  background-color: rgb(243, 231, 243);
+  font-size: 20px;
+  display: inline-block;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgba(37, 37, 37, 0.3);
+}
+
+/* 전기충전소 찾기  */
+.charging {
+  position: absolute;
+  top: 144px; /*  검색창 아래로 */
+  right: 109px;
+  z-index: 100;
+}
+
+.charging img {
+  width: 735px;
+  height: 270px;
+  margin-right: 15px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgba(37, 37, 37, 0.3);
+}
+
+/* 즐겨찾기 */
+.favorites {
+  position: absolute;
+  top: 435px; /*  검색창 아래로 */
+  right: 109px;
+  z-index: 100;
+}
+
+.favorites img {
+  width: 735px;
+  height: 90px;
+  margin-right: 15px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgba(37, 37, 37, 0.3);
+}
+
+/* 페이충전 확인 */
+.evpay {
+  display: flex;
+  position: absolute;
+  top: 545px; /*  검색창 아래로 */
+  right: 378px;
+  z-index: 100;
+}
+
+.evpay img {
+  width: 360px;
+  height: 210px;
+  margin-right: 120px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgba(37, 37, 37, 0.3);
+}
+
+/* QR/NFC */
+.qnnfc {
+  position: absolute;
+  top: 545px; /* 검색창 아래로 */
+  right: 110px;
+  z-index: 100;
+}
+
+.qnnfc img {
+  width: 360px;
+  height: 210px;
+  margin-right: 15px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgba(37, 37, 37, 0.3);
+}
+
+/* 커뮤니티 */
+.community {
+  position: absolute;
+  top: 775px; /* 검색창 아래로 */
+  right: 107px;
+  z-index: 100;
+}
+
+.community img {
+  width: 735px;
+  height: 85px;
+  margin-right: 15px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgba(37, 37, 37, 0.3);
+}
+
+/* 3번째  */
+
+/* 배경 섹션 */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  /* 배경 이미지는 작업 중인 파일 경로에 맞춰 변경하세요 */
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("../임의로\ 만든\ 이미지.png") no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+}
+
+body {
+  background-image: url(../임의로\ 만든\ 이미지.png); /* 이미지 파일 경로 */
+  background-repeat: no-repeat; /* 이미지 반복 안함 */
+  background-size: cover; /* 화면을 꽉 채우도록 크기 조절 */
+  background-position: center; /* 이미지를 중앙에 배치 */
+  background-attachment: fixed; /* 스크롤해도 배경 고정 (선택사항) */
+}
+
+/* 왼쪽 반투명 사이드바 (Glassmorphism) */
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15); /* 흰색 투명도 */
+  backdrop-filter: blur(15px); /* 배경 흐림 효과 */
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  padding: 40px 0; /* 이미지의 넓은 간격 반영 */
+  text-align: center;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: 0.3s;
+  opacity: 0.9;
+}
+
+.sidebar ul li a:hover {
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* 사이드바 메뉴 기본 스타일 */
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  opacity: 0.8;
+
+  /* [핵심] 부드러운 변화를 위해 꼭 필요합니다 (0.3초 동안 변화) */
+  transition: all 0.3s ease;
+
+  /* 글자가 커질 때 주변 요소에 영향을 주지 않도록 설정 */
+  display: inline-block;
+}
+
+/* 마우스를 올렸을 때(Hover) 효과 */
+.sidebar ul li a:hover {
+  opacity: 1; /* 투명도 100% */
+  color: #ffffff; /* 글자색 유지 혹은 강조색 */
+
+  /* [핵심] 글자 크기를 1.2배로 키우는 속성 */
+  transform: scale(1.2);
+
+  /* 선택사항: 글자가 커지면서 살짝 빛나는 효과를 주면 더 예뻐요 */
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* 중앙 메인 텍스트 */
+.main-content {
+  flex-grow: 1;
+  text-align: center;
+  padding-right: 250px; /* 사이드바 두께만큼 오른쪽 여백을 주어 정중앙 배치 */
+}
+
+.main-content h1 {
+  color: #ffffff;
+  font-size: 5rem;
+  font-weight: 300;
+  letter-spacing: -1px;
+}
+
+/* 자동차 로고  */
+
+.footer {
+  background-color: white;
+  padding: 40px 20px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  flex: 1;
+  min-width: 220px;
+  text-align: center;
+}
+
+.footer-logo img {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+}
+
+.footer-info {
+  flex: 1.5;
+  min-width: 300px;
+  color: #1d2350;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.footer-info p {
+  margin: 4px 0;
+}
+
+.footer-contact {
+  flex: 1;
+  min-width: 220px;
+  color: #1d2350;
+  text-align: left;
+}
+
+.footer-contact p {
+  margin: 10px 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.footer-contact h3 {
+  margin: 0 0 18px;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* 반응형 */
+@media (max-width: 900px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .footer-logo {
+    text-align: left;
+  }
+
+  .footer-contact h3 {
+    font-size: 32px;
+  }
+}
