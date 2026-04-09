@@ -65,9 +65,82 @@ const StationList = () => {
         position: new kakao.maps.LatLng(station.lat, station.lng),
         map: map
       });
+      
+const content = `
+  <div style="
+    padding: 16px; 
+    background: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+    border: 1px solid #e1e4e8; 
+    min-width: 280px; 
+    font-family: 'Noto Sans KR', sans-serif;
+  ">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+      <div style="max-width: 70%;">
+        <strong style="font-size: 17px; color: #1a1a1a; display: block; margin-bottom: 2px;">
+          ${station.stationName}
+        </strong>
+        <span style="font-size: 12px; color: #007bff; font-weight: 600;">
+          ${station.distance ? station.distance.toFixed(2) + 'km' : '거리 계산 중'}
+        </span>
+      </div>
+      <span style="
+        font-size: 11px; 
+        background: ${station.status === '사용가능' ? '#34c759' : '#8e8e93'}; 
+        color: #fff; 
+        padding: 4px 10px; 
+        border-radius: 20px; 
+        font-weight: bold;
+      ">
+        ${station.status || '정보없음'}
+      </span>
+    </div>
 
+    <div style="font-size: 13px; color: #444; line-height: 1.6;">
+      <p style="margin: 6px 0; display: flex; align-items: flex-start;">
+        <span style="margin-right: 8px;">📍</span> 
+        <span style="flex: 1;">${station.address}</span>
+      </p>
+      
+      <div style="margin-top: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;">
+        <p style="margin: 0; font-size: 12px; color: #555;">
+          <strong>⚡ 충전기:</strong> ${station.chargerName} (ID: ${station.chargerId})
+        </p>
+        <p style="margin: 6px 0; font-size: 12px; color: #555;">
+          <strong>🔌 타입/방식:</strong> ${station.chargerType} / ${station.chargerMethod || '기본'}
+        </p>
+        <p style="margin: 0; font-size: 12px; color: #666;">
+          <strong>🚀 충전량:</strong> ${station.fastChargeAmount || '정보없음'}
+        </p>
+      </div>
+
+      <p style="margin: 10px 0 0 0; font-size: 11px; color: #999; text-align: right;">
+        업데이트: ${station.statUpdateDatetime || '-'}
+      </p>
+    </div>
+
+    <button 
+      onclick="window.location.href='/detail/${station.stationId}'"
+      style="
+        width: 100%; 
+        margin-top: 14px; 
+        background: #0b0d1a; 
+        color: #fff; 
+        border: none; 
+        padding: 12px; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        font-weight: bold;
+        font-size: 14px;
+      "
+    >
+      상세 정보 보기
+    </button>
+  </div>
+`;
       const infowindow = new kakao.maps.InfoWindow({
-        content: `<div style="padding:5px; color:black; font-size:12px;">${station.stationName}</div>`,
+        content:  content,
         removable: true
       });
 
@@ -87,9 +160,10 @@ const StationList = () => {
           height: "100%", 
           borderRadius: "10px", 
           border: '1px solid #ddd' 
-        }} 
+        }}         
       />
     </div>
+    
   );
 };
 

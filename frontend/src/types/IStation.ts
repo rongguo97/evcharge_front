@@ -10,22 +10,19 @@ export interface IRegionData {
 }
 
 export interface IStation {
-    lat: any;
-    lng: any;
-    id: number;                    // id
-    stationId: string;           //충전소id
-    chargerId: number;             //충전기id
-    sido: String;                // 시도
-    gunggu: String;              // 군구
-    address: String             // 주소
-    stationName: String;         // 충전소명
-    facilityL: String;           // 시설구분(대)
-    facilityS: String;           // 시설구분(소)
-    modelL: String;              // 기종(대)
-    modelS: String;              // 기종(소)
-    operatorL: String;           // 운영기관(대)
-    operatorS: String;           // 운영기관(소)
-    fastChargeAmount: String;    // 급속충전량
-    chargerType: String;         // 충전기타입
-    userRestriction: String;     // 이용자제한
+  statId: any;
+  location: string;
+  stationId: string;         // 충전소 ID
+  chargerId: number;         // 충전기 ID
+  stationName: string;       // 충전소명
+  chargerName?: string;      // 충전기명 (Java DTO에 있던 필드)
+  address: string;           // 주소
+  lat: number;               // 위도 (any 대신 number 권장)
+  lng: number;               // 경도 (any 대신 number 권장)
+  chargerType: string;       // 충전기타입
+  chargerMethod?: string;    // 충전방식 (Java DTO에 있던 필드)
+  fastChargeAmount: string;  // 급속충전량
+  status: string;            // 상태 (사용가능 등)
+  statUpdateDatetime: string; // 업데이트 시간
+  distance: number;          // 사용자로부터의 거리 (가상 필드)
 }
