@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../css/wellet.css">
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>차카지 충전 금액 입금</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/footer.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* 포인트 css 추가 */
+    .point-use-box {
+  margin-bottom: 24px;
+}
+
+.point-use-box p {
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #4c1d95;
+}
+
+.point-input-wrap {
+  display: flex;
+  gap: 10px;
+}
+
+.point-input-wrap input {
+  flex: 1;
+  height: 52px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+.point-input-wrap button {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  padding: 0 16px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.point-input-wrap button:hover {
+  background: #6d28d9;
+}
+
+.my-point {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #6b21a8;
+}
+/* 추가 끝 */
+    body {
+      font-family: "Noto Sans KR", sans-serif;
+      background: #f6f3ff;
+      color: #222;
+    }
+
+    .charge-page {
+      width: 100%;
+      min-height: 100vh;
+      padding: 80px 20px;
+      background: linear-gradient(180deg, #f6f3ff 0%, #efe8ff 100%);
+    }
+
+    .charge-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .charge-title-box {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(124, 58, 237, 0.12);
+      color: #6d28d9;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 18px;
+    }
+
+    .charge-title-box h1 {
+      font-size: 42px;
+      color: #2e1065;
+      margin-bottom: 16px;
+      font-weight: 800;
+    }
+
+    .charge-title-box p {
+      font-size: 17px;
+      color: #5b5175;
+      line-height: 1.7;
+    }
+
+    .charge-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .charge-card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 36px;
+      box-shadow: 0 14px 40px rgba(109, 40, 217, 0.08);
+    }
+
+    .charge-card h2 {
+      font-size: 28px;
+      color: #2e1065;
+      margin-bottom: 24px;
+    }
+
+    .amount-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .amount-buttons button {
+      height: 56px;
+      border: 1px solid #ddd6fe;
+      background: #f9f7ff;
+      color: #4c1d95;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .amount-buttons button:hover {
+      transform: translateY(-2px);
+      background: #ede9fe;
+    }
+
+    .amount-buttons button.active {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      border: none;
+      box-shadow: 0 10px 20px rgba(124, 58, 237, 0.2);
+    }
+
+    .input-group {
+      margin-bottom: 24px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #4c1d95;
+    }
+
+    .input-group input {
+      width: 100%;
+      height: 58px;
+      padding: 0 18px;
+      border: 1px solid #d8ccff;
+      border-radius: 16px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .input-group input:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+    }
+
+    .point-box {
+      background: linear-gradient(135deg, #f3e8ff, #ede9fe);
+      border-radius: 22px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .point-box p {
+      font-size: 15px;
+      color: #6b21a8;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .point-box strong {
+      display: block;
+      font-size: 38px;
+      color: #581c87;
+      margin-bottom: 8px;
+    }
+
+    .point-box span {
+      font-size: 14px;
+      color: #7e22ce;
+    }
+
+    .bank-box {
+      background: linear-gradient(135deg, #6d28d9, #9333ea);
+      color: white;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+
+    .bank-name {
+      font-size: 15px;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+
+    .bank-box strong {
+      display: block;
+      font-size: 26px;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .bank-box span {
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    .guide-list {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+
+    .guide-list li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 12px;
+      color: #5b5175;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .guide-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #7c3aed;
+      font-weight: bold;
+    }
+
+    .summary-box {
+      background: #faf8ff;
+      border: 1px solid #e9ddff;
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .summary-row + .summary-row {
+      margin-top: 14px;
+    }
+
+    .summary-row span {
+      font-size: 16px;
+      color: #4b5563;
+    }
+
+    .summary-row strong {
+      font-size: 20px;
+      color: #111827;
+    }
+
+    .purple-text {
+      color: #7c3aed !important;
+    }
+
+    .charge-btn {
+      width: 100%;
+      height: 60px;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .charge-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(124, 58, 237, 0.22);
+    }
+
+    @media (max-width: 900px) {
+      .charge-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .charge-title-box h1 {
+        font-size: 32px;
+      }
+
+      .charge-title-box p {
+        font-size: 15px;
+      }
+
+      .charge-card {
+        padding: 26px;
+      }
+
+      .bank-box strong {
+        font-size: 22px;
+      }
+
+      .point-box strong {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="charge-page">
+    <div class="charge-wrap">
+
+      <div class="charge-title-box">
+        <span class="badge">EV CASH CHARGE</span>
+        <h1>충전 금액 입금</h1>
+        <p>
+          카드결제 없이 현금 입금으로 충전 금액을 등록할 수 있습니다.<br>
+          입금 완료 후 확인되면 충전 금액이 반영되며, <strong>충전 금액의 10%는 포인트로 적립</strong>됩니다.
+        </p>
+      </div>
+
+      <div class="charge-grid">
+
+        <div class="charge-card left-card">
+          <h2>충전 금액 선택</h2>
+
+          <form>
+            <div class="amount-buttons">
+              <button type="button" data-amount="10000">10,000원</button>
+              <button type="button" data-amount="30000">30,000원</button>
+              <button type="button" data-amount="50000" class="active">50,000원</button>
+              <button type="button" data-amount="100000">100,000원</button>
+            </div>
+
+            <div class="input-group">
+              <label for="chargeAmount">직접 입력</label>
+              <input type="text" id="chargeAmount" placeholder="충전 금액을 입력하세요" value="50,000">
+            </div>
+
+            <div class="point-box">
+              <p>예상 적립 포인트</p>
+              <strong id="expectedPoint">5,000P</strong>
+              <span>충전 금액의 10% 적립</span>
+            </div>
+          </form>
+        </div>
+
+        <div class="charge-card right-card">
+          <h2>입금 계좌 안내</h2>
+
+          <div class="bank-box">
+            <p class="bank-name">차카지 충전 전용 계좌</p>
+            <strong>국민은행 123-456-789012</strong>
+            <span>예금주 : 차카지</span>
+          </div>
+
+          <ul class="guide-list">
+            <li>입금자명은 회원명과 동일하게 입력해주세요.</li>
+            <li>입금 확인 후 충전 금액이 계정에 반영됩니다.</li>
+            <li>충전 완료 시 금액의 10%가 포인트로 자동 적립됩니다.</li>
+            <li>적립 포인트는 추후 충전 금액 결제에 사용할 수 있습니다.</li>
+          </ul>
+              /* 추가 */
+            <div class="point-use-box">
+            <p>포인트 사용</p>
+
+            <div class="point-input-wrap">
+            <input type="text" id="usePoint" placeholder="사용할 포인트 입력">
+            <button type="button" id="useAllPoint">전부 사용</button>
+            </div>
+
+            <span class="my-point">보유 포인트 : <strong id="myPoint">20,000P</strong></span>
+            </div>
+          <div class="summary-box">
+            <div class="summary-row">
+            <span>충전 금액</span>
+            <strong id="summaryAmount">50,000원</strong>
+         </div>
+
+        <div class="summary-row">
+        <span>사용 포인트</span>
+        <strong id="usedPoint">0P</strong>
+        </div>
+
+        <div class="summary-row">
+        <span>최종 입금 금액</span>
+        <strong id="finalAmount">50,000원</strong>
+        </div>
+
+        <div class="summary-row">
+        <span>적립 예정 포인트</span>
+        <strong class="purple-text" id="summaryPoint">5,000P</strong>
+        </div>
+        <br>
+        <button type="button" class="charge-btn" id="submitBtn">입금하기</button>
+        </div>
+        </div>
+        </div>
+     </section>
+ 
+    <script>
+    const amountButtons = document.querySelectorAll(".amount-buttons button");
+    const chargeInput = document.getElementById("chargeAmount");
+    const expectedPoint = document.getElementById("expectedPoint");
+    const summaryAmount = document.getElementById("summaryAmount");
+    const summaryPoint = document.getElementById("summaryPoint");
+    // 추가
+    function updateDisplay(amount) {
+    const point = Math.floor(amount * 0.1);
+
+    summaryAmount.textContent = `${formatNumber(amount)}원`;
+    summaryPoint.textContent = `${formatNumber(point)}P`;
+    expectedPoint.textContent = `${formatNumber(point)}P`;
+    }
+    // 추가 2
+    const usePointInput = document.getElementById("usePoint");
+    const useAllBtn = document.getElementById("useAllPoint");
+    const myPointText = document.getElementById("myPoint");
+
+    const usedPointText = document.getElementById("usedPoint");
+    const finalAmountText = document.getElementById("finalAmount");
+
+    let myPoint = 20000; // 보유 포인트
+    let currentAmount = 50000;
+
+    function updateAll() {
+    const usePointRaw = usePointInput.value.replace(/[^0-9]/g, "");
+    let usePoint = Number(usePointRaw || 0);
+
+    if (usePoint > myPoint) usePoint = myPoint;
+    if (usePoint > currentAmount) usePoint = currentAmount;
+
+    usePointInput.value = usePoint ? usePoint.toLocaleString() : "";
+
+    const finalAmount = currentAmount - usePoint;
+    const earnPoint = Math.floor(currentAmount * 0.1);
+
+    summaryAmount.textContent = currentAmount.toLocaleString() + "원";
+    usedPointText.textContent = usePoint.toLocaleString() + "P";
+    finalAmountText.textContent = finalAmount.toLocaleString() + "원";
+    summaryPoint.textContent = earnPoint.toLocaleString() + "P";
+    expectedPoint.textContent = earnPoint.toLocaleString() + "P";
+    }
+
+    amountButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+    amountButtons.forEach((btn) => btn.classList.remove("active"));
+    button.classList.add("active");
+
+    currentAmount = Number(button.dataset.amount);
+    chargeInput.value = currentAmount.toLocaleString();
+
+    updateAll();
+    });
+    });
+
+    chargeInput.addEventListener("input", () => {
+    const value = chargeInput.value.replace(/[^0-9]/g, "");
+    currentAmount = Number(value || 0);
+
+    chargeInput.value = value ? currentAmount.toLocaleString() : "";
+
+    amountButtons.forEach((btn) => btn.classList.remove("active"));
+
+    updateAll();
+    });
+
+    usePointInput.addEventListener("input", updateAll);
+
+    useAllBtn.addEventListener("click", () => {
+  usePointInput.value = Math.min(myPoint, currentAmount).toLocaleString();
+  updateAll();
+});
+
+    updateAll();
+    // 추가3
+    const submitBtn = document.getElementById("submitBtn");
+
+    submitBtn.addEventListener("click", () => {
+    window.location.href = "complete.html";
+    });
+    // 추가4
+    submitBtn.addEventListener("click", () => {
+    if (confirm("입금을 진행하시겠습니까?")) {
+    window.location.href = "complete.html";
+    }
+    });
+    //
+    function formatNumber(value) {
+      return Number(value).toLocaleString("ko-KR");
+    }
+
+    function onlyNumber(value) {
+      return value.replace(/[^0-9]/g, "");
+    }
+
+    function updateDisplay(amount) {
+      const point = Math.floor(amount * 0.1);
+
+      summaryAmount.textContent = `${formatNumber(amount)}원`;
+      summaryPoint.textContent = `${formatNumber(point)}P`;
+      expectedPoint.textContent = `${formatNumber(point)}P`;
+    }
+
+    amountButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        amountButtons.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        const amount = Number(button.dataset.amount);
+        chargeInput.value = formatNumber(amount);
+        updateDisplay(amount);
+      });
+    });
+
+    chargeInput.addEventListener("input", () => {
+      const rawValue = onlyNumber(chargeInput.value);
+      const amount = Number(rawValue || 0);
+
+      chargeInput.value = rawValue ? formatNumber(rawValue) : "";
+
+      updateDisplay(amount);
+
+      amountButtons.forEach((btn) => btn.classList.remove("active"));
+    });
+
+    updateDisplay(50000);
+  </script>
+ <footer class="footer">
+  <div class="footer-inner">
+    
+    <div class="footer-logo">
+      <img src="../../image/logo.png" alt="차카지 로고">
+    </div>
+
+    <div class="footer-info">
+      <p><strong>회사이름 :</strong> 차카지</p>
+      <p><strong>대표이사 :</strong> 이팀이지</p>
+      <p><strong>사업자번호 :</strong> 123-4567-8910</p>
+      <p><strong>통신판매업신고 :</strong> 1238-4657-1236</p>
+      <p><strong>주소 :</strong>부산 부산진구 중앙대로 00 OO빌딩</p>
+      <p><strong>E-mail :</strong> chakaji@mail.com</p>
+    </div>
+
+    <div class="footer-contact">
+      <p>영업및 협력문의</p>
+      <h3>1577 - 1234</h3>
+
+      <p>비즈니스 투자문의</p>
+      <h3>1577 - 1234</h3>
+
+      <p>고객센터</p>
+      <h3>1577 - 1234</h3>
+    </div>
+
+  </div>
+</footer>
+</body>
+</html>

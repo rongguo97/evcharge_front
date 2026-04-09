@@ -1,0 +1,370 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background: #f7f7fb;
+  color: #222;
+}
+
+a {
+  text-decoration: none;
+}
+
+.mypage {
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  background: linear-gradient(180deg, #f5f3ff 0%, #f8fafc 100%);
+}
+
+.mypage-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* 상단 프로필 카드 */
+.profile-card {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  border-radius: 28px;
+  padding: 28px;
+  color: white;
+  box-shadow: 0 16px 40px rgba(124, 58, 237, 0.18);
+  margin-bottom: 22px;
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.profile-text {
+  flex: 1;
+  width: 100%;
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-name h2 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.user-info {
+  text-align: right;
+  font-size: 14px;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.7;
+}
+
+.grade-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* 탭 메뉴 */
+.tab-menu {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.tab {
+  flex: 1;
+  height: 48px;
+  border: none;
+  border-radius: 14px;
+  background: #ececf3;
+  color: #5b6170;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.tab:hover {
+  background: #e4defc;
+  color: #6d28d9;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  color: white;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.18);
+}
+
+/* 충전금 / 포인트 */
+.wallet-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 26px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  margin-bottom: 22px;
+}
+
+.wallet-box {
+  flex: 1;
+  text-align: center;
+}
+
+.wallet-box span {
+  display: block;
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.wallet-box strong {
+  font-size: 30px;
+  color: #111827;
+  font-weight: 800;
+}
+
+.wallet-divider {
+  width: 1px;
+  height: 56px;
+  background: #e5e7eb;
+}
+
+/* 충전하기 버튼 */
+.charge-button-wrap {
+  margin-bottom: 28px;
+}
+
+.charge-btn-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(124, 58, 237, 0.18);
+  transition: all 0.3s ease;
+}
+
+.charge-btn-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 28px rgba(124, 58, 237, 0.24);
+}
+
+/* 공통 섹션 */
+.history-section,
+.reservation-section {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.history-section {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title h3 {
+  font-size: 22px;
+  color: #111827;
+}
+
+.section-title a {
+  font-size: 14px;
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+/* 충전 내역 */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 16px;
+  border-radius: 18px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+}
+
+.history-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.history-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.history-right {
+  text-align: right;
+}
+
+.history-right strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.history-right span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.plus {
+  color: #7c3aed;
+}
+
+.minus {
+  color: #111827;
+}
+
+/* 예약 확인 */
+.reservation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.reservation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 16px;
+  border-radius: 18px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+}
+
+.reservation-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reservation-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.reservation-info {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.reservation-status {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .mypage {
+    padding: 24px 16px 60px;
+  }
+
+  .profile-card {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .profile-left {
+    align-items: flex-start;
+  }
+
+  .profile-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-name h2 {
+    font-size: 20px;
+  }
+
+  .user-info {
+    text-align: left;
+    margin-top: 4px;
+  }
+
+  .wallet-card {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .wallet-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .wallet-box strong {
+    font-size: 26px;
+  }
+
+  .history-item,
+  .reservation-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .history-right {
+    text-align: left;
+  }
+}
