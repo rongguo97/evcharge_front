@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ko">
   <head>
@@ -24,7 +23,7 @@
   </head>
 
   <body>
-       <!-- NAV / 상단 메뉴바  -->
+    <!-- NAV / 상단 메뉴바  -->
     <header class="navbar">
       <div class="nav-logo">CHARCAGE</div>
       <nav class="nav-links">
@@ -34,7 +33,7 @@
         <a href="#" class="nav-item">고객지원</a>
       </nav>
       <div class="nav-mypage">
-       <img src="./차카지로고(누끼).png" alt="메인로고(누끼)" width="100px" >
+        <img src="./차카지로고(누끼).png" alt="메인로고(누끼)" width="100px" />
       </div>
     </header>
 
@@ -51,62 +50,65 @@
         <p class="hero-sub">Save time, Reserve your charge</p>
       </div>
     </section>
-<!-- // -->
-<section class="section-map">
-    <div class="container">
-      <!-- 지도 검색  -->
-      <form class="search" action="" method="post">
-        <input
-          type="search"
-          class="search-box"
-          name="q"
-          placeholder="검색위치"
-        />
-        <button type="submit" name="searchButton" value="clicked">검색</button>
-      </form>
-      <!--  충전소 찾기 아이콘  -->
-      <div class="charging">
-        <a href="./" alt="find charging">
-          <img src="../충전소찾기 아이콘.png" />
-        </a>
-      </div>
-      <!--  즐겨찾기 아이콘 -->
-      <div class="favorites">
-        <a href="./" alt="favorites">
-          <img src="../즐겨찾기아이콘.png" />
-        </a> 
-      </div>
-      <div clas="pay-container">
-        <!--  evpay 아이콘  -->
-        <div class="evpay">
-          <a href="./" alt="evpay">
-            <img src="../페이결제 아이콘.png" alt="페이/충전" />
+    <!-- // -->
+    <section class="section-map">
+      <div class="container">
+        <!-- 지도 검색  -->
+        <form class="search" action="" method="post">
+          <input
+            type="search"
+            class="search-box"
+            name="q"
+            placeholder="검색위치"
+          />
+          <!-- 필터 버튼 -->
+          <button type="button" class="filter-btn">⚙️</button>
+          <button type="submit" name="searchButton" value="clicked">
+            검색
+          </button>
+        </form>
+        <!--  충전소 찾기 아이콘  -->
+        <div class="charging">
+          <a href="./" alt="find charging">
+            <img src="../충전소찾기 아이콘.png" />
           </a>
         </div>
-        <!-- qn/nfc아이콘 -->
-        <div class="qnnfc">
-          <a href="./" alt="QN/NFC">
-            <img src="../QR스캔 아이콘.png" alt="QN/NFC" />
+        <!--  즐겨찾기 아이콘 -->
+        <div class="favorites">
+          <a href="./" alt="favorites">
+            <img src="../즐겨찾기아이콘.png" />
           </a>
+        </div>
+        <div clas="pay-container">
+          <!--  evpay 아이콘  -->
+          <div class="evpay">
+            <a href="./" alt="evpay">
+              <img src="../페이결제 아이콘.png" alt="페이/충전" />
+            </a>
+          </div>
+          <!-- qn/nfc아이콘 -->
+          <div class="qnnfc">
+            <a href="./" alt="QN/NFC">
+              <img src="../QR스캔 아이콘.png" alt="QN/NFC" />
+            </a>
+          </div>
+
+          <div class="community">
+            <a href="./" alt="community">
+              <img src="../community아이콘.png" alt="community icon" />
+            </a>
+          </div>
         </div>
 
-        <div class="community">
-          <a href="./" alt="community">
-            <img src="../community아이콘.png" alt="community icon" />
-          </a>
-        </div>
+        <div id="map"></div>
+        <script src="../03_JS/01_map.js"></script>
       </div>
-
-      <div id="map"></div>
-      <script src="../03_JS/01_map.js"></script>
-    </div>
     </section>
-
 
     <!-- // -->
 
     <!-- 3번째 화면 -->
-        <main class="hero-section">
+    <main class="hero-section">
       <nav class="sidebar">
         <ul>
           <li><a href="#">충전예약</a></li>
@@ -120,43 +122,32 @@
       </div>
     </main>
 
-     <footer class="footer">
-  <div class="footer-inner">
-    
-    <div class="footer-logo">
-      <img src="../../image/logo.png" alt="차카지 로고">
-    </div>
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <img src="../../image/logo.png" alt="차카지 로고" />
+        </div>
 
-    <div class="footer-info">
-      <p><strong>회사이름 :</strong> 차카지</p>
-      <p><strong>대표이사 :</strong> 이팀이지</p>
-      <p><strong>사업자번호 :</strong> 123-4567-8910</p>
-      <p><strong>통신판매업신고 :</strong> 1238-4657-1236</p>
-      <p><strong>주소 :</strong>부산 부산진구 중앙대로 00 OO빌딩</p>
-      <p><strong>E-mail :</strong> chakaji@mail.com</p>
-    </div>
+        <div class="footer-info">
+          <p><strong>회사이름 :</strong> 차카지</p>
+          <p><strong>대표이사 :</strong> 이팀이지</p>
+          <p><strong>사업자번호 :</strong> 123-4567-8910</p>
+          <p><strong>통신판매업신고 :</strong> 1238-4657-1236</p>
+          <p><strong>주소 :</strong>부산 부산진구 중앙대로 00 OO빌딩</p>
+          <p><strong>E-mail :</strong> chakaji@mail.com</p>
+        </div>
 
-    <div class="footer-contact">
-      <p>영업및 협력문의</p>
-      <h3>1577 - 1234</h3>
+        <div class="footer-contact">
+          <p>영업및 협력문의</p>
+          <h3>1577 - 1234</h3>
 
-      <p>비즈니스 투자문의</p>
-      <h3>1577 - 1234</h3>
+          <p>비즈니스 투자문의</p>
+          <h3>1577 - 1234</h3>
 
-      <p>고객센터</p>
-      <h3>1577 - 1234</h3>
-    </div>
-
-  </div>
-</footer>
-
+          <p>고객센터</p>
+          <h3>1577 - 1234</h3>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
-
-
-
-
-
-
-
-
