@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import StationService from '../services/StationService';
 import type { IStation } from '../types/IStation';
 
+import { getStatusLabel, getTypeLabel, getMethodLabel } from "../common/stationConverter";
+
 const Home = () => {
     const [map, setMap] = useState<any>(null);
   const [stations, setStations] = useState<IStation[]>([]);
@@ -73,78 +75,84 @@ const Home = () => {
       });
 const content = `
   <div style="
-    padding: 16px; 
-    background: #fff; 
-    border-radius: 12px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+    padding: 20px; 
+    background: #ffffff; 
+    border-radius: 16px; 
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
     border: 1px solid #e1e4e8; 
-    min-width: 280px; 
+    min-width: 300px; /* 폭을 조금 더 넓게 확보 */
+    max-width: 350px;
     font-family: 'Noto Sans KR', sans-serif;
+    color: #1a1a1a;
   ">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-      <div style="max-width: 70%;">
-        <strong style="font-size: 17px; color: #1a1a1a; display: block; margin-bottom: 2px;">
+    
+    <div style="margin-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <strong style="font-size: 19px; color: #000; letter-spacing: -0.5px;">
           ${station.stationName}
         </strong>
-        <span style="font-size: 12px; color: #007bff; font-weight: 600;">
-          ${station.distance ? station.distance.toFixed(2) + 'km' : '거리 계산 중'}
+        <span style="
+          background: ${station.status === '1' ? '#34c759' : '#555'}; 
+          color: #ffffff !important; 
+          padding: 4px 10px; 
+          border-radius: 6px; 
+          font-size: 11px; 
+          font-weight: 800;
+          white-space: nowrap;
+        ">
+          ${getStatusLabel(station.status)}
         </span>
       </div>
-      <span style="
-        font-size: 11px; 
-        background: ${station.status === '사용가능' ? '#34c759' : '#8e8e93'}; 
-        color: #fff; 
-        padding: 4px 10px; 
-        border-radius: 20px; 
-        font-weight: bold;
-      ">
-        ${station.status || '정보없음'}
-      </span>
-    </div>
-
-    <div style="font-size: 13px; color: #444; line-height: 1.6;">
-      <p style="margin: 6px 0; display: flex; align-items: flex-start;">
-        <span style="margin-right: 8px;"></span> 
-        <span style="flex: 1;">${station.address}</span>
-      </p>
-      
-      <div style="margin-top: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;">
-        <p style="margin: 0; font-size: 12px; color: #555;">
-          <strong> 충전기:</strong> ${station.chargerName} (ID: ${station.chargerId})
-        </p>
-        <p style="margin: 6px 0; font-size: 12px; color: #555;">
-          <strong> 타입/방식:</strong> ${station.chargerType} / ${station.chargerMethod || '기본'}
-        </p>
-        <p style="margin: 0; font-size: 12px; color: #666;">
-          <strong> 충전량:</strong> ${station.fastChargeAmount || '정보없음'}
-        </p>
+      <div style="font-size: 13px; color: #007bff; font-weight: 600;">
+        ${station.distance ? station.distance.toFixed(2) + 'km' : '거리 계산 중'}
       </div>
-
-      <p style="margin: 10px 0 0 0; font-size: 11px; color: #999; text-align: right;">
-        업데이트: ${station.statUpdateDatetime || '-'}
-      </p>
     </div>
 
+    <div style="margin-bottom: 15px; font-size: 14px; color: #444; line-height: 1.5; display: flex; align-items: flex-start;">
+      <span style="margin-right: 6px;">📍</span>
+      <span>${station.address}</span>
+    </div>
+
+    <div style="
+      padding: 15px; 
+      background: #f8f9fa; 
+      border-radius: 10px; 
+      font-size: 13px;
+      border: 1px solid #eee;
+    ">
+      <div style="margin-bottom: 8px; display: flex; align-items: center;">
+        <strong style="width: 70px; color: #000;">⚡ 타입</strong>
+        <span style="color: #555;">${getTypeLabel(station.chargerType)}</span>
+      </div>
+      <div style="margin-bottom: 8px; display: flex; align-items: center;">
+        <strong style="width: 70px; color: #000;">🔌 방식</strong>
+        <span style="color: #555;">${getMethodLabel(station.chargerMethod)}</span>
+      </div>
+      <div style="display: flex; align-items: center;">
+        <strong style="width: 70px; color: #000;">🚀 충전량</strong>
+        <span style="font-weight: 700; color: #007bff;">${station.fastChargeAmount || '기본'}</span>
+      </div>
+    </div>
+    
     <button 
-      onclick="window.location.href='/detail/${station.stationId}'"
+      onclick="location.href='/detail/${station.stationId}'" 
       style="
-        width: 100%; 
-        margin-top: 14px; 
-        background: #0b0d1a; 
-        color: #fff; 
-        border: none; 
-        padding: 12px; 
-        border-radius: 8px; 
-        cursor: pointer; 
+        width: 100%;
+        margin-top: 15px;
+        background: #0b0d1a;
+        color: #fff;
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
         font-weight: bold;
-        font-size: 14px;
+        cursor: pointer;
+        font-size: 15px;
       "
     >
       상세 정보 보기
     </button>
   </div>
 `;
-
       const infowindow = new kakao.maps.InfoWindow({
         content: content,
         removable: true
