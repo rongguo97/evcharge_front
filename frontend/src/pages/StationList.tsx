@@ -8,6 +8,8 @@ import {
   getMethodLabel,
 } from "../common/stationConverter";
 
+
+
 // 1. SQL charger_type 컬럼 값과 UI 명칭 매핑 테이블 (컴포넌트 외부 선언)
 const SPEED_MAP: { [key: string]: string } = {
   "01": "급속",
@@ -30,7 +32,7 @@ const StationList = () => {
 
   const markersRef = useRef<any[]>([]); // 마커 관리용 Ref (중복 방지)
 
-  // 1. 지도 초기화 (카카오맵 로드)
+  // 1. 지도 초기화 및 초기 현재 위치 설정
   useEffect(() => {
     const initMap = () => {
       const { kakao } = window as any;
@@ -38,16 +40,40 @@ const StationList = () => {
         const container = document.getElementById("map");
         if (!container) return;
 
-        const options = {
-          center: new kakao.maps.LatLng(37.5665, 126.978), // 초기 서울 중심
+        // 기본 중심 설정 (GPS 로드 전이나 실패 시 보여줄 서울 중심 좌표)
+        const defaultOptions = {
+          center: new kakao.maps.LatLng(37.5665, 126.978),
           level: 3,
         };
 
-        const kakaoMap = new kakao.maps.Map(container, options);
+        const kakaoMap = new kakao.maps.Map(container, defaultOptions);
         setMap(kakaoMap);
+
+        // ✨ 지도가 로드되자마자 현재 위치로 이동 시도
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+              const locPosition = new kakao.maps.LatLng(lat, lng);
+
+              // 지도가 생성된 직후이므로 kakaoMap 객체에 바로 적용
+              kakaoMap.setCenter(locPosition);
+              kakaoMap.setLevel(3);
+              console.log("📍 현재 위치로 초기 중심점 설정 완료");
+            },
+            (error) => {
+              console.warn(
+                "⚠️ 현재 위치를 가져올 수 없어 기본 위치를 사용합니다.",
+                error,
+              );
+            },
+          );
+        }
       });
     };
 
+    // 카카오맵 스크립트 로드 체크
     if ((window as any).kakao && (window as any).kakao.maps) {
       initMap();
     } else {
@@ -59,7 +85,6 @@ const StationList = () => {
       script.onload = () => initMap();
     }
   }, []);
-
   // 2. 백엔드 데이터 가져오기
   useEffect(() => {
     const fetchStations = () => {
@@ -77,6 +102,23 @@ const StationList = () => {
     if (map) fetchStations();
   }, [map]);
 
+  // 두 좌표 사이의 거리를 계산하는 함수 (단위: m)
+  const getDistance = (
+    lat1: number,
+    lng1: number,
+    lat2: number,
+    lng2: number,
+  ) => {
+    const { kakao } = window as any;
+    const p1 = new kakao.maps.LatLng(lat1, lng1);
+    const p2 = new kakao.maps.LatLng(lat2, lng2);
+
+    const polyline = new (window as any).kakao.maps.Polyline({
+      path: [p1, p2],
+    });
+
+    return polyline.getLength(); // 두 지점 사이의 직선 거리를 m 단위로 리턴
+  };
   // 3. 통합 필터링 로직 (검색 + 속도 + 상태 + 중복제거)
   const filteredStations = stations
     .filter((s) => {
@@ -126,8 +168,6 @@ const StationList = () => {
         map: map,
       });
 
-    
-
       const content = `
   <div style="
     padding: 20px; 
@@ -147,7 +187,7 @@ const StationList = () => {
           ${station.stationName}
         </strong>
         <span style="
-          background: ${station.status === '1' ? '#34c759' : '#555'}; 
+          background: ${station.status === "1" ? "#34c759" : "#555"}; 
           color: #ffffff !important; 
           padding: 4px 10px; 
           border-radius: 6px; 
@@ -159,7 +199,7 @@ const StationList = () => {
         </span>
       </div>
       <div style="font-size: 13px; color: #007bff; font-weight: 600;">
-        ${station.distance ? station.distance.toFixed(2) + 'km' : '거리 계산 중'}
+        ${station.distance ? station.distance.toFixed(2) + "km" : "거리 계산 중"}
       </div>
     </div>
 
@@ -242,39 +282,6 @@ const StationList = () => {
     }
   };
 
-  // 상태 추가
-  const [sido, setSido] = useState(""); // 시/도 선택
-  const [sigungu, setSigungu] = useState(""); // 시/군/구 선택
-
-  const handleMoveToRegion = () => {
-    console.log("현재 선택된 지역:", sido, sigungu); // 디버깅용
-
-    if (!sido || !sigungu) {
-      alert("지역을 모두 선택해주세요.");
-      return;
-    }
-
-    // 1. 데이터 가져오기
-    const cityList = regionData[sido as keyof typeof regionData];
-
-    // 2. 선택한 시/군/구 이름과 일치하는 객체 찾기
-    const target = cityList?.find((item: any) => item.name === sigungu);
-
-    console.log("찾은 좌표 데이터:", target); // 디버깅용
-
-    if (target && map) {
-      const { kakao } = window as any;
-      // 3. 카카오 좌표 객체 생성
-      const coords = new kakao.maps.LatLng(target.lat, target.lng);
-
-      // 4. 지도 이동 및 확대 레벨 조정
-      map.panTo(coords);
-      map.setLevel(5);
-    } else {
-      alert("해당 지역의 좌표 정보를 찾을 수 없습니다.");
-    }
-  };
-
   const gpsBtnStyle = {
     width: "100%",
     padding: "10px",
@@ -319,70 +326,6 @@ const StationList = () => {
             style={inputStyle}
           />
         </section>
-
-        {/* 📍 1. 지역 선택 및 이동 섹션 (이게 있어야 합니다!) */}
-        <section
-          style={{
-            marginBottom: "15px",
-            padding: "10px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "8px",
-          }}
-        >
-          <h3 style={labelStyle}>📍 지역 선택 이동</h3>
-
-          {/* 시/도 선택 */}
-          <select
-            value={sido}
-            onChange={(e) => {
-              setSido(e.target.value);
-              setSigungu("");
-            }}
-            style={{ ...selectStyle, marginBottom: "8px", color: "#000" }}
-          >
-            <option value="">시/도 선택</option>
-            {Object.keys(regionData).map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
-
-          {/* 시/군/구 선택 */}
-          <select
-            value={sigungu}
-            onChange={(e) => setSigungu(e.target.value)}
-            disabled={!sido}
-            style={{ ...selectStyle, marginBottom: "8px", color: "#000" }}
-          >
-            <option value="">시/군/구 선택</option>
-            {sido &&
-              (regionData[sido as keyof typeof regionData] as any[]).map(
-                (item) => (
-                  <option key={item.name} value={item.name}>
-                    {item.name}
-                  </option>
-                ),
-              )}
-          </select>
-
-          <div style={{ display: "flex", gap: "5px" }}>
-            <button
-              onClick={handleMoveToRegion}
-              style={{ ...gpsBtnStyle, flex: 2 }}
-            >
-              지역 이동
-            </button>
-            <button
-              onClick={handleMyLocation}
-              style={{ ...gpsBtnStyle, flex: 1, backgroundColor: "#444" }}
-            >
-              현재 위치로 이동
-            </button>
-          </div>
-        </section>
-
-        <hr style={{ border: "0.5px solid #eee", margin: "10px 0" }} />
 
         <hr style={{ border: "0.5px solid #444", margin: "15px 0" }} />
 
