@@ -19,7 +19,7 @@ const StationList = () => {
 
   // 필터 상태 관리
   const [searchTerm, setSearchTerm] = useState(""); // 이름 검색
-  const [regionSearch, setRegionSearch] = useState(""); // 지역 검색어 상태
+  const [] = useState(""); // 지역 검색어 상태
   const [selectedSpeed, setSelectedSpeed] = useState("전체"); // 급속/완속 필터
   const [selectedStatus, setSelectedStatus] = useState("전체"); // 충전기 상태 필터
 
@@ -119,7 +119,7 @@ const StationList = () => {
         position: new kakao.maps.LatLng(station.lat, station.lng),
         map: map,
       });
-
+      
       const infowindow = new kakao.maps.InfoWindow({
         content: `<div style="padding:5px; color:black; font-size:12px;">${station.stationName}</div>`,
         removable: true,
@@ -234,60 +234,42 @@ const StationList = () => {
           />
         </section>
 
-        <section style={{ marginBottom: "10px" }}>
-          <h3 style={labelStyle}>📍 지역 선택</h3>
+        {/* 📍 1. 지역 선택 및 이동 섹션 (이게 있어야 합니다!) */}
+  <section style={{ marginBottom: "15px", padding: "10px", backgroundColor: "#f8f9fa", borderRadius: "8px" }}>
+    <h3 style={labelStyle}>📍 지역 선택 이동</h3>
+    
+    {/* 시/도 선택 */}
+    <select 
+      value={sido} 
+      onChange={(e) => { setSido(e.target.value); setSigungu(""); }}
+      style={{ ...selectStyle, marginBottom: "8px", color: "#000" }}
+    >
+      <option value="">시/도 선택</option>
+      {Object.keys(regionData).map(name => (
+        <option key={name} value={name}>{name}</option>
+      ))}
+    </select>
 
-          {/* 1단계: 시/도 선택 */}
-          <select
-            value={sido}
-            onChange={(e) => {
-              setSido(e.target.value);
-              setSigungu("");
-            }} // 시/도 바뀌면 시/군/구 초기화
-            style={{ ...selectStyle, marginBottom: "8px" }}
-          >
-            <option value="">시/도 선택</option>
-            {Object.keys(regionData).map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
+    {/* 시/군/구 선택 */}
+    <select 
+      value={sigungu} 
+      onChange={(e) => setSigungu(e.target.value)}
+      disabled={!sido}
+      style={{ ...selectStyle, marginBottom: "8px", color: "#000" }}
+    >
+      <option value="">시/군/구 선택</option>
+      {sido && (regionData[sido as keyof typeof regionData] as any[]).map(item => (
+        <option key={item.name} value={item.name}>{item.name}</option>
+      ))}
+    </select>
 
-          {/* 2단계: 시/군/구 선택 */}
-          <select
-            value={sigungu}
-            onChange={(e) => setSigungu(e.target.value)}
-            disabled={!sido}
-            style={{ ...selectStyle, marginBottom: "8px", color: "#000" }} // 글자색 검정 추가
-          >
-            <option value="">시/군/구 선택</option>
-            {sido &&
-              // 💡 string[] 대신 정확한 객체 타입 { name: string; lat: number; lng: number }[] 을 지정합니다.
-              (regionData[sido as keyof typeof regionData] as any[]).map(
-                (item) => (
-                  <option key={item.name} value={item.name}>
-                    {item.name}
-                  </option>
-                ),
-              )}
-          </select>
+    <div style={{ display: "flex", gap: "5px" }}>
+      <button onClick={handleMoveToRegion} style={{ ...gpsBtnStyle, flex: 2 }}>지역 이동</button>
+      <button onClick={handleMyLocation} style={{ ...gpsBtnStyle, flex: 1, backgroundColor: "#444" }}>🎯</button>
+    </div>
+  </section>
 
-          <div style={{ display: "flex", gap: "5px" }}>
-            <button
-              onClick={handleMoveToRegion}
-              style={{ ...gpsBtnStyle, flex: 2 }}
-            >
-              지역 이동
-            </button>
-            <button
-              onClick={handleMyLocation}
-              style={{ ...gpsBtnStyle, flex: 1, backgroundColor: "#444" }}
-            >
-              🎯
-            </button>
-          </div>
-        </section>
+  <hr style={{ border: "0.5px solid #eee", margin: "10px 0" }} />
 
         <hr style={{ border: "0.5px solid #444", margin: "15px 0" }} />
 
@@ -381,6 +363,7 @@ const StationList = () => {
         }}
       />
     </div>
+    
   );
 };
 

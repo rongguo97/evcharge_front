@@ -10,9 +10,13 @@ export interface IRegionData {
 }
 
 export interface IStation {
+    statUpdateDatetime: string;
+    chargerMethod: string;
+    chargerName: any;
+    distance: any;
     stat: string;
-    lat: any;
-    lng: any;
+    lat: number;
+    lng: number;
     id: number;                    // id
     stationId: string;           //충전소id
     chargerId: number;             //충전기id
