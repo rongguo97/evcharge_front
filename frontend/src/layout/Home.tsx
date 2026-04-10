@@ -1,5 +1,6 @@
 import StationList from '../pages/StationList'; 
-import carVideo from '../image/carvideo.mp4'; 
+import carVideo from '../image/carvideo.mp4';
+
 
 const Home = () => {
   // 💡 Home에서는 더 이상 map, stations 상태를 직접 관리하지 않습니다.

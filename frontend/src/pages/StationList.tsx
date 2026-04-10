@@ -2,6 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import StationService from "../services/StationService";
 import type { IStation } from "../types/IStation";
 import { regionData } from "../services/RegionService";
+import {
+  getStatusLabel,
+  getTypeLabel,
+  getMethodLabel,
+} from "../common/stationConverter";
 
 // 1. SQL charger_type 컬럼 값과 UI 명칭 매핑 테이블 (컴포넌트 외부 선언)
 const SPEED_MAP: { [key: string]: string } = {
@@ -104,111 +109,116 @@ const StationList = () => {
     );
 
   // 4. 필터링된 데이터 기반 마커 생성 (수정된 인포윈도우 코드)
-useEffect(() => {
-  const { kakao } = window as any;
-  if (!map || !kakao) return;
+  useEffect(() => {
+    const { kakao } = window as any;
+    if (!map || !kakao) return;
 
-  // 기존 마커 제거 (지도 청소)
-  markersRef.current.forEach((marker) => marker.setMap(null));
-  markersRef.current = [];
+    // 기존 마커 제거 (지도 청소)
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
 
-  filteredStations.forEach((station) => {
-    if (!station.lat || !station.lng) return;
+    filteredStations.forEach((station) => {
+      if (!station.lat || !station.lng) return;
 
-    // 마커 객체 생성
-    const marker = new kakao.maps.Marker({
-      position: new kakao.maps.LatLng(station.lat, station.lng),
-      map: map,
-    });
+      // 마커 객체 생성
+      const marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(station.lat, station.lng),
+        map: map,
+      });
+
     
-    const content = `
+
+      const content = `
   <div style="
-    padding: 16px; 
-    background: #fff; 
-    border-radius: 12px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+    padding: 20px; 
+    background: #ffffff; 
+    border-radius: 16px; 
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
     border: 1px solid #e1e4e8; 
-    min-width: 280px; 
+    min-width: 300px; /* 폭을 조금 더 넓게 확보 */
+    max-width: 350px;
     font-family: 'Noto Sans KR', sans-serif;
+    color: #1a1a1a;
   ">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-      <div style="max-width: 70%;">
-        <strong style="font-size: 17px; color: #1a1a1a; display: block; margin-bottom: 2px;">
+    
+    <div style="margin-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <strong style="font-size: 19px; color: #000; letter-spacing: -0.5px;">
           ${station.stationName}
         </strong>
-        <span style="font-size: 12px; color: #007bff; font-weight: 600;">
-          ${station.distance ? station.distance.toFixed(2) + 'km' : '거리 계산 중'}
+        <span style="
+          background: ${station.status === '1' ? '#34c759' : '#555'}; 
+          color: #ffffff !important; 
+          padding: 4px 10px; 
+          border-radius: 6px; 
+          font-size: 11px; 
+          font-weight: 800;
+          white-space: nowrap;
+        ">
+          ${getStatusLabel(station.status)}
         </span>
       </div>
-      <span style="
-        font-size: 11px; 
-        background: ${station.status === '사용가능' ? '#34c759' : '#8e8e93'}; 
-        color: #fff; 
-        padding: 4px 10px; 
-        border-radius: 20px; 
-        font-weight: bold;
-      ">
-        ${station.status || '정보없음'}
-      </span>
-    </div>
-
-    <div style="font-size: 13px; color: #444; line-height: 1.6;">
-      <p style="margin: 6px 0; display: flex; align-items: flex-start;">
-        <span style="margin-right: 8px;">📍</span> 
-        <span style="flex: 1;">${station.address}</span>
-      </p>
-      
-      <div style="margin-top: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;">
-        <p style="margin: 0; font-size: 12px; color: #555;">
-          <strong>⚡ 충전기:</strong> ${station.chargerName} (ID: ${station.chargerId})
-        </p>
-        <p style="margin: 6px 0; font-size: 12px; color: #555;">
-          <strong>🔌 타입/방식:</strong> ${station.chargerType} / ${station.chargerMethod || '기본'}
-        </p>
-        <p style="margin: 0; font-size: 12px; color: #666;">
-          <strong>🚀 충전량:</strong> ${station.fastChargeAmount || '정보없음'}
-        </p>
+      <div style="font-size: 13px; color: #007bff; font-weight: 600;">
+        ${station.distance ? station.distance.toFixed(2) + 'km' : '거리 계산 중'}
       </div>
-
-      <p style="margin: 10px 0 0 0; font-size: 11px; color: #999; text-align: right;">
-        업데이트: ${station.statUpdateDatetime || '-'}
-      </p>
     </div>
 
+    <div style="margin-bottom: 15px; font-size: 14px; color: #444; line-height: 1.5; display: flex; align-items: flex-start;">
+      <span style="margin-right: 6px;">📍</span>
+      <span>${station.address}</span>
+    </div>
+
+    <div style="
+      padding: 15px; 
+      background: #f8f9fa; 
+      border-radius: 10px; 
+      font-size: 13px;
+      border: 1px solid #eee;
+    ">
+      <div style="margin-bottom: 8px; display: flex; align-items: center;">
+        <strong style="width: 70px; color: #000;">⚡ 타입</strong>
+        <span style="color: #555;">${getTypeLabel(station.chargerType)}</span>
+      </div>
+      <div style="margin-bottom: 8px; display: flex; align-items: center;">
+        <strong style="width: 70px; color: #000;">🔌 방식</strong>
+        <span style="color: #555;">${getMethodLabel(station.chargerMethod)}</span>
+      </div>
+    </div>
+    
     <button 
-      onclick="window.location.href='/detail/${station.stationId}'"
+      onclick="location.href='/detail/${station.stationId}'" 
       style="
-        width: 100%; 
-        margin-top: 14px; 
-        background: #0b0d1a; 
-        color: #fff; 
-        border: none; 
-        padding: 12px; 
-        border-radius: 8px; 
-        cursor: pointer; 
+        width: 100%;
+        margin-top: 15px;
+        background: #0b0d1a;
+        color: #fff;
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
         font-weight: bold;
-        font-size: 14px;
+        cursor: pointer;
+        font-size: 15px;
       "
     >
       상세 정보 보기
     </button>
   </div>
 `;
-    // 인포윈도우 객체 생성
-    const infowindow = new kakao.maps.InfoWindow({
-      content: content, // 수정된 콘텐츠 적용
-      removable: true,
-    });
+      // 인포윈도우 객체 생성
+      const infowindow = new kakao.maps.InfoWindow({
+        content: content, // 수정된 콘텐츠 적용
+        removable: true,
+      });
 
-    // 마커 클릭 이벤트 등록
-    kakao.maps.event.addListener(marker, "click", () => {
-      infowindow.open(map, marker);
-    });
+      // 마커 클릭 이벤트 등록
+      kakao.maps.event.addListener(marker, "click", () => {
+        infowindow.open(map, marker);
+      });
 
-    // 마커 관리용 배열에 추가
-    markersRef.current.push(marker); 
-  });
-}, [map, filteredStations]);
+      // 마커 관리용 배열에 추가
+      markersRef.current.push(marker);
+    });
+  }, [map, filteredStations]);
   // 5. 리스트 클릭 시 이동 함수
   const handleLocationClick = (lat: number, lng: number) => {
     const { kakao } = window as any;
@@ -237,33 +247,33 @@ useEffect(() => {
   const [sigungu, setSigungu] = useState(""); // 시/군/구 선택
 
   const handleMoveToRegion = () => {
-  console.log("현재 선택된 지역:", sido, sigungu); // 디버깅용
+    console.log("현재 선택된 지역:", sido, sigungu); // 디버깅용
 
-  if (!sido || !sigungu) {
-    alert("지역을 모두 선택해주세요.");
-    return;
-  }
+    if (!sido || !sigungu) {
+      alert("지역을 모두 선택해주세요.");
+      return;
+    }
 
-  // 1. 데이터 가져오기
-  const cityList = regionData[sido as keyof typeof regionData];
-  
-  // 2. 선택한 시/군/구 이름과 일치하는 객체 찾기
-  const target = cityList?.find((item: any) => item.name === sigungu);
+    // 1. 데이터 가져오기
+    const cityList = regionData[sido as keyof typeof regionData];
 
-  console.log("찾은 좌표 데이터:", target); // 디버깅용
+    // 2. 선택한 시/군/구 이름과 일치하는 객체 찾기
+    const target = cityList?.find((item: any) => item.name === sigungu);
 
-  if (target && map) {
-    const { kakao } = window as any;
-    // 3. 카카오 좌표 객체 생성
-    const coords = new kakao.maps.LatLng(target.lat, target.lng);
-    
-    // 4. 지도 이동 및 확대 레벨 조정
-    map.panTo(coords);
-    map.setLevel(5); 
-  } else {
-    alert("해당 지역의 좌표 정보를 찾을 수 없습니다.");
-  }
-};
+    console.log("찾은 좌표 데이터:", target); // 디버깅용
+
+    if (target && map) {
+      const { kakao } = window as any;
+      // 3. 카카오 좌표 객체 생성
+      const coords = new kakao.maps.LatLng(target.lat, target.lng);
+
+      // 4. 지도 이동 및 확대 레벨 조정
+      map.panTo(coords);
+      map.setLevel(5);
+    } else {
+      alert("해당 지역의 좌표 정보를 찾을 수 없습니다.");
+    }
+  };
 
   const gpsBtnStyle = {
     width: "100%",
@@ -311,41 +321,68 @@ useEffect(() => {
         </section>
 
         {/* 📍 1. 지역 선택 및 이동 섹션 (이게 있어야 합니다!) */}
-  <section style={{ marginBottom: "15px", padding: "10px", backgroundColor: "#f8f9fa", borderRadius: "8px" }}>
-    <h3 style={labelStyle}>📍 지역 선택 이동</h3>
-    
-    {/* 시/도 선택 */}
-    <select 
-      value={sido} 
-      onChange={(e) => { setSido(e.target.value); setSigungu(""); }}
-      style={{ ...selectStyle, marginBottom: "8px", color: "#000" }}
-    >
-      <option value="">시/도 선택</option>
-      {Object.keys(regionData).map(name => (
-        <option key={name} value={name}>{name}</option>
-      ))}
-    </select>
+        <section
+          style={{
+            marginBottom: "15px",
+            padding: "10px",
+            backgroundColor: "#f8f9fa",
+            borderRadius: "8px",
+          }}
+        >
+          <h3 style={labelStyle}>📍 지역 선택 이동</h3>
 
-    {/* 시/군/구 선택 */}
-    <select 
-      value={sigungu} 
-      onChange={(e) => setSigungu(e.target.value)}
-      disabled={!sido}
-      style={{ ...selectStyle, marginBottom: "8px", color: "#000" }}
-    >
-      <option value="">시/군/구 선택</option>
-      {sido && (regionData[sido as keyof typeof regionData] as any[]).map(item => (
-        <option key={item.name} value={item.name}>{item.name}</option>
-      ))}
-    </select>
+          {/* 시/도 선택 */}
+          <select
+            value={sido}
+            onChange={(e) => {
+              setSido(e.target.value);
+              setSigungu("");
+            }}
+            style={{ ...selectStyle, marginBottom: "8px", color: "#000" }}
+          >
+            <option value="">시/도 선택</option>
+            {Object.keys(regionData).map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
 
-    <div style={{ display: "flex", gap: "5px" }}>
-      <button onClick={handleMoveToRegion} style={{ ...gpsBtnStyle, flex: 2 }}>지역 이동</button>
-      <button onClick={handleMyLocation} style={{ ...gpsBtnStyle, flex: 1, backgroundColor: "#444" }}>현재 위치로 이동</button>
-    </div>
-  </section>
+          {/* 시/군/구 선택 */}
+          <select
+            value={sigungu}
+            onChange={(e) => setSigungu(e.target.value)}
+            disabled={!sido}
+            style={{ ...selectStyle, marginBottom: "8px", color: "#000" }}
+          >
+            <option value="">시/군/구 선택</option>
+            {sido &&
+              (regionData[sido as keyof typeof regionData] as any[]).map(
+                (item) => (
+                  <option key={item.name} value={item.name}>
+                    {item.name}
+                  </option>
+                ),
+              )}
+          </select>
 
-  <hr style={{ border: "0.5px solid #eee", margin: "10px 0" }} />
+          <div style={{ display: "flex", gap: "5px" }}>
+            <button
+              onClick={handleMoveToRegion}
+              style={{ ...gpsBtnStyle, flex: 2 }}
+            >
+              지역 이동
+            </button>
+            <button
+              onClick={handleMyLocation}
+              style={{ ...gpsBtnStyle, flex: 1, backgroundColor: "#444" }}
+            >
+              현재 위치로 이동
+            </button>
+          </div>
+        </section>
+
+        <hr style={{ border: "0.5px solid #eee", margin: "10px 0" }} />
 
         <hr style={{ border: "0.5px solid #444", margin: "15px 0" }} />
 
@@ -439,7 +476,6 @@ useEffect(() => {
         }}
       />
     </div>
-    
   );
 };
 

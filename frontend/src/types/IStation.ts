@@ -31,6 +31,6 @@ export interface IStation {
     operatorL: String;           // 운영기관(대)
     operatorS: String;           // 운영기관(소)
     fastChargeAmount: String;    // 급속충전량
-    chargerType: String;         // 충전기타입
+    chargerType: number;         // 충전기타입
     userRestriction: String;     // 이용자제한
 }
