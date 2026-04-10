@@ -20,9 +20,9 @@ export interface IStation {
     id: number;                    // id
     stationId: string;           //충전소id
     chargerId: number;             //충전기id
-    sido: String;                // 시도
-    gunggu: String;              // 군구
-    address: String             // 주소
+    sido: string;                // 시도
+    gunggu: string;              // 군구
+    address: string             // 주소
     stationName: String;         // 충전소명
     facilityL: String;           // 시설구분(대)
     facilityS: String;           // 시설구분(소)
