@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <title>EV-Reserve | 전기차 충전 예약</title>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <!-- css link -->
+    <link rel="stylesheet" href="../01_CSS/main.css" />
+  </head>
+
+  <body>
+    <!-- NAV / 상단 메뉴바  -->
+    <header class="navbar">
+      <div class="nav-logo">CHARCAGE</div>
+      <nav class="nav-links">
+        <a href="../01_HTML/door.html" class="nav-item active">BRAND</a>
+        <a href="#" class="nav-item">충전예약</a>
+        <a href="#" class="nav-item">인프라</a>
+        <a href="#" class="nav-item">고객지원</a>
+      </nav>    
+    </header>
+
+
+    <!-- 메인 동영상 화면 -->
+    <section class="hero">
+      <div class="video-background">
+        <video autoplay muted loop>
+          <source src="../KakaoTalk_20260325_121226509.mp4" type="video/mp4" />
+          글자
+        </video>
+      </div>
+      <div class="hero-content">
+        <h1 class="hero-title">친환경 이동을 더 똑똑하게</h1>
+        <p class="hero-sub">Save time, Reserve your charge</p>
+      </div>
+    </section>
+
+    <!-- // -->
+   <section class="section-map">
+  <div class="container">
+
+    <!-- 2. 오른쪽: 검색 + 아이콘 메뉴 영역 -->
+    <div class="side-panel">
+      
+      <!-- 검색바 영역 -->
+      <div class="side-panel">
+      <div class="search-area">
+        <div class="controls-wrapper">
+          <input type="text" class="search-box" placeholder="장소를 검색하세요">
+          <button type="submit" class="search-btn">검색</button>         
+        </div>
+      </div>
+
+      <!-- 아이콘들 모음 -->
+      <div class="menu-list">
+        <!-- 충전소 찾기 --> 
+        <div class="menu-item charging">
+          <a href="#"><img src="../충전소찾기 아이콘.png" alt="find charging" /></a>
+        </div>
+
+        <!-- 즐겨찾기 -->
+        <div class="menu-item favorites">
+          <a href="#"><img src="../즐겨찾기아이콘.png" alt="favorites" /></a>
+        </div>
+        <!-- EV페이 & QR (가로 나란히) -->
+        <div class="pay-row">
+          <div class="menu-item evpay">
+            <a href="#"><img src="../페이결제 아이콘.png" alt="페이/충전" /></a>
+          </div>
+          <div class="menu-item qnnfc">
+            <a href="#"><img src="../QR스캔 아이콘.png" alt="QN/NFC" /></a>
+          </div>
+        </div>
+        <!-- 커뮤니티 -->
+        <div class="menu-item community">
+          <a href="#"><img src="../community아이콘.png" alt="community" /></a>
+        </div>
+      </div>
+    </div>
+        <div id="map"></div>
+           <script src="../03_JS/01_map.js"></script>
+  </div>
+</section>
+
+    <!-- // -->
+    <!-- 3번째 화면 -->
+    <main class="hero-section">
+      <nav class="sidebar">
+        <ul>
+          <li><a href="#">충전예약</a></li>
+          <li><a href="#">서비스개요</a></li>
+          <li><a href="#">App서비스</a></li>
+          <li><a href="#">멤버십</a></li>
+        </ul>
+      </nav>
+      <div class="main-content">
+        <h1>Ready to charge</h1> 
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <img src="../../image/logo.png" alt="차카지 로고" />
+        </div>
+        <div class="footer-info">
+          <p><strong>회사이름 :</strong> 차카지</p>
+          <p><strong>대표이사 :</strong> 이팀이지</p>
+          <p><strong>사업자번호 :</strong> 123-4567-8910</p>
+          <p><strong>통신판매업신고 :</strong> 1238-4657-1236</p>
+          <p><strong>주소 :</strong>부산 부산진구 중앙대로 00 OO빌딩</p>
+          <p><strong>E-mail :</strong> chakaji@mail.com</p>
+        </div>
+
+        <div class="footer-contact">
+          <p>영업및 협력문의</p>
+          <h3>1577 - 1234</h3>
+
+          <p>비즈니스 투자문의</p>
+          <h3>1577 - 1234</h3>
+
+          <p>고객센터</p>
+          <h3>1577 - 1234</h3>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
