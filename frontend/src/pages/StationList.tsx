@@ -88,7 +88,7 @@ const StationList = () => {
 
       // C) 상태 필터
       const matchesStatus =
-        selectedStatus === "전체" || s.stat === selectedStatus;
+        selectedStatus === "전체" || s.status === selectedStatus;
 
       return matchesSearch && matchesSpeed && matchesStatus;
     })
@@ -103,36 +103,112 @@ const StationList = () => {
         ),
     );
 
-  // 4. 필터링된 데이터 기반 마커 생성
-  useEffect(() => {
-    const { kakao } = window as any;
-    if (!map || !kakao) return;
+  // 4. 필터링된 데이터 기반 마커 생성 (수정된 인포윈도우 코드)
+useEffect(() => {
+  const { kakao } = window as any;
+  if (!map || !kakao) return;
 
-    // 기존 마커 제거 (지도 청소)
-    markersRef.current.forEach((marker) => marker.setMap(null));
-    markersRef.current = [];
+  // 기존 마커 제거 (지도 청소)
+  markersRef.current.forEach((marker) => marker.setMap(null));
+  markersRef.current = [];
 
-    filteredStations.forEach((station) => {
-      if (!station.lat || !station.lng) return;
+  filteredStations.forEach((station) => {
+    if (!station.lat || !station.lng) return;
 
-      const marker = new kakao.maps.Marker({
-        position: new kakao.maps.LatLng(station.lat, station.lng),
-        map: map,
-      });
-      
-      const infowindow = new kakao.maps.InfoWindow({
-        content: `<div style="padding:5px; color:black; font-size:12px;">${station.stationName}</div>`,
-        removable: true,
-      });
-
-      kakao.maps.event.addListener(marker, "click", () => {
-        infowindow.open(map, marker);
-      });
-
-      markersRef.current.push(marker); // 마커 관리용 배열에 추가
+    // 마커 객체 생성
+    const marker = new kakao.maps.Marker({
+      position: new kakao.maps.LatLng(station.lat, station.lng),
+      map: map,
     });
-  }, [map, filteredStations]);
+    
+    const content = `
+  <div style="
+    padding: 16px; 
+    background: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+    border: 1px solid #e1e4e8; 
+    min-width: 280px; 
+    font-family: 'Noto Sans KR', sans-serif;
+  ">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+      <div style="max-width: 70%;">
+        <strong style="font-size: 17px; color: #1a1a1a; display: block; margin-bottom: 2px;">
+          ${station.stationName}
+        </strong>
+        <span style="font-size: 12px; color: #007bff; font-weight: 600;">
+          ${station.distance ? station.distance.toFixed(2) + 'km' : '거리 계산 중'}
+        </span>
+      </div>
+      <span style="
+        font-size: 11px; 
+        background: ${station.status === '사용가능' ? '#34c759' : '#8e8e93'}; 
+        color: #fff; 
+        padding: 4px 10px; 
+        border-radius: 20px; 
+        font-weight: bold;
+      ">
+        ${station.status || '정보없음'}
+      </span>
+    </div>
 
+    <div style="font-size: 13px; color: #444; line-height: 1.6;">
+      <p style="margin: 6px 0; display: flex; align-items: flex-start;">
+        <span style="margin-right: 8px;">📍</span> 
+        <span style="flex: 1;">${station.address}</span>
+      </p>
+      
+      <div style="margin-top: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;">
+        <p style="margin: 0; font-size: 12px; color: #555;">
+          <strong>⚡ 충전기:</strong> ${station.chargerName} (ID: ${station.chargerId})
+        </p>
+        <p style="margin: 6px 0; font-size: 12px; color: #555;">
+          <strong>🔌 타입/방식:</strong> ${station.chargerType} / ${station.chargerMethod || '기본'}
+        </p>
+        <p style="margin: 0; font-size: 12px; color: #666;">
+          <strong>🚀 충전량:</strong> ${station.fastChargeAmount || '정보없음'}
+        </p>
+      </div>
+
+      <p style="margin: 10px 0 0 0; font-size: 11px; color: #999; text-align: right;">
+        업데이트: ${station.statUpdateDatetime || '-'}
+      </p>
+    </div>
+
+    <button 
+      onclick="window.location.href='/detail/${station.stationId}'"
+      style="
+        width: 100%; 
+        margin-top: 14px; 
+        background: #0b0d1a; 
+        color: #fff; 
+        border: none; 
+        padding: 12px; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        font-weight: bold;
+        font-size: 14px;
+      "
+    >
+      상세 정보 보기
+    </button>
+  </div>
+`;
+    // 인포윈도우 객체 생성
+    const infowindow = new kakao.maps.InfoWindow({
+      content: content, // 수정된 콘텐츠 적용
+      removable: true,
+    });
+
+    // 마커 클릭 이벤트 등록
+    kakao.maps.event.addListener(marker, "click", () => {
+      infowindow.open(map, marker);
+    });
+
+    // 마커 관리용 배열에 추가
+    markersRef.current.push(marker); 
+  });
+}, [map, filteredStations]);
   // 5. 리스트 클릭 시 이동 함수
   const handleLocationClick = (lat: number, lng: number) => {
     const { kakao } = window as any;
@@ -265,7 +341,7 @@ const StationList = () => {
 
     <div style={{ display: "flex", gap: "5px" }}>
       <button onClick={handleMoveToRegion} style={{ ...gpsBtnStyle, flex: 2 }}>지역 이동</button>
-      <button onClick={handleMyLocation} style={{ ...gpsBtnStyle, flex: 1, backgroundColor: "#444" }}>🎯</button>
+      <button onClick={handleMyLocation} style={{ ...gpsBtnStyle, flex: 1, backgroundColor: "#444" }}>현재 위치로 이동</button>
     </div>
   </section>
 
@@ -338,7 +414,7 @@ const StationList = () => {
                 >
                   {SPEED_MAP[s.chargerType as keyof typeof SPEED_MAP] ||
                     s.chargerType}{" "}
-                  | {s.stat}
+                  | {s.status}
                 </div>
               </div>
             ))

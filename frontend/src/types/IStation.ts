@@ -14,7 +14,7 @@ export interface IStation {
     chargerMethod: string;
     chargerName: any;
     distance: any;
-    stat: string;
+    status: string;
     lat: number;
     lng: number;
     id: number;                    // id
