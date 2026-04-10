@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    background-color: #fff;
+    color: #333;
+}
+
+/* 전체 감싸는 영역 */
+.wrapper {
+    width: 100%;
+}
+
+/* 네비게이션 바 - 전체 너비 확장 */
+.top-nav-container {
+    width: 100%;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+}
+
+.top-nav {
+    display: flex;
+    list-style: none;
+    padding: 0 50px; /* 좌우 여백만 살짝 유지 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+.top-nav li {
+    padding: 20px 30px;
+    cursor: pointer;
+    color: #888;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.top-nav li.active {
+    color: #6a1b9a; /* 보라색 강조 */
+    border-bottom: 3px solid #6a1b9a;
+}
+
+/* 메인 컨텐츠 - 100% 확장 */
+.main-content {
+    width: 100%;
+    padding: 60px 50px; /* 좌우 여백 50px로 꽉 차게 설정 */
+}
+
+.page-header {
+    margin-bottom: 40px;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+/* 카드 섹션 - 전체 너비에 맞춰 균등 배분 */
+.info-cards {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.card {
+    flex: 1; /* 33.3%씩 균등 배분 */
+    padding: 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #fdfdfd;
+}
+
+.card .icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.card p {
+    font-size: 15px;
+    color: #666;
+}
+
+/* 컨트롤 영역 */
+.list-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.total {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #222;
+    padding-bottom: 5px;
+}
+
+.search-box input {
+    border: none;
+    font-size: 16px;
+    padding: 5px;
+    width: 300px;
+    outline: none;
+}
+
+.search-box button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* 리스트 영역 - 100% 확장 */
+.notice-list {
+    width: 100%;
+    list-style: none;
+    border-top: 2px solid #333;
+}
+
+.notice-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 15px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+.notice-list li:hover {
+    background-color: #f8f9fa;
+}
+
+.notice-list .title {
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.notice-list .date {
+    color: #aaa;
+    font-size: 14px;
+}
