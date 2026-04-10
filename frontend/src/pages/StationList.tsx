@@ -282,17 +282,7 @@ const StationList = () => {
     }
   };
 
-  const gpsBtnStyle = {
-    width: "100%",
-    padding: "10px",
-    backgroundColor: "#333",
-    color: "#fee500", // 노란색 포인트
-    border: "1px solid #444",
-    borderRadius: "5px",
-    fontWeight: "bold" as "bold",
-    cursor: "pointer",
-    fontSize: "13px",
-  };
+  
   return (
     <div
       className="station-container"
