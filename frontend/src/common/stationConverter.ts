@@ -27,15 +27,6 @@ export const methodMap: { [key: string]: string } = {
   "8": "DC차데모+DC콤보", "08": "DC차데모+DC콤보"
 };
 
-export const SPEED_MAP: { [key: string]: string } = {
-  "01": "급속",
-  "02": "완속",
-  "1": "급속",
-  "2": "완속",
-  Fast: "급속",
-  Slow: "완속",
-};
-
 // 주소의 첫 단어가 "서울"이면 "서울특별시"로, "경남"이면 "경상남도"로 통일합니다.
 export const normalizeSido = (addr: string) => {
   if (!addr) return "기타";

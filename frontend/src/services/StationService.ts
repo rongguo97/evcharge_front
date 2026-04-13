@@ -2,7 +2,7 @@
 // 목적: 전기차 충전소(IStation) 백엔드와 통신하는 함수들 작성
 
 import common from "../common/CommonService";
-import type { IStation } from "../types/IStation";
+
 
 /**
  * 1) 충전소 전체 조회
@@ -10,53 +10,42 @@ import type { IStation } from "../types/IStation";
  * @param page 현재 페이지
  * @param size 페이지당 개수
  */
-const getAll = (stationName: string, page: number, size: number) => {
-  // 2. 주소를 /station으로 통일 (기존 /map에서 변경)
-  return common.get("/station", { params: { stationName, page, size } });
+// StationService.ts
+const getAll = (params: {
+  searchKeyword?: string;
+  status?: string;
+  chargerType?: string;
+  chargerMethod?: string;
+  page: number;
+  size: number;
+}) => {
+  return common.get("/station", { params });
+};
+
+  // 충전소 상세 조회 (ID 기준)
+
+const get = (stationId: number ) => {
+  return common.get(`/station/${stationId}`,);
 };
 
 /**
- * 2) 충전소 추가 (Insert)
+ * 3) 내 위치 기반 주변 충전소 조회
+ * @param userLat 내 위도
+ * @param userLng 내 경도
+ * @param radius 반경 (km)
  */
-const insert = (data: IStation) => { // 3. 타입 수정
-  return common.post("/station", data);
+const getNearby = (userLat: number, userLng: number, radius: number = 5.0) => {
+  return common.get("/station/nearby", {
+    params: {
+      userLat,
+      userLng,
+      radius
+    }
+  });
+};
+const StationService = {getAll, get, getNearby
 };
 
-/**
- * 3) 충전소 상세 조회 (ID 기준)
- */
-const get = (id: number) => {
-  return common.get(`/station/${id}`);
-};
 
-/**
- * 4) 충전소 정보 수정 (Update)
- */
-const update = (id: number, data: IStation) => { // 3. 타입 수정
-  return common.put(`/station/${id}`, data);
-};
-
-/**
- * 5) 충전소 정보 삭제 (Delete)
- */
-const remove = (id: number) => {
-  return common.delete(`/station/${id}`);
-};
-
-/**
- * 6) 지역별 충전소 검색 (시도/군구 기반)
- */
-const getByRegion = (sido: string, gunggu: string) => {
-  return common.get("/station/region", { params: { sido, gunggu } });
-};
-
-const StationService = {
-  getAll,
-  insert,
-  get,
-  update,
-  remove,
-  getByRegion
-};
 
 export default StationService;

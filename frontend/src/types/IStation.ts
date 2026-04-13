@@ -10,13 +10,13 @@ export interface IRegionData {
 }
 
 export interface IStation {
-    statUpdateDatetime: string;
-    chargerMethod: string;
-    chargerName: any;
+    statUpdateDatetime: string;      
+    chargerMethod: string;         
+    chargerName: any;              //충전기이름
     distance: any;
-    status: string;
-    lat: number;
-    lng: number;
+     status: string;              // 현재상태
+    lat: number;                  //위도
+    lng: number;                  //경도
     id: number;                    // id
     stationId: string;           //충전소id
     chargerId: number;             //충전기id
@@ -24,13 +24,9 @@ export interface IStation {
     gunggu: string;              // 군구
     address: string             // 주소
     stationName: String;         // 충전소명
-    facilityL: String;           // 시설구분(대)
-    facilityS: String;           // 시설구분(소)
     modelL: String;              // 기종(대)
     modelS: String;              // 기종(소)
-    operatorL: String;           // 운영기관(대)
-    operatorS: String;           // 운영기관(소)
     fastChargeAmount: String;    // 급속충전량
     chargerType: number;         // 충전기타입
-    userRestriction: String;     // 이용자제한
+
 }
