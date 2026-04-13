@@ -83,13 +83,13 @@ const fetchNearbyStations = () => {
     (err) => {
   console.error("위치 획득 실패:", err);
   
-  if (err.code === 1) { // PERMISSION_DENIED
-    alert("위치 정보 권한이 차단되었습니다. 권한을 허용해주세요!");
-  } else if (err.code === 2) { // POSITION_UNAVAILABLE
-    alert("현재 위치를 파악할 수 없습니다. 잠시 후 다시 시도해주세요.");
-  } else if (err.code === 3) { // TIMEOUT
-    alert("위치 정보를 가져오는 시간이 초과되었습니다.");
-  }
+  // if (err.code === 1) { // PERMISSION_DENIED
+  //   alert("위치 정보 권한이 차단되었습니다. 권한을 허용해주세요!");
+  // } else if (err.code === 2) { // POSITION_UNAVAILABLE
+  //   alert("현재 위치를 파악할 수 없습니다. 잠시 후 다시 시도해주세요.");
+  // } else if (err.code === 3) { // TIMEOUT
+  //   alert("위치 정보를 가져오는 시간이 초과되었습니다.");
+  // }
 }
   );
 };
@@ -224,8 +224,8 @@ const filteredGroups = getGroupedStations();
 
   /* --- [8] UI 렌더링 --- */
   return (
-    <div ref={wholeContainerRef} className="station-container" style={{ display: "flex", width: "100%", height: "850px", padding: "20px", boxSizing: "border-box", background: "#f1f3f5" }}>
-      <aside style={{ width: "400px", display: "flex", flexDirection: "column", marginRight: "20px", gap: "15px", zIndex: 10 }}>
+    <div ref={wholeContainerRef} className="station-container" style={{ display: "flex", width: "100vh", height: "850px",  boxSizing: "border-box", background: "#f1f3f5" }}>
+      <aside style={{ width: "450px",height: "100%", display: "flex", flexDirection: "column", marginRight: "20px", gap: "15px", zIndex: 10 }}>
         
         {/* 검색 섹션 */}
         <section style={sideBoxStyle}>
@@ -316,7 +316,7 @@ const filteredGroups = getGroupedStations();
                         window.open(`https://map.kakao.com/link/to/${encodeURIComponent(group.stationName)},${group.lat},${group.lng}`, "_blank");
                       });
                     }
-                  }}>🚩 길찾기</button>
+                  }}> 길찾기</button>
                 </div>
               </div>
             ))}
