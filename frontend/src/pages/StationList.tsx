@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import StationService from "../services/StationService";
 import type { IStation } from "../types/IStation";
-import { regionData } from "../services/RegionService";
 import {
   getStatusLabel,
   getTypeLabel,
@@ -102,23 +101,6 @@ const StationList = () => {
     if (map) fetchStations();
   }, [map]);
 
-  // 두 좌표 사이의 거리를 계산하는 함수 (단위: m)
-  const getDistance = (
-    lat1: number,
-    lng1: number,
-    lat2: number,
-    lng2: number,
-  ) => {
-    const { kakao } = window as any;
-    const p1 = new kakao.maps.LatLng(lat1, lng1);
-    const p2 = new kakao.maps.LatLng(lat2, lng2);
-
-    const polyline = new (window as any).kakao.maps.Polyline({
-      path: [p1, p2],
-    });
-
-    return polyline.getLength(); // 두 지점 사이의 직선 거리를 m 단위로 리턴
-  };
   // 3. 통합 필터링 로직 (검색 + 속도 + 상태 + 중복제거)
   const filteredStations = stations
     .filter((s) => {
