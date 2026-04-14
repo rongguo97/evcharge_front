@@ -219,7 +219,7 @@ ul { list-style: none; }
               transition: var(--transition); }
 
 .content-grid { display: grid; grid-template-columns: 1fr 450px; gap: 30px; height: 700px; padding: 30px; }
-#map { height:594px; var(--navy-mid); border-radius: 20px; border: 1px solid var(--white-10); z-index: 1; }
+#map { height:594px; var(--navy-mid); border-radius: 10px; border: 1px solid var(--white-10); z-index: 1; }
 .quick-menu { display: flex; flex-direction: column; gap: 20px; }
 .menu-card { border-radius: 15px; position: relative; overflow: hidden; cursor: pointer; transition: var(--transition); background: var(--navy-mid); border: 1px solid var(--white-10); min-height: 100px; }
 .menu-card:hover { transform: translateY(-5px); border-color: var(--purple-glow); box-shadow: 0 10px 20px rgba(107, 91, 226, 0.2); }
@@ -239,7 +239,187 @@ ul { list-style: none; }
 
 
 
+/* 3번째 section 시작부분 */
 
+
+/* 배경 섹션 */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  /* 배경 이미지는 작업 중인 파일 경로에 맞춰 변경하세요 */
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("./다운로드\ \(1\).png") no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+}
+
+body {
+  background-image: url(); /* 이미지 파일 경로 */
+  background-repeat: no-repeat; /* 이미지 반복 안함 */
+  background-size: cover; /* 화면을 꽉 채우도록 크기 조절 */
+  background-position: center; /* 이미지를 중앙에 배치 */
+  background-attachment: fixed; /* 스크롤해도 배경 고정 (선택사항) */
+}
+
+/* 왼쪽 반투명 사이드바 (Glassmorphism) */
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15); /* 흰색 투명도 */
+  backdrop-filter: blur(15px); /* 배경 흐림 효과 */
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  padding: 40px 0; /* 이미지의 넓은 간격 반영 */
+  text-align: center;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: 0.3s;
+  opacity: 0.9;
+}
+
+.sidebar ul li a:hover {
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* 사이드바 메뉴 기본 스타일 */
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  opacity: 0.8;
+
+  /* [핵심] 부드러운 변화를 위해 꼭 필요합니다 (0.3초 동안 변화) */
+  transition: all 0.3s ease;
+
+  /* 글자가 커질 때 주변 요소에 영향을 주지 않도록 설정 */
+  display: inline-block;
+}
+
+/* 마우스를 올렸을 때(Hover) 효과 */
+.sidebar ul li a:hover {
+  opacity: 1; /* 투명도 100% */
+  color: #ffffff; /* 글자색 유지 혹은 강조색 */
+
+  /* [핵심] 글자 크기를 1.2배로 키우는 속성 */
+  transform: scale(1.2);
+
+  /* 선택사항: 글자가 커지면서 살짝 빛나는 효과를 주면 더 예뻐요 */
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* 중앙 메인 텍스트 */
+.main-content {
+  flex-grow: 1;
+  text-align: center;
+  padding-right: 250px; /* 사이드바 두께만큼 오른쪽 여백을 주어 정중앙 배치 */
+}
+
+.main-content h1 {
+  color: #ffffff;
+  font-size: 5rem;
+  font-weight: 300;
+  letter-spacing: -1px;
+}
+
+/* 자동차 로고  */
+
+.footer {
+  background-color: white;
+  padding: 40px 20px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  flex: 1;
+  min-width: 220px;
+  text-align: center;
+}
+
+.footer-logo img {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+}
+
+.footer-info {
+  flex: 1.5;
+  min-width: 300px;
+  color: #1d2350;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.footer-info p {
+  margin: 4px 0;
+}
+
+.footer-contact {
+  flex: 1;
+  min-width: 220px;
+  color: #1d2350;
+  text-align: left;
+}
+
+.footer-contact p {
+  margin: 10px 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.footer-contact h3 {
+  margin: 0 0 18px;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* 반응형 */
+@media (max-width: 900px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .footer-logo {
+    text-align: left;
+  }
+
+  .footer-contact h3 {
+    font-size: 32px;
+  }
+}
+
+
+/* 3번째 section끝나는 부분 */
 
 
 
