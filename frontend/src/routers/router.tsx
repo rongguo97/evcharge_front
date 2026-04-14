@@ -5,6 +5,7 @@ import Cash from "../pages/Cash";
 import Wallet from "../pages/Wallet";
 import MyPage from "../pages/MyPage";
 import App from "../pages/App";
+import Admin from "../pages/AdminPage";
 
 // (이론)성능 증가 팁 코딩: 코드 스플리팅(Route Code Splitting) 기능(페이지 뜨는 속도가 빨라짐)
 // 보충설명: 1) 기본: 화면이 뜨면 리액트의 모든 페이지를(부서,사원) 가져옵니다.
@@ -27,8 +28,12 @@ const router = createBrowserRouter([
       { path: "/wallet", element: <Wallet /> },
       // 마이페이지
       { path: "/mypage", element: <MyPage /> },
+      // 관리자 페이지
+      { path: "/admin", element: <Admin /> },
       // 앱 소개 페이지
       { path: "/app", element: <App /> },
+
+
       
 
     ],

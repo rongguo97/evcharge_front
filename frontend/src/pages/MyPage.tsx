@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // 1. Link 컴포넌트 추가
 import '../css/mypage.css';
-import '../css/mypageP.css' 
+import '../css/mypageP.css';
 
 // 2. 인터페이스 정의 (파일 상단에 추가해야 에러가 안 납니다)
 interface HistoryItem {
