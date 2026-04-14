@@ -58,27 +58,29 @@ ul { list-style: none; }
   font-weight: 800;
   font-size: 24px;
   letter-spacing: 0.12em;
-  color: var(--white);
+  color:#e2dcff;
   text-transform: uppercase;
 }
 
 .nav-links {
   display: flex;
   height: 100%;
-  align-items: center;
+  align-items: center; 
+  gap: 0px;
 }
 
 .nav-item-wrapper {
   height: 100%;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .nav-item {
-  padding: 0 25px;
-  font-size: 16px;
+  padding: 0 90px;
+  font-size: 20px;
   font-weight: 500;
-  color: var(--white-60);
+  color:#e2dcff;
   transition: var(--transition);
   height: 100%;
   display: flex;
@@ -88,7 +90,7 @@ ul { list-style: none; }
 }
 
 .nav-item:hover, .nav-item.active {
-  color: var(--white);
+  color:#4f0fb8;
 }
 
 .nav-item::after {
@@ -108,6 +110,13 @@ ul { list-style: none; }
   width: calc(100% - 30px);
 }
 
+.submenu{ 
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+}
+
 /* ===========================
   전체 펼침형 메가 메뉴 (Mega Menu Panel)
    =========================== */
@@ -117,6 +126,7 @@ ul { list-style: none; }
   left: 0;
   width: 100%;
 
+
     /* ✅ 변경 */
   background: rgba(17, 22, 48, 0.3);   /* 반투명 */
   backdrop-filter: blur(20px);        /* 유리 효과 */
@@ -124,10 +134,6 @@ ul { list-style: none; }
   border-bottom: 1px solid var(--white-10);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 
-
-  border-bottom: 1px solid var(--white-10);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-  
   /* 가시성 보장 설정 */
   max-height: 0;
   opacity: 0;
@@ -147,7 +153,7 @@ ul { list-style: none; }
 .mega-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 48px;
+  padding: 40px 230px;
   min-height: 250px;
 }
 
@@ -171,14 +177,30 @@ ul { list-style: none; }
 
 .mega-column { min-width: 150px; }
 .mega-column h3 {
-  font-size: 17px; font-weight: 700; margin-bottom: 20px;
+  font-size: 17px; font-weight: 700; margin-bottom: 10px;
   color: var(--white); position: relative; padding-bottom: 10px;
+  
 }
+
+#menu-2 { font-size: 17px; font-weight: 700; margin-bottom: 10px;
+  color: var(--white); position: relative; padding-bottom: 10px;
+  justify-content: center;}
+
+#menu-3{font-size: 17px; font-weight: 700; margin-bottom: 10px;
+  color: var(--white); position: relative; padding-bottom: 10px;
+  margin-left:540px; }  
+
+#menu-4{font-size: 17px; font-weight: 700; margin-bottom: 10px;
+  color: var(--white); position: relative; padding-bottom: 10px;
+  margin-left: 792px; }  
+
+
 .mega-column h3::after {
   content: ''; position: absolute; bottom: 0; left: 0;
-  width: 25px; height: 2px; background: var(--purple-glow);
+  width: 20px; height: 2px; background: var(--purple-glow);
 }
-.mega-column ul li { margin-bottom: 12px; }
+
+.mega-column ul li { margin-bottom: 12px;  }
 .mega-column ul li a {
   font-size: 15px; color: var(--white-60); transition: var(--transition);
   display: block;
@@ -189,11 +211,12 @@ ul { list-style: none; }
   기타 UI 요소
    =========================== */
 .nav-right { display: flex; align-items: center; z-index: 3001; }
-.nav-mypage {
+.nav-log {
   width: 40px; height: 40px; background: var(--white-10); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
   cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
+  color: #e2dcff;
 }
 
 .hero {
@@ -205,9 +228,10 @@ ul { list-style: none; }
 .bg-video{ width: 100%; height: 100%; object-fit: cover;}
 
 
-.hero-content { position: relative; z-index: 2; padding-left: 6%; }
-.hero-title { font-size: clamp(32px, 5vw, 60px); font-weight: 700; line-height: 1.1; margin-bottom: 15px; }
-.hero-sub { font-family: "Montserrat", sans-serif; font-size: clamp(16px, 2vw, 22px); color: var(--white-60); }
+.hero-content { position: relative; z-index: 2; padding-left: 22%; }
+.hero-title { font-size: clamp(32px, 5vw, 100px); font-weight: 700; line-height: 1.1; margin-bottom: 15px;
+              letter-spacing: 1px; }
+.hero-sub { font-family: "Montserrat", sans-serif; font-size: clamp(15px, 2.5vw, 90px); color: var(--white-60); }
 
 .container { max-width: 1400px; margin: 90px auto 100px; position: relative; z-index: 10; padding: 0 20px; }
 .search { display: flex; gap: 10px; background: var(--white); 
@@ -219,7 +243,7 @@ ul { list-style: none; }
               transition: var(--transition); }
 
 .content-grid { display: grid; grid-template-columns: 1fr 450px; gap: 30px; height: 700px; padding: 30px; }
-#map { height:594px; var(--navy-mid); border-radius: 10px; border: 1px solid var(--white-10); z-index: 1; }
+#map { height:594px; var:(--navy-mid); border-radius: 10px; border: 1px solid var(--white-10); z-index: 1; }
 .quick-menu { display: flex; flex-direction: column; gap: 20px; }
 .menu-card { border-radius: 15px; position: relative; overflow: hidden; cursor: pointer; transition: var(--transition); background: var(--navy-mid); border: 1px solid var(--white-10); min-height: 100px; }
 .menu-card:hover { transform: translateY(-5px); border-color: var(--purple-glow); box-shadow: 0 10px 20px rgba(107, 91, 226, 0.2); }
@@ -250,7 +274,7 @@ ul { list-style: none; }
   /* 배경 이미지는 작업 중인 파일 경로에 맞춰 변경하세요 */
   background:
     linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url("./다운로드\ \(1\).png") no-repeat center center/cover;
+    url("./3번째\ section.png") no-repeat center center/cover;
   display: flex;
   align-items: center;
 }
@@ -334,8 +358,8 @@ body {
 }
 
 .main-content h1 {
-  color: #ffffff;
-  font-size: 5rem;
+  color: #e8e4fc;
+  font-size: 6.5rem;
   font-weight: 300;
   letter-spacing: -1px;
 }
@@ -343,7 +367,7 @@ body {
 /* 자동차 로고  */
 
 .footer {
-  background-color: white;
+  background-color: #f8f7fd;
   padding: 40px 20px;
 }
 
