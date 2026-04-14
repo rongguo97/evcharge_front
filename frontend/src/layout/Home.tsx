@@ -23,15 +23,11 @@ const Home = () => {
           <p className="hero-sub">Save time, Reserve your charge</p>
         </div>
       </section>
-
       {/* 2. 하단: 지도 섹션 (지역 이동 기능은 StationList 내부에 포함됨) */}
-      <section className="map-section" style={{ padding: "50px 20px", backgroundColor: "#f8f9fa" }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <section className="map-section" style={{ width: "100%",height: "90vh", backgroundColor: "#f8f9fa",padding: "0" }}>
           <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>내 주변 충전소 찾기</h2>
-          
           {/* 💡 모든 기능(지역 선택, 이동, 마커)이 들어있는 컴포넌트 하나만 띄웁니다. */}
           <StationList />
-        </div>
       </section>
     </div>
   );
