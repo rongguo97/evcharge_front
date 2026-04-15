@@ -12,7 +12,7 @@ const Header = () => {
       <nav className="nav-links">
         {/* 일반 a 태그 대신 리액트 라우터의 Link를 사용하면 새로고침 없이 이동합니다 */}
         <Link to="/" className="nav-item active">CHARCAGE</Link>
-        <Link to="/find" className="nav-item">충전소찾기</Link>
+        <Link to="/reservation" className="nav-item">충전소예약</Link>
         <Link to="/membership" className="nav-item">멤버십</Link>
         <Link to="/support" className="nav-item">고객지원</Link>
       </nav>
