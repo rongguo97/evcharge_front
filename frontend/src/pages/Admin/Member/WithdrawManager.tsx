@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 
 const WithdrawManager: React.FC = () => {
-  const [deletedMembers, setDeletedMembers] = useState<any[]>([]);
 
   // 복구 함수
   const handleRestore = async (id: number, userId: string) => {

@@ -1,5 +1,6 @@
 // src/types/IMember.ts
 export interface IMemberExtended {
+  wallet: any;
   id: number;
   userId: string;
   userName: string;
