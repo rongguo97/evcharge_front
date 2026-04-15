@@ -35,7 +35,6 @@ const AdminPage: React.FC = () => {
       
       /* 2. 서비스 운영 */
       case "monitor": return <Monitor />;
-      case "error-res": return <div className="p-4">비정상 예약 처리 화면</div>;
 
       /* 3. 매출 및 결제 */
       case "audit": return <div className="p-4">결제 내역 감사 화면</div>;
@@ -45,8 +44,7 @@ const AdminPage: React.FC = () => {
       case "charts": return <div className="p-4">시각화 차트 화면</div>;
       case "analysis": return <div className="p-4">운영 지표 분석 화면</div>;
 
-      /* 5. 커뮤니티 및 보안 */
-      case "notice": return <div className="p-4">공지사항 및 게시글 관리 화면</div>;
+      /* 5. 로그 */
       case "log": return <div className="p-4">관리자 활동 로그 화면</div>;
 
       default: return <div className="p-4">메뉴를 선택해주세요.</div>;
@@ -62,7 +60,7 @@ const AdminPage: React.FC = () => {
           <ul>
             {/* 1. 회원 관리 */}
             <li className={`has-sub ${openMenus.member ? 'open' : ''}`}>
-              <div className="menu-title" onClick={() => toggleMenu('member')}>👥 회원 및 권한 관리</div>
+              <div className="menu-title" onClick={() => toggleMenu('member')}>회원 및 권한 관리</div>
               {openMenus.member && (
                 <ul className="sub-menu-list">
                   <li onClick={() => setActiveMenu("member-list")}>회원 목록 조회/수정</li>
@@ -74,18 +72,17 @@ const AdminPage: React.FC = () => {
 
             {/* 2. 서비스 운영 */}
             <li className={`has-sub ${openMenus.operation ? 'open' : ''}`}>
-              <div className="menu-title" onClick={() => toggleMenu('operation')}>🔌 서비스 운영 관리</div>
+              <div className="menu-title" onClick={() => toggleMenu('operation')}>서비스 운영 관리</div>
               {openMenus.operation && (
                 <ul className="sub-menu-list">
                   <li onClick={() => setActiveMenu("monitor")}>실시간 예약 모니터링</li>
-                  <li onClick={() => setActiveMenu("error-res")}>비정상 예약 처리</li>
                 </ul>
               )}
             </li>
 
             {/* 3. 매출 관리 */}
             <li className={`has-sub ${openMenus.payment ? 'open' : ''}`}>
-              <div className="menu-title" onClick={() => toggleMenu('payment')}>💰 매출 및 결제 관리</div>
+              <div className="menu-title" onClick={() => toggleMenu('payment')}>매출 및 결제 관리</div>
               {openMenus.payment && (
                 <ul className="sub-menu-list">
                   <li onClick={() => setActiveMenu("audit")}>결제 내역 감사</li>
@@ -96,7 +93,7 @@ const AdminPage: React.FC = () => {
 
             {/* ... 4, 5번 메뉴도 동일한 방식으로 추가 ... */}
             <li className={`has-sub ${openMenus.stats ? 'open' : ''}`}>
-              <div className="menu-title" onClick={() => toggleMenu('stats')}>📊 대시보드 및 통계</div>
+              <div className="menu-title" onClick={() => toggleMenu('stats')}>대시보드 및 통계</div>
               {openMenus.stats && (
                 <ul className="sub-menu-list">
                   <li onClick={() => setActiveMenu("charts")}>시각화 차트</li>
@@ -106,10 +103,9 @@ const AdminPage: React.FC = () => {
             </li>
 
             <li className={`has-sub ${openMenus.security ? 'open' : ''}`}>
-              <div className="menu-title" onClick={() => toggleMenu('security')}>🔒 커뮤니티 및 보안 관리</div>
+              <div className="menu-title" onClick={() => toggleMenu('security')}>로그</div>
               {openMenus.security && (
                 <ul className="sub-menu-list">
-                  <li onClick={() => setActiveMenu("notice")}>공지사항 및 게시글 관리</li>
                   <li onClick={() => setActiveMenu("log")}>관리자 활동 로그</li>
                 </ul>
               )}
