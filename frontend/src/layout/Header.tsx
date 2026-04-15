@@ -16,14 +16,14 @@ const Header = () => {
   return (
     <header className="header-container">
       {/* 로고 텍스트 */}
-      <div className="nav-logo">CHARCAGE</div>
+      <div className="nav-logo">CHARCARGE</div>
 
       {/* 내비게이션 메뉴 */}
       <nav className="nav-links">
         <li>
           <ul className="Logo">
             <Link to="/" className="nav-item active">
-              CHARCAGE
+              CHARCARGE
             </Link>
           </ul>
         </li>
