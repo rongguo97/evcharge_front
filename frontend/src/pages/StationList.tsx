@@ -428,7 +428,7 @@ const StationList = () => {
         <section style={{ display: "flex", flexDirection: "column", gap: "25px" }}>
           {[ { title: "실시간 정보", desc: "충전소의 실시간 운영 상태와 사용 가능 여부를 확인할 수 있습니다.", icon: LiveInformationIcon }, { title: "간편 예약", desc: "원하는 시간과 장소를 선택하여 쉽게 예약할 수 있습니다.", icon: Simple_ReservationIcon }, { title: "예약 관리", desc: "예약 내역 및 결제 내역을 편리하게 관리할 수 있습니다.", icon: ReservationIcon } ].map((menu, idx) => (
             <div key={idx} style={{ display: "flex", alignItems: "center", padding: "24px", background: "linear-gradient(135deg, #FAF8FF 0%, #B4A0D9 100%)", borderRadius: "28px", boxShadow: "0 8px 20px rgba(122, 93, 232, 0.05)", cursor: "pointer", transition: "all 0.2s ease", border: "1px solid rgba(0,0,0,0.03)" }}>
-              <div style={{ width: "70px", height: "70px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", marginRight: "20px", flexShrink: 0, overflow: "hidden" }}><img src={menu.icon} alt={menu.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /></div>
+              <div style={{ width: "70px", height: "80px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", marginRight: "20px", flexShrink: 0, overflow: "hidden" }}><img src={menu.icon} alt={menu.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /></div>
               <div style={{ flex: 1 }}>
                 <h4 style={{ margin: "0 0 5px 0", fontSize: "17px", fontWeight: "900", color: "#333" }}>{menu.title}</h4>
                 <p style={{ margin: 0, fontSize: "12.5px", color: "#888", lineHeight: "1.4", fontWeight: "500" }}>{menu.desc}</p>
