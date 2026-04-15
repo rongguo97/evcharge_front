@@ -6,6 +6,7 @@ import MemberList from '../pages/Admin/Member/MemberList';
 import WalletManager from '../pages/Admin/Member/WalletManager';
 import WithdrawManager from '../pages/Admin/Member/WithdrawManager';
 import Monitor from '../pages/Admin/Service/ReservationMonitor';
+import Log from '../pages/Admin/Community/ActivityLog';
 // ... 나머지 컴포넌트들도 같은 방식으로 import
 
 const AdminPage: React.FC = () => {
@@ -45,7 +46,7 @@ const AdminPage: React.FC = () => {
       case "analysis": return <div className="p-4">운영 지표 분석 화면</div>;
 
       /* 5. 로그 */
-      case "log": return <div className="p-4">관리자 활동 로그 화면</div>;
+      case "log": return <Log />;
 
       default: return <div className="p-4">메뉴를 선택해주세요.</div>;
     }
