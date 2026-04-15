@@ -52,6 +52,18 @@
     background: transparent;
   }
 
+  .header-container {
+    display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  padding: 0 20px;
+  height: 80px; /* 헤더 높이를 충분히 확보 */
+  background-color: #000;
+  position: relative;
+  z-index: 101;
+  list-style: none;
+  }
+
+
   .nav-logo {
     font-family: "Montserrat", sans-serif;
     font-weight: 800;
@@ -79,6 +91,7 @@
     position: relative;
   }
 
+  
   .nav-item.active {
     color: var(--white);
     font-weight: 500;
@@ -99,22 +112,53 @@
     color: var(--white);
   }
 
+    /* 하위 메뉴 초기 상태: 숨김 */
+.sub-menu {
+  display: none; 
+  position: absolute;
+  top: 80%; /* 상위 메뉴 바로 아래 나타나도록 */
+  background-color: #1a1c23;
+  list-style: none;
+  padding: 15px;
+  min-width: 150px;
+  border-radius: 4px;
+  z-index: 102;
+}
+
+.sub-menu li {
+  padding: 8px 0;
+  white-space: nowrap; /* 글자 줄바꿈 방지 */
+  text-align: center;
+  color: #ccc;
+}
+
+.sub-menu li:hover {
+  color: white; /* 마우스 올렸을 때 강조 */
+}
+
+/* ⭐ 마우스를 올렸을 때 나타나는 핵심 로직 */
+/* 이제 모든 메뉴가 li 구조이므로 이 한 줄로 모든 드롭다운이 작동합니다 */
+.nav-links > li:hover .sub-menu {
+  display: block;
+}
+
+
   .nav-mypage {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.15);
+    width: 50px;
+    height: 50px;
     border-radius: 6px;
     font-family: "Montserrat", sans-serif;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.05em;
     line-height: 1.1;
     color: var(--white);
     backdrop-filter: blur(4px);
+    margin-left: auto;
   }
 
   /* ===========================
