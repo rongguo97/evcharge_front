@@ -1,11 +1,12 @@
 import '../css/main.css'
+import logo from '../image/logo.png'
 
 const Footer = () => {
    return (
 <footer className="white-footer">
   <div className="container footer-flex">
     <div className="footer-logo">
-      <img src="../../image/logo.png" alt="CHARCAGE" />
+      <img src={logo} alt="CHARCAGE" />
     </div>
     <div className="footer-info">
       <p>회사이름 : 차카지 </p>

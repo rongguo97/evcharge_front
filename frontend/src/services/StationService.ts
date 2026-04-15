@@ -11,7 +11,7 @@ import common from "../common/CommonService";
  * @param size 페이지당 개수
  */
 // StationService.ts
-const getAll = (params: {
+const getAll = ( params: {
   searchKeyword?: string;
   status?: string;
   chargerType?: string;
