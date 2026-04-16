@@ -29,7 +29,7 @@ const Header = () => {
         </li>
         {/* 일반 a 태그 대신 리액트 라우터의 Link를 사용하면 새로고침 없이 이동합니다 */}
         <li>
-          <Link to="/reverlation" className="nav-item">
+          <Link to="/reservation" className="nav-item">
             충전소예약
           </Link>
           <ul className="sub-menu">
