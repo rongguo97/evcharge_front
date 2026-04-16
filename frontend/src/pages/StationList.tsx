@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import StationService from "../services/StationService";
 import type { IStation } from "../types/IStation";
 import {
@@ -18,6 +19,8 @@ import Simple_ReservationIcon from "../image/simple_reservation.png";
 import { statusColorMap } from "../common/statusColorMap";
 
 const StationList = () => {
+  // 네비게이트 함수 초기화
+  const navigate = useNavigate();
     // 상태 관리 (State) 
   const [map, setMap] = useState<any>(null); // 카카오 맵 객체
   const [stations, setStations] = useState<IStation[]>([]); // 서버에서 가져온 원본 충전소 데이터
@@ -334,7 +337,7 @@ const StationList = () => {
         <div style={{ fontSize: "12px", color: "#777", marginTop: "6px", lineHeight: "1.4", paddingRight: "30px" }}>{group.address}</div>
         <div style={{ fontSize: "12px", color: "#7a5de8", fontWeight: "bold", marginTop: "10px", display: "flex", alignItems: "center", gap: "4px" }}><i className="fa-solid fa-plug" style={{ fontSize: "10px" }}></i>총 충전기: {group.chargers.length}대</div>
         <div style={{ display: "flex", gap: "8px", marginTop: "15px" }}>
-          <button style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "none", background: "#B452B5", color: "#fff", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}>예약하기</button>
+          <button onClick={(e) => { e.stopPropagation(); navigate("/reservation", { state: { preSelectedStation: group } }); }} style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "none", background: "#B452B5", color: "#fff", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}> 예약하기</button>
           <button onClick={(e) => { e.stopPropagation(); window.open(`https://map.kakao.com/link/to/${encodeURIComponent(group.stationName)},${group.lat},${group.lng}`, "_blank"); }} style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "1px solid #ddd", background: "#fff", color: "#555", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}>길찾기</button>
         </div>
       </div>
@@ -427,7 +430,17 @@ const StationList = () => {
         {/* 퀵 메뉴 섹션 */}
         <section style={{ display: "flex", flexDirection: "column", gap: "25px" }}>
           {[ { title: "실시간 정보", desc: "충전소의 실시간 운영 상태와 사용 가능 여부를 확인할 수 있습니다.", icon: LiveInformationIcon }, { title: "간편 예약", desc: "원하는 시간과 장소를 선택하여 쉽게 예약할 수 있습니다.", icon: Simple_ReservationIcon }, { title: "예약 관리", desc: "예약 내역 및 결제 내역을 편리하게 관리할 수 있습니다.", icon: ReservationIcon } ].map((menu, idx) => (
-            <div key={idx} style={{ display: "flex", alignItems: "center", padding: "24px", background: "linear-gradient(135deg, #FAF8FF 0%, #B4A0D9 100%)", borderRadius: "28px", boxShadow: "0 8px 20px rgba(122, 93, 232, 0.05)", cursor: "pointer", transition: "all 0.2s ease", border: "1px solid rgba(0,0,0,0.03)" }}>
+            <div key={idx} 
+              // 📍 [수정] 모든 퀵 메뉴에 개별 라우팅 처리 추가
+              onClick={() => {
+                if (menu.title === "실시간 정보") {
+                  navigate("/"); // 실시간 정보 홈 경로
+                } else if (menu.title === "간편 예약") {
+                  navigate("/reservation"); // 간편 예약 경로
+                } else if (menu.title === "예약 관리") {
+                  navigate("/my-reservations"); // 예약 관리 경로 (임의 주소)
+                }
+              }} style={{ display: "flex", alignItems: "center", padding: "24px", background: "linear-gradient(135deg, #FAF8FF 0%, #B4A0D9 100%)", borderRadius: "28px", boxShadow: "0 8px 20px rgba(122, 93, 232, 0.05)", cursor: "pointer", transition: "all 0.2s ease", border: "1px solid rgba(0,0,0,0.03)" }}>
               <div style={{ width: "70px", height: "80px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", marginRight: "20px", flexShrink: 0, overflow: "hidden" }}><img src={menu.icon} alt={menu.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /></div>
               <div style={{ flex: 1 }}>
                 <h4 style={{ margin: "0 0 5px 0", fontSize: "17px", fontWeight: "900", color: "#333" }}>{menu.title}</h4>

@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+// 📍 [수정] useEffect와 useLocation(라우터 상태 받기용) 추가 임포트
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import StationService from "../services/StationService";
 import type { IStation } from "../types/IStation";
+import {
+  getStatusLabel,
+  getTypeLabel,
+  getMethodLabel,
+} from "../common/stationConverter";
 
 function ReservationPage() {
+  // 📍 [추가] 전달받은 라우터 상태 접근
+  const location = useLocation();
+
   // --- [1] 상태 관리 ---
   const [keyword, setKeyword] = useState(""); 
   const [results, setResults] = useState<any[]>([]); 
@@ -13,14 +23,24 @@ function ReservationPage() {
   const [selectedCharger, setSelectedCharger] = useState<any>(null); 
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  // 📍 추가: 팝업창(모달) 열림/닫힘 상태
+  // 📍 팝업창(모달) 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalStep, setModalStep] = useState(1); // 📍 1: 정보 확인, 2: 결제(적립금) 확인, 3: 예약 완료
   
   // 페이징
-  const [currentPage, setCurrentPage] = useState(1); // 📍 현재 페이지 번호
-  const ITEMS_PER_PAGE = 10; // 📍 한 페이지당 보여줄 개수
+  const [currentPage, setCurrentPage] = useState(1); 
+  const ITEMS_PER_PAGE = 10; 
 
-  // --- [2] 검색 핸들러 (그룹화 로직) ---
+  // 📍 [추가] StationList 화면에서 "예약하기"를 눌러 데이터가 넘어왔다면, 초기 화면에 충전소를 세팅
+  useEffect(() => {
+    if (location.state?.preSelectedStation) {
+      const station = location.state.preSelectedStation;
+      setSelectedStation(station);
+      setChargers(station.chargers || []);
+    }
+  }, [location.state]);
+
+  // --- [2] 검색 핸들러 ---
   const handleSearch = async () => {
     if (!keyword.trim()) return;
     const searchParams = { searchKeyword: keyword, status: "", chargerType: "", chargerMethod: "", page: 0, size: 10000 };
@@ -56,17 +76,45 @@ function ReservationPage() {
     setSelectedTime(null); 
   };
 
-  // --- [4] 시간 슬롯 생성 (00:00 ~ 23:00) ---
-  const timeSlots = Array.from({ length: 24 }, (_, i) => {
-    const hour = i < 10 ? `0${i}` : `${i}`;
-    return `${hour}:00`;
-  });
+  // --- [4] 시간 슬롯 생성 (동적 로직) ---
+  const generateTimeSlots = (charger: any) => {
+    if (!charger) return [];
 
-  // 📍 추가: 최종 예약 확정 핸들러
+    const typeLabel = getTypeLabel(charger.chargerType);
+    const methodLabel = getMethodLabel(charger.chargerMethod);
+    let duration = 60; // 기본값 완속 60분
+
+    if (typeLabel.includes("급속") || methodLabel.includes("100kW")) {
+      duration = 40;
+    } else if (methodLabel.includes("50kW")) {
+      duration = 70;
+    }
+
+    const buffer = 10; 
+    const totalMinutes = 24 * 60;
+    const slots = [];
+    let currentMin = 0;
+
+    while (currentMin + duration <= totalMinutes) {
+      const startH = String(Math.floor(currentMin / 60)).padStart(2, "0");
+      const startM = String(currentMin % 60).padStart(2, "0");
+      
+      const endMinTotal = currentMin + duration;
+      let endH = String(Math.floor(endMinTotal / 60)).padStart(2, "0");
+      const endM = String(endMinTotal % 60).padStart(2, "0");
+      
+      if (endMinTotal === 1440) endH = "24"; 
+
+      slots.push(`${startH}:${startM} - ${endH}:${endM}`);
+      currentMin = endMinTotal + buffer;
+    }
+    return slots;
+  };
+
+  // 📍 [수정됨] 최종 예약 확정 핸들러 (모달 Step 2에서 호출됨)
   const handleConfirmReservation = () => {
     // 여기에 실제 백엔드로 예약 정보를 보내는 로직을 추가하시면 됩니다.
-    alert("예약이 완료되었습니다!");
-    setIsModalOpen(false); // 팝업 닫기
+    setModalStep(3); // 완료 알람 대신 모달 3단계(완료 화면)로 이동
   };
 
   // --- [렌더링 전 페이징 데이터 계산 로직] ---
@@ -76,12 +124,16 @@ function ReservationPage() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  // 📍 수정: 10개씩 페이징 블록 자르기 로직
   const PAGES_PER_BLOCK = 10;
   const currentBlock = Math.ceil(currentPage / PAGES_PER_BLOCK);
   const startPage = (currentBlock - 1) * PAGES_PER_BLOCK + 1;
   const endPage = Math.min(startPage + PAGES_PER_BLOCK - 1, totalPages);
   const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+
+  // 📍 결제용 임시 데이터 (나중에 실제 데이터와 연동하세요)
+  const MOCK_RESERVATION_FEE = 2000;
+  const MOCK_CURRENT_POINTS = 5000;
+  const remainPoints = MOCK_CURRENT_POINTS - MOCK_RESERVATION_FEE;
 
   return (
     <div style={{ backgroundColor: "#f4f5fa", minHeight: "100vh", padding: "0 0 40px 0" }}>
@@ -124,7 +176,6 @@ function ReservationPage() {
                 </div>
               )) : <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>검색 결과가 없습니다.</div>}
 
-              {/* 페이징 UI */}
               {totalPages > 1 && (
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "15px", gap: "8px", background: "#fafafa", borderTop: "1px solid #eee" }}>
                   <button 
@@ -135,7 +186,6 @@ function ReservationPage() {
                     이전
                   </button>
 
-                  {/* 📍 수정: 계산된 pageNumbers (최대 10개)만 노출합니다 */}
                   {pageNumbers.map((page) => (
                     <button
                       key={page}
@@ -184,10 +234,16 @@ function ReservationPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {chargers.length > 0 ? chargers.map((ch, index) => {
                 const isSelected = selectedCharger === ch;
+                
+                const statusLabel = getStatusLabel(ch.status);
+                const typeLabel = getTypeLabel(ch.chargerType);
+                const methodLabel = getMethodLabel(ch.chargerMethod);
+                
+                const isAvailable = statusLabel === "충전가능";
+                const isFast = typeLabel.includes("급속");
 
                 return (
                   <div key={ch.chargerId || index}>
-                    {/* 충전기 버튼 */}
                     <button
                       onClick={() => { 
                         if (isSelected) {
@@ -202,39 +258,39 @@ function ReservationPage() {
                       onMouseOut={(e) => { if (!isSelected) e.currentTarget.style.background = "#ffffff"; }}
                       style={{
                         width: "100%", textAlign: "left", padding: "16px", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease", display: "block", outline: "none",
-                        background: "#ffffff", border: isSelected ? "2px solid #B452B5" : "1px solid #eaddff", boxShadow: isSelected ? "0 4px 10px rgba(180, 82, 181, 0.15)" : "none",
+                        background: "#ffffff", border: isSelected ? "1px solid #f0f0f0" : "1px solid #eaddff", boxShadow: isSelected ? "0 4px 10px rgba(180, 82, 181, 0.15)" : "none",
                       }}
                     >
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <strong style={{ color: "#4a3b8a", fontSize: "15px", fontWeight: "800" }}>{ch.chargerName || `${ch.chargerId}호기`}</strong>
-                        <span style={{ color: ch.status === "1" ? "#28a745" : "#7a5de8", fontWeight: "800", fontSize: "11px", border: `1px solid ${ch.status === "1" ? "#28a745" : "#7a5de8"}`, padding: "3px 8px", borderRadius: "6px", background: "#fff" }}>
-                          {ch.status === "1" ? "충전가능" : "충전중"}
+                        <span style={{ color: isAvailable ? "#28a745" : "#7a5de8", fontWeight: "800", fontSize: "11px", border: `1px solid ${isAvailable ? "#28a745" : "#7a5de8"}`, padding: "3px 8px", borderRadius: "6px", background: "#fff" }}>
+                          {statusLabel}
                         </span>
                       </div>
                       <div style={{ color: "#666", fontSize: "13px", marginTop: "8px", fontWeight: "500" }}>
-                        {ch.chargerType === 1 ? "급속" : "완속"} | {ch.chargerMethod || "DC콤보"}
+                        {typeLabel} | {methodLabel}
                       </div>
                     </button>
 
-                    {/* 시간표 */}
                     {isSelected && (
                       <div style={{ 
                         margin: "10px 0 20px 0", padding: "20px", background: "#fcfcfc", 
                         borderRadius: "12px", border: "1px solid #eaddff"
                       }}>
                         <h4 style={{ fontSize: "14px", fontWeight: "800", color: "#333", marginBottom: "15px", display: "flex", alignItems: "center", gap: "5px" }}>
-                          🕒 예약 가능 시간 <span style={{ fontSize: "11px", color: "#B452B5", fontWeight: "normal" }}>(* 1시간 단위)</span>
+                          🕒 예약 가능 시간 <span style={{ fontSize: "11px", color: "#B452B5", fontWeight: "normal" }}>({isFast ? "* 40분 충전" : "* 60분 충전"})</span>
                         </h4>
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
-                          {timeSlots.map((time) => {
+                          
+                          {generateTimeSlots(ch).map((time) => {
                             const isTimeSelected = selectedTime === time;
                             return (
                               <button
                                 key={time}
                                 onClick={() => setSelectedTime(time)}
                                 style={{
-                                  padding: "10px 0", borderRadius: "8px", border: isTimeSelected ? "2px solid #B452B5" : "1px solid #eee",
-                                  background: isTimeSelected ? "#F5E6FF" : "#fff", color: isTimeSelected ? "#B452B5" : "#555",
+                                  padding: "10px 0", borderRadius: "8px", border: isTimeSelected ? "1px solid #eaddff" : "1px solid #eee",
+                                  background: isTimeSelected ? "#F5E6FF" : "#fff", color: isTimeSelected ? "#555" : "#555",
                                   fontSize: "13px", fontWeight: "700", cursor: "pointer", transition: "all 0.2s"
                                 }}
                               >
@@ -242,9 +298,16 @@ function ReservationPage() {
                               </button>
                             );
                           })}
+
                         </div>
-                        <div style={{ marginTop: "15px", fontSize: "12px", color: "#7b61ff", fontWeight: "600" }}>
-                           ℹ️ {ch.chargerType === 1 ? "급속 충전기는 최대 1시간까지 예약 가능합니다." : "완속 충전기는 장시간 이용이 가능합니다."}
+                        <div style={{ marginTop: "15px", fontSize: "12px", color: "#333", fontWeight: "600" }}>
+                          *{isFast ? "원할한 충전기 사용을 위해 각 예약 시간 사이에 10분 간격을 두고있습니다." : "원할한 충전기 사용을 위해 각 예약 시간 사이에 10분 간격을 두고있습니다."}
+                          <br />
+                           *{isFast ? "예약시간 10분 후까지 충전을 시작하지 않으면 예약은 자동으로 취소되고 결제하신 금액은 환불되지 않습니다. " : "예약시간 10분 후까지 충전을 시작하지 않으면 예약은 자동으로 취소되고 결제하신 금액은 환불되지 않습니다."}
+                           <br />
+                           *{isFast ? "예약 시간을 초과해서 충전시 부담금(5,000원)이 부과됩니다. 만약 본인 예약시간에 다른 이용자가 이용하고 있으면 고객 지원을 통해 문의해주세요." : "예약 시간을 초과해서 충전시 부담금(5,000원)이 부과됩니다. 만약 본인 예약시간에 다른 이용자가 이용하고 있으면 고객 지원을 통해 문의해주세요."}
+                          <br />
+                           *{isFast ? "충전소 운영시간이 상이할 수 있으므로 충전을 못할경우 고객지원을 통해 문의해주세요. " : "충전소 운영시간이 상이할 수 있으므로 충전을 못할경우 고객지원을 통해 문의해주세요."}
                         </div>
                       </div>
                     )}
@@ -258,7 +321,10 @@ function ReservationPage() {
         {/* [STEP 3] 하단 예약 버튼 */}
         <button 
           disabled={!selectedStation || !selectedCharger || !selectedTime} 
-          onClick={() => setIsModalOpen(true)} // 📍 팝업창 띄우기 연결
+          onClick={() => {
+            setIsModalOpen(true);
+            setModalStep(1); 
+          }} 
           style={{ 
             width: "100%", padding: "20px", borderRadius: "18px", border: "none", 
             background: (!selectedStation || !selectedCharger || !selectedTime) ? "#ccc" : "linear-gradient(135deg, #B452B5 0%, #7a5de8 100%)", 
@@ -271,7 +337,7 @@ function ReservationPage() {
         </button>
       </main>
 
-      {/* 📍 예약 확인 팝업창 (모달) */}
+      {/* 📍 예약/결제 확인 팝업창 (모달) */}
       {isModalOpen && selectedStation && selectedCharger && selectedTime && (
         <div style={{
           position: "fixed", top: 0, left: 0, width: "100%", height: "100%", 
@@ -279,45 +345,129 @@ function ReservationPage() {
           display: "flex", justifyContent: "center", alignItems: "center", padding: "20px"
         }}>
           <div style={{
-            background: "#fff", padding: "30px", borderRadius: "24px", width: "100%", maxWidth: "400px",
+            background: "#fff", padding: "40px", borderRadius: "24px", width: "100%", maxWidth: "500px",
             boxShadow: "0 20px 40px rgba(0,0,0,0.2)", animation: "fadeIn 0.3s ease-out"
           }}>
-            <h3 style={{ margin: "0 0 20px 0", color: "#333", fontSize: "20px", textAlign: "center", fontWeight: "800" }}>예약 정보 확인</h3>
             
-            {/* 선택한 정보 요약 박스 */}
-            <div style={{ background: "#f8f9ff", borderRadius: "12px", padding: "20px", border: "1px solid #eaddff", marginBottom: "25px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
-                <span style={{ color: "#666", fontSize: "14px" }}>충전소</span>
-                <strong style={{ color: "#333", fontSize: "15px" }}>{selectedStation.stationName}</strong>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
-                <span style={{ color: "#666", fontSize: "14px" }}>충전기</span>
-                <strong style={{ color: "#333", fontSize: "15px" }}>{selectedCharger.chargerName || `${selectedCharger.chargerId}호기`}</strong>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ color: "#666", fontSize: "14px" }}>예약 시간</span>
-                <strong style={{ color: "#B452B5", fontSize: "18px", backgroundColor: "#F5E6FF", padding: "4px 10px", borderRadius: "8px" }}>{selectedTime}</strong>
-              </div>
-            </div>
+            {/* 📍 모달 Step 1: 예약 정보 확인 */}
+            {modalStep === 1 && (
+              <>
+                <h3 style={{ margin: "0 0 25px 0", color: "#333", fontSize: "22px", textAlign: "center", fontWeight: "800" }}>예약 정보 확인</h3>
+                
+                <div style={{ background: "#f8f9ff", borderRadius: "12px", padding: "25px", border: "1px solid #eaddff", marginBottom: "30px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>충전소</span>
+                    <strong style={{ color: "#333", fontSize: "16px" }}>{selectedStation.stationName}</strong>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>충전기</span>
+                    <strong style={{ color: "#333", fontSize: "16px" }}>{selectedCharger.chargerName || `${selectedCharger.chargerId}호기`}</strong>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>예약 시간</span>
+                    <strong style={{ color: "#333", fontSize: "20px", padding: "4px 0px", borderRadius: "8px" }}>{selectedTime}</strong>
+                  </div>
+                </div>
 
-            <p style={{ textAlign: "center", color: "#333", fontSize: "16px", fontWeight: "bold", margin: "0 0 25px 0" }}>
-              이대로 예약하시겠습니까?
-            </p>
+                <p style={{ textAlign: "center", color: "#333", fontSize: "18px", fontWeight: "bold", margin: "0 0 30px 0" }}>
+                  해당 시간으로 예약을 진행하시겠습니까?
+                </p>
 
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button 
-                onClick={() => setIsModalOpen(false)} 
-                style={{ flex: 1, padding: "16px", borderRadius: "14px", border: "1px solid #ddd", background: "#fff", color: "#555", fontSize: "15px", fontWeight: "bold", cursor: "pointer" }}
-              >
-                취소
-              </button>
-              <button 
-                onClick={handleConfirmReservation} 
-                style={{ flex: 1, padding: "16px", borderRadius: "14px", border: "none", background: "linear-gradient(135deg, #B452B5 0%, #7a5de8 100%)", color: "#fff", fontSize: "15px", fontWeight: "bold", cursor: "pointer", boxShadow: "0 4px 12px rgba(122, 93, 232, 0.3)" }}
-              >
-                예약 확정
-              </button>
-            </div>
+                <div style={{ display: "flex", gap: "15px" }}>
+                  <button 
+                    onClick={() => setIsModalOpen(false)} 
+                    style={{ flex: 1, padding: "18px", borderRadius: "14px", border: "1px solid #ddd", background: "#fff", color: "#555", fontSize: "16px", fontWeight: "bold", cursor: "pointer" }}
+                  >
+                    취소
+                  </button>
+                  <button 
+                    onClick={() => setModalStep(2)} 
+                    style={{ flex: 1, padding: "18px", borderRadius: "14px", border: "none", background: "linear-gradient(135deg, #B452B5 0%, #7a5de8 100%)", color: "#fff", fontSize: "16px", fontWeight: "bold", cursor: "pointer", boxShadow: "0 4px 12px rgba(122, 93, 232, 0.3)" }}
+                  >
+                    예약하기
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* 📍 모달 Step 2: 결제(적립금) 정보 확인 */}
+            {modalStep === 2 && (
+              <>
+                <h3 style={{ margin: "0 0 25px 0", color: "#333", fontSize: "22px", textAlign: "center", fontWeight: "800" }}>결제 정보 확인</h3>
+                
+                <div style={{ background: "#f8f9ff", borderRadius: "12px", padding: "25px", border: "1px solid #eaddff", marginBottom: "30px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>예약 금액</span>
+                    <strong style={{ color: "#333", fontSize: "16px" }}>{MOCK_RESERVATION_FEE.toLocaleString()} 원</strong>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>현재 적립금액</span>
+                    <strong style={{ color: "#333", fontSize: "16px" }}>{MOCK_CURRENT_POINTS.toLocaleString()} P</strong>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>차감 금액</span>
+                    <strong style={{ color: "#e53e3e", fontSize: "16px" }}>- {MOCK_RESERVATION_FEE.toLocaleString()} P</strong>
+                  </div>
+                  
+                  <div style={{ borderTop: "1px dashed #ccc", margin: "20px 0" }}></div>
+                  
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ color: "#333", fontSize: "16px", fontWeight: "800" }}>결제 후 남은 적립금</span>
+                    <strong style={{ color: "#B452B5", fontSize: "20px" }}>{remainPoints.toLocaleString()} P</strong>
+                  </div>
+                </div>
+
+                <p style={{ textAlign: "center", color: "#333", fontSize: "18px", fontWeight: "bold", margin: "0 0 30px 0" }}>
+                  적립금으로 결제하시겠습니까?
+                </p>
+
+                <div style={{ display: "flex", gap: "15px" }}>
+                  <button 
+                    onClick={() => setModalStep(1)} 
+                    style={{ flex: 1, padding: "18px", borderRadius: "14px", border: "1px solid #ddd", background: "#fff", color: "#555", fontSize: "16px", fontWeight: "bold", cursor: "pointer" }}
+                  >
+                    이전
+                  </button>
+                  <button 
+                    onClick={handleConfirmReservation} // 📍 클릭 시 3단계(완료 화면)로 넘어감
+                    style={{ flex: 1, padding: "18px", borderRadius: "14px", border: "none", background: "linear-gradient(135deg, #B452B5 0%, #7a5de8 100%)", color: "#fff", fontSize: "16px", fontWeight: "bold", cursor: "pointer", boxShadow: "0 4px 12px rgba(122, 93, 232, 0.3)" }}
+                  >
+                    예약 확정
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* 📍 모달 Step 3: 최종 예약 완료 화면 */}
+            {modalStep === 3 && (
+              <div style={{ textAlign: "center", animation: "fadeIn 0.5s ease-out" }}>
+    
+                <h3 style={{ margin: "0 0 25px 0", color: "#333", fontSize: "24px", fontWeight: "900" }}>예약이 완료되었습니다!</h3>
+                
+                <div style={{ background: "#f8f9ff", borderRadius: "12px", padding: "25px", border: "1px solid #eaddff", marginBottom: "30px", textAlign: "left" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>예약 충전소</span>
+                    <strong style={{ color: "#333", fontSize: "16px" }}>{selectedStation.stationName}</strong>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>예약 충전기</span>
+                    <strong style={{ color: "#333", fontSize: "16px" }}>{selectedCharger.chargerName || `${selectedCharger.chargerId}호기`}</strong>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ color: "#666", fontSize: "15px" }}>예약 시간</span>
+                    <strong style={{ color: "#B452B5", fontSize: "20px", padding: "4px 0px", borderRadius: "8px" }}>{selectedTime}</strong>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => window.location.href = '/'} // 📍 홈으로 돌아가기
+                  style={{ width: "100%", padding: "18px", borderRadius: "14px", border: "none", background: "linear-gradient(135deg, #B452B5 0%, #7a5de8 100%)", color: "#fff", fontSize: "16px", fontWeight: "bold", cursor: "pointer", boxShadow: "0 4px 12px rgba(122, 93, 232, 0.3)" }}
+                >
+                  홈으로 돌아가기
+                </button>
+              </div>
+            )}
+
           </div>
         </div>
       )}

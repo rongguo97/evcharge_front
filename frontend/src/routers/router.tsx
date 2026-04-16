@@ -25,7 +25,7 @@ const router = createBrowserRouter([
       // index: true - 첫페이지를 의미
       { index: true, path: "/", element: <Home /> },
       // 예약페이지
-      { index: true, path: "/reverlation", element: <ReservationPage /> },
+      { index: true, path: "/reservation", element: <ReservationPage /> },
       // 지갑 및 결제 관련 페이지
       { path: "/cash", element: <Cash /> },
       { path: "/wallet", element: <Wallet /> },
