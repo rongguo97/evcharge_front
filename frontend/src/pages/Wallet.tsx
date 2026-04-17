@@ -1,181 +1,166 @@
-import React, { useState, useRef } from 'react';
-import '../css/wallet.css'; // 기존 wallet.css 내용을 이쪽으로 옮겨주세요.
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import '../css/wallet.css';
+import '../css/header.css';
+import '../css/footer.css';
 
-const Wallet: React.FC = () => {
-  // --- 상태 관리 (State) ---
-  const MY_POINTS = 20000; // 실제로는 API 등에서 받아올 값
-  const [chargeAmount, setChargeAmount] = useState<number>(100000);
-  const [usePoint, setUsePoint] = useState<number>(0);
-  const [showBank, setShowBank] = useState<boolean>(false);
-  const [copyText, setCopyText] = useState<string>("계좌 복사");
-  
-  const bankDetailRef = useRef<HTMLDivElement>(null);
+const Pay: React.FC = () => {
+  const navigate = useNavigate();
 
-  // --- 로직 함수 ---
+  const [selectedAmount, setSelectedAmount] = useState<number>(0);
+  const [customAmount, setCustomAmount] = useState<string>("");
+  const [point, setPoint] = useState<number>(0);
+  const [payMethod, setPayMethod] = useState<string>("kakao");
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
-  // 금액 버튼 클릭 시
-  const handleSelectAmt = (value: number) => {
-    setChargeAmount(value);
-    setShowBank(false); // 금액 변경 시 계좌 정보 숨김 (선택사항)
+  const myTotalPoint = 20000;
+  const amounts = [10000, 20000, 30000, 50000];
+
+  const currentTotal = selectedAmount || Number(customAmount) || 0;
+
+  // 보완: 포인트가 결제 금액보다 크지 않도록 제한
+  const finalPrice = Math.max(0, currentTotal - point);
+
+  const savedPoint = Math.floor(finalPrice * 0.1);
+
+  const handlePayment = () => {
+    if (currentTotal <= 0) {
+      alert("충전 금액을 선택하거나 입력해주세요.");
+      return;
+    }
+    setIsCompleted(true);
   };
 
-  // 직접 입력 시
-  const handleManualInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value) || 0;
-    setChargeAmount(value);
-  };
+  if (isCompleted) {
+    return (
 
-  // 포인트 입력 시
-  const handlePointInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = parseInt(e.target.value) || 0;
-    if (value > MY_POINTS) value = MY_POINTS;
-    setUsePoint(value);
-  };
+      <div className="payment-page-bg">
+        <div className="header-spacer"></div>
+        <div className="payment-container completed-box">
+          <div className="status-icon">✔️</div>
+          <h2 className="complete-title">결제가 완료되었습니다</h2>
+          <p className="complete-desc">포인트 10% 적립완료</p>
 
-  // 전액 사용
-  const handleUseAllPoints = () => {
-    setUsePoint(MY_POINTS);
-  };
+          <div className="receipt-box large">
+            <div className="receipt-row">
+              <span>충전 금액</span>
+              <span>{currentTotal.toLocaleString()}원</span>
+            </div>
+            <div className="receipt-row">
+              <span>포인트 사용</span>
+              <span className="used-point">-{point.toLocaleString()}P</span>
+            </div>
+            <div className="receipt-row total-row">
+              <span>최종 결제 금액</span>
+              <span className="final-amt">{finalPrice.toLocaleString()}원</span>
+            </div>
 
-  // 계산된 값들
-  const bonus = Math.floor(chargeAmount * 0.1);
-  const finalPrice = Math.max(0, chargeAmount - usePoint);
-  const limitDate = new Date();
-  limitDate.setDate(limitDate.getDate() + 1);
+            <div className="point-reward-card">
+              <div className="reward-label">적립된 포인트</div>
+              <div className="reward-value">
+                <strong>{savedPoint.toLocaleString()}P</strong> 적립
+              </div>
+              <p className="reward-info">현금처럼 결제 시 사용하세요</p>
+            </div>
+          </div>
 
-  // 충전하기 버튼 클릭
-  const handleShowBankDetail = () => {
-    setShowBank(true);
-    // 상태 변경 후 렌더링이 완료된 뒤 스크롤 이동
-    setTimeout(() => {
-      bankDetailRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-  };
-
-  // 계좌 복사
-  const handleCopyAccount = () => {
-    const accNum = "1234-123-456789";
-    navigator.clipboard.writeText(accNum).then(() => {
-      alert("계좌번호가 복사되었습니다!");
-      setCopyText("복사완료!");
-      setTimeout(() => setCopyText("계좌 복사"), 2000);
-    });
-  };
+          <button className="go-main-btn" onClick={() => navigate('/')}>
+            메인으로 돌아가기
+          </button>
+        </div>
+        <div className="footer-spacer"></div>
+      </div>
+    );
+  }
 
   return (
-    <main className="payment-wrapper">
-      <div className="payment-bg-overlay"></div>
+    <div>
 
-      <section className="payment-content">
-        <div className="payment-header-text">
-          <h2>Charging Wallet</h2>
-          <br />
-          <p>충전 금액의 10%를 포인트로 돌려드려요!</p>
-          <p>행복한 드라이브 되세요.</p>
-        </div>
-        <br />
 
-        <div className="glass-card status-card">
-          <div className="status-box-item">
-            <span className="status-label">보유 충전금</span>
-            <div className="status-value-group">
-              <span className="status-value">0</span>
-              <span className="status-unit">원</span>
-            </div>
-          </div>
-          <div className="status-v-line"></div>
-          <div className="status-box-item">
-            <span className="status-label">포인트 잔액</span>
-            <div className="status-value-group">
-              <span className="status-value purple">{MY_POINTS.toLocaleString()}</span>
-              <span className="status-unit">P</span>
-            </div>
-          </div>
-        </div>
+      <aside className="side-quick-menu">
+        <Link to="/mypage" className="quick-btn my-page">
+          마 이 페 이 지
+        </Link>
 
-        <div className="glass-card payment-main-card">
-          <div className="payment-group center-align">
-            <label className="group-title">충전 금액 선택</label>
+        <Link to="#" className="quick-btn admin-page">
+          관 리 자 페 이 지
+        </Link>
+      </aside>
+
+      <div className="payment-page-bg">
+        <div className="header-spacer"></div>
+        <div className="payment-container">
+          <h2 className="title">차카지 간편결제</h2>
+          <section className="section">
+            <label className="section-label">금액 선택</label>
             <div className="amount-grid">
-              {[10000, 30000, 50000, 100000].map((amt) => (
+              {amounts.map((amt) => (
                 <button
                   key={amt}
-                  type="button"
-                  className={`amt-btn ${chargeAmount === amt ? 'active' : ''}`}
-                  onClick={() => handleSelectAmt(amt)}
+                  className={`amount-btn ${selectedAmount === amt ? 'active' : ''}`}
+                  onClick={() => { setSelectedAmount(amt); setCustomAmount(""); setPoint(0); }} // 금액 변경 시 포인트 초기화 권장
                 >
                   {amt.toLocaleString()}원
                 </button>
               ))}
             </div>
-            <br />
-            <div className="input-wrapper center-input">
+            <input
+              type="number"
+              className="custom-input no-spinner"
+              placeholder="직접 입력하기 (원)"
+              value={customAmount}
+              onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(0); setPoint(0); }}
+            />
+          </section>
+          <br /><br />
+          <section className="section">
+            <div className="flex-between">
+              <label className="section-label">포인트 사용</label>
+              <span className="my-point">보유 {myTotalPoint.toLocaleString()}P</span>
+            </div>
+            <div className="point-input-wrapper">
               <input
                 type="number"
-                className="no-spin"
-                value={chargeAmount === 0 ? '' : chargeAmount}
-                placeholder="직접 금액 입력"
-                onChange={handleManualInput}
+                className="no-spinner"
+                value={point || ""}
+                onChange={(e) => setPoint(Math.min(currentTotal, myTotalPoint, Number(e.target.value)))}
+                placeholder="0"
               />
+              <button className="all-use-btn" onClick={() => setPoint(Math.min(currentTotal, myTotalPoint))}>
+                전액사용
+              </button>
             </div>
-          </div>
-
-          <div className="calc-section">
-            <div className="calc-row bonus">
-              <span>적립 예정 보너스 (10%)</span>
-              <span>{bonus.toLocaleString()} P</span>
+          </section>
+          <br /><br />
+          <section className="section">
+            <label className="section-label">간편결제 선택</label>
+            <div className="pay-methods">
+              <button className={`pay-btn ${payMethod === 'kakao' ? 'active kakao' : ''}`} onClick={() => setPayMethod('kakao')}>카카오페이</button>
+              <button className={`pay-btn ${payMethod === 'toss' ? 'active toss' : ''}`} onClick={() => setPayMethod('toss')}>토스페이</button>
+              <button className={`pay-btn ${payMethod === 'naver' ? 'active naver' : ''}`} onClick={() => setPayMethod('naver')}>네이버페이</button>
             </div>
+          </section>
 
-            <div className="calc-row use-point-row">
-              <label className="group-title">
-                보유 포인트 사용 <small>(잔액: {MY_POINTS.toLocaleString()} P)</small>
-              </label>
-              <div className="point-input-container">
-                <input
-                  type="number"
-                  className="no-spin"
-                  placeholder="0"
-                  value={usePoint === 0 ? '' : usePoint}
-                  onChange={handlePointInput}
-                />
-                <button type="button" className="inline-use-all-btn" onClick={handleUseAllPoints}>
-                  전액사용
-                </button>
-              </div>
+          <div className="bottom-sticky">
+            <div className="price-summary">
+              <span className="summary-label">최종 결제 금액   </span>
+              <span className="total-price">{finalPrice.toLocaleString()}원</span>
             </div>
-          </div>
-
-          <div className="divider"></div>
-
-          <div className="final-summary center-align">
-            <div className="summary-item">
-              <span>최종 입금액</span>
-              <h3>{finalPrice.toLocaleString()}원</h3>
-            </div>
-            <button type="button" className="pay-submit-btn" onClick={handleShowBankDetail}>
-              {finalPrice <= 0 ? "포인트로 결제하기" : "충전하기"}
+            <button className="pay-submit-btn" onClick={handlePayment}>
+              {finalPrice.toLocaleString()}원 결제하기
             </button>
           </div>
-
-          {showBank && (
-            <div ref={bankDetailRef} className="bank-info-panel">
-              <div className="bank-card">
-                <p className="bank-name">차카지은행 <span>(주)차카지</span></p>
-                <p className="bank-account">1234-123-456789</p>
-                <div className="bank-footer">
-                  <span>입금 기한: <strong>{limitDate.toLocaleDateString()} 23:59</strong></span>
-                  <button type="button" className="premium-copy-btn" onClick={handleCopyAccount}>
-                    {copyText}
-                  </button>
-                </div>
-              </div>
-              <p className="bank-notice">※ 입금자명과 회원명이 일치해야 빠른 처리가 가능합니다.</p>
-            </div>
-          )}
         </div>
-      </section>
-    </main>
+        <div className="footer-spacer">
+
+        </div>
+      </div>
+
+      
+    </div>
+
+
   );
 };
 
-export default Wallet;
+export default Pay;

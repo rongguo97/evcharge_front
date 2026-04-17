@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../layout/Layout";
 import Home from "../layout/Home";
+import Pay from "../pages/Wallet";
 import Cash from "../pages/Cash";
-import Wallet from "../pages/Wallet";
 import MyPage from "../pages/MyPage";
 import App from "../pages/App";
 import Admin from "../pages/AdminPage";
@@ -27,8 +27,8 @@ const router = createBrowserRouter([
       // 예약페이지
       { index: true, path: "/reservation", element: <ReservationPage /> },
       // 지갑 및 결제 관련 페이지
+      { path: "/pay", element: <Pay /> },
       { path: "/cash", element: <Cash /> },
-      { path: "/wallet", element: <Wallet /> },
       // 마이페이지
       { path: "/mypage", element: <MyPage /> },
       // 관리자 페이지
