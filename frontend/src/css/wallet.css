@@ -1,310 +1,230 @@
-/* 전체 텍스트 컬러 최적화 (흰색 위주) */
-.payment-wrapper {
-    position: relative;
-    min-height: 100vh;
-    padding: 60px 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #0b0b1a url('https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-    color: #ffffff; /* 기본 글자색 흰색으로 설정 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans KR', sans-serif;  overflow-x: hidden; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+
+/* 본문 */
+
+.payment-page-bg {
+  width: 100%;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding-top: 100px; /* 헤더 공간 */
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+                url('https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop') no-repeat center/cover;
+ display: flex; align-items: center; color: var(--white);
 }
 
-.payment-bg-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle at center, rgba(30, 27, 75, 0.7) 0%, #0b0b1a 100%);
+
+.payment-container {
+  max-width: 480px;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding: 30px 30px 50px 30px;
+  background-color: #f5f3ff; /* 본문 배경을 약간 투명한 흰색으로 */
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
 }
 
-.payment-content { position: relative; z-index: 2; width: 100%; max-width: 550px; }
-
-/* 카드 디자인 및 텍스트 */
-.payment-main-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 30px;
-    border-radius: 24px;
+.title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #4c1d95; 
+  margin-bottom: 30px;
+  text-align: center;
 }
 
-.group-title { color: #e2e8f0; font-weight: 500; margin-bottom: 15px; display: block; }
 
-/* 버튼 및 입력창 */
-.amt-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #ffffff; /* 버튼 글자 흰색 */
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-}
-.amt-btn.active { background: #a855f7; border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.5); }
-
-.input-wrapper input, .point-input-box input {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #ffffff; /* 입력창 글자 흰색 */
-    padding: 12px;
-    border-radius: 10px;
-    width: 100%;
+.amount-btn {
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  color: #1a1a1a; 
+  font-size: 1rem;
+  transition: all 0.2s;
 }
 
-/* 포인트 섹션 */
-.calc-section { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; margin: 25px 0; }
-.calc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.calc-row span { color: #ffffff; } /* 텍스트 흰색 */
-#bonusVal { color: #a855f7; font-weight: bold; }
-#userPointBalance { color: #94a3b8; font-size: 0.8rem; }
-
-.use-all-btn {
-    background: #4b5563; color: white; border: none; padding: 0 12px;
-    border-radius: 8px; cursor: pointer; white-space: nowrap; font-size: 0.8rem;
+.amount-btn.active {
+  border-color: #7c3aed;
+  background-color: #f5f3ff;
+  color: #7c3aed;
 }
 
-/* 최종 금액 섹션 */
-.final-summary { text-align: center; }
-.summary-item span { color: #cbd5e1; font-size: 0.9rem; }
-#finalPriceDisplay { font-size: 2.2rem; color: #ffffff; margin: 10px 0 25px; font-weight: 800; }
+.custom-input {
+  width: 100%;
+  padding: 18px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 2px solid #ddd;
+  font-size: 1rem;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.section-label {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.my-point {
+  color: #666;
+  font-weight: 600;
+}
+
+.point-input-wrapper input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.all-use-btn {
+  padding: 15px;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pay-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pay-btn {
+  padding: 20px;
+  border-radius: 15px;
+  border: 2px solid #eee;
+  background: #fff;
+  font-weight: 800;
+  color: #1a1a1a; /* 글자색 강조 */
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+.pay-icon { margin-right: 12px; color: #ccc; }
+
+.pay-btn.kakao.active { background-color: #fff9c4; border-color: #fbc02d; }
+.pay-btn.toss.active { background-color: #e3f2fd; border-color: #2196f3; }
+.pay-btn.naver.active { background-color: #e8f5e9; border-color: #4caf50; }
+
+
+.bottom-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -10px 20px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.summary-label { color: #333; font-weight: 700; }
+.total-price { color: #7c3aed; font-size: 1.4rem; font-weight: 900; }
 
 .pay-submit-btn {
-    width: 100%; padding: 18px; background: linear-gradient(135deg, #a855f7, #6d28d9);
-    border: none; border-radius: 12px; color: white; font-weight: bold; font-size: 1.1rem; cursor: pointer;
-}
-
-/* 계좌 정보 (검은 글자 제거) */
-.bank-card { background: rgba(255, 255, 255, 0.95); color: #1e1b4b; padding: 20px; border-radius: 15px; margin-top: 20px; }
-.bank-account { font-size: 1.5rem; font-weight: bold; color: #6d28d9; }
-.bank-notice { color: #e2e8f0; font-size: 0.8rem; text-align: center; margin-top: 10px; }
-
-/* 태그 추가 */
-/* 1. 메뉴 글자 크기 키우기 (기존 헤더/메뉴 적용용) */
-.menu a, .menu span {
-    font-size: 1.1rem !important; /* 기존보다 큼직하게 */
-    font-weight: 600;
-}
-
-/* 2. 중앙 정렬 스타일 */
-.center-align {
-    text-align: center;
-}
-.center-input {
-    max-width: 300px;
-    margin: 0 auto;
-}
-
-/* 3. 포인트 입력창 (화살표 제거 및 버튼 삽입) */
-.point-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.point-input-container input {
-    width: 100%;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 15px 100px 15px 20px; /* 오른쪽 버튼 자리를 위해 padding 확보 */
-    border-radius: 12px;
-    color: #fff;
-    font-size: 1.1rem;
-    outline: none;
-}
-
-/* 크롬/사파리 화살표 제거 */
-.no-spin::-webkit-outer-spin-button,
-.no-spin::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.inline-use-all-btn {
-    position: absolute;
-    right: 10px;
-    background: #a855f7;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-}
-.inline-use-all-btn:hover { background: #9333ea; }
-
-/* 4. 복사하기 버튼 꾸미기 */
-.premium-copy-btn {
-    background: #1e1b4b;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    border: 1p solid #6d28d9;
-}
-
-.premium-copy-btn:hover {
-    background: #6d28d9;
-    transform: scale(1.05);
-    box-shadow: 0 6px 15px rgba(109, 40, 217, 0.3);
-}
-
-.premium-copy-btn:active {
-    transform: scale(0.95);
-}
-
-/* 기타 텍스트 가독성 */
-.payment-main-card {
-    color: #ffffff;
-}
-.group-title small {
-    color: #94a3b8;
-    margin-left: 10px;
-}
-
-/* --- 퀵메뉴 --- */
-.side-quick-menu { position: fixed; right: 0; top: 30%; z-index: 999; }
-.quick-btn {
-    display: block; writing-mode: vertical-rl; padding: 30px 15px; margin-top: 20px;
-    text-decoration: none; color: var(--white); font-weight: bold;
-    border-radius: 20px 0 0 20px; margin-bottom: 5px; background: #9381ff;
-
-}
-.admin-page { background-color: #b8b8ff; }
-
-/*  */
-/* 사용자 보유 현황 바 스타일 */
-.user-status-bar {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.08); /* 카드보다 약간 더 밝은 배경 */
-    border-radius: 16px;
-    padding: 20px 10px;
-    margin-bottom: 35px; /* 아래 섹션과의 간격 */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.status-item {
-    text-align: center;
-    flex: 1;
-}
-
-.status-label {
-    display: block;
-    font-size: 0.85rem;
-    color: #94a3b8; /* 차분한 회색조 */
-    margin-bottom: 5px;
-}
-
-.status-value {
-    font-size: 1.3rem;
-    font-weight: 800;
-    color: #fff;
-}
-
-.status-value.purple {
-    color: #a855f7; /* 포인트는 보라색으로 강조 */
-    text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
-}
-
-.status-value small {
-    font-size: 0.9rem;
-    font-weight: 400;
-    margin-left: 2px;
-}
-
-/* 수직 구분선 */
-.status-divider {
-    width: 1px;
-    height: 30px;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* css 수정 상단 충전금, 포인트 */
-.status-card {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 25px 0 ; /* 내부 패딩 조정 */
-    margin-bottom: 20px; /* 메인 카드와의 간격 */
-    border: 1px solid rgba(168, 85, 247, 0.3) ; /* 은은한 보라색 테두리 */
-    background: rgba(255, 255, 255, 0.07) ;
-}
-
-.status-box-item {
-    flex: 1;
-    text-align: center;
-}
-
-.status-label {
-    display: block;
-    font-size: 0.9rem;
-    color: #94a3b8;
-    margin-bottom: 8px;
-    font-weight: 500;
-}
-
-.status-value-group {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 4px;
-}
-
-.status-value {
-    font-size: 1.6rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-}
-
-.status-value.purple {
-    color: #a855f7;
-    text-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
-}
-
-.status-unit {
-    font-size: 1rem;
-    color: #cbd5e1;
-}
-
-/* 박스 사이 수직 구분선 */
-.status-v-line {
-    width: 1px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* [보너스] 메인 카드 상단 여백 조정 */
-.payment-main-card {
-    margin-top: 0; 
+  width: 100%;
+  padding: 20px;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-top: 15px;
+  cursor: pointer;
 }
 
 
+.complete-title { color: #7c3aed; font-weight: 800; margin-top: 10px; }
+.complete-desc { color: #666; font-weight: 600; }
+.receipt-divider { border: none; border-top: 1px dashed #ccc; margin: 15px 0; }
 
-@media (max-width: 480px) {
-    .amount-grid { grid-template-columns: 1fr; } 
 
-    .user-status-bar {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .status-divider {
-        width: 80%;
-        height: 1px;}
+.completed-box {
+  max-width: 550px !important; 
+  padding: 50px 40px !important;
+  text-align: center;
+}
 
-    .status-card {
-        flex-direction: column;
-        padding: 20px 0 ;
-        gap: 20px;
-    }
-    .status-v-line {
-        width: 60%;
-        height: 1px;
-    }
+.status-icon { font-size: 5rem; margin-bottom: 20px; }
+.complete-title { font-size: 2rem; color: #4c1d95; margin-bottom: 10px; font-weight: 800; }
+.complete-desc { color: #6b7280; font-weight: 600; margin-bottom: 30px; }
 
-}    
+
+.receipt-box.large {
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+
+.receipt-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: #4b5563; font-weight: 600; }
+.used-point { color: #ef4444; }
+.total-row { margin-top: 15px; padding-top: 15px; border-top: 2px dashed #eee; font-size: 1.3rem; font-weight: 800; color: #111827; }
+.final-amt { color: #7c3aed; }
+
+
+.point-reward-card {
+  margin-top: 25px;
+  background: #f5f3ff;
+  border: 2px solid #ddd6fe;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.reward-label { font-size: 0.9rem; color: #6d28d9; font-weight: 700; margin-bottom: 5px; }
+.reward-value { font-size: 1.5rem; color: #1e1b4b; margin-bottom: 5px; }
+.reward-value strong { color: #7c3aed; font-size: 1.8rem; }
+.reward-info { font-size: 0.8rem; color: #7c3aed; font-weight: 600; }
+
+/* 메인으로 돌아가기 버튼 */
+.go-main-btn {
+  width: 100%;
+  padding: 20px;
+  background-color: #4c1d95;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.go-main-btn:hover { background-color: #3b0764; transform: translateY(-2px); }
+
+.header-spacer { height: 120px; }
+.footer-spacer { height: 100px; }
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.all-use-btn {
+  margin-left: 10px;
+}
