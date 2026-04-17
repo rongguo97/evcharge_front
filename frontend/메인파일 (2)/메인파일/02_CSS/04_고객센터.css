@@ -273,6 +273,178 @@ color: var(--primary-color);
     .contact-form { padding: 30px; }
 }
 
+/* footer */
+
+
+/* footer */
+
+
+.footer {
+  background-color: white;
+  padding: 40px 20px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  flex: 1;
+  min-width: 220px;
+  text-align: center;
+}
+
+.footer-logo img {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+}
+
+.footer-info {
+  flex: 1.5;
+  min-width: 300px;
+  color: #1d2350;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.footer-info p {
+  margin: 4px 0;
+}
+
+.footer-contact {
+  flex: 1;
+  min-width: 220px;
+  color: #1d2350;
+  text-align: left;
+}
+
+.footer-contact p {
+  margin: 10px 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.footer-contact h3 {
+  margin: 0 0 18px;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* 반응형 */
+@media (max-width: 900px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .footer-logo {
+    text-align: left;
+  }
+
+  .footer-contact h3 {
+    font-size: 32px;
+
+  }
+}
+
+
+
+
+
+/* footer */
+
+
+.footer {
+  background-color: white;
+  padding: 40px 20px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  flex: 1;
+  min-width: 220px;
+  text-align: center;
+}
+
+.footer-logo img {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+}
+
+.footer-info {
+  flex: 1.5;
+  min-width: 300px;
+  color: #1d2350;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.footer-info p {
+  margin: 4px 0;
+}
+
+.footer-contact {
+  flex: 1;
+  min-width: 220px;
+  color: #1d2350;
+  text-align: left;
+}
+
+.footer-contact p {
+  margin: 10px 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.footer-contact h3 {
+  margin: 0 0 18px;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* 반응형 */
+@media (max-width: 900px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .footer-logo {
+    text-align: left;
+  }
+
+  .footer-contact h3 {
+    font-size: 32px;
+
+  }
+}
+
+
+
+
+
+
 
 
 
