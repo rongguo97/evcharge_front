@@ -1,0 +1,474 @@
+:root {
+    --primary-purple: #9b72cf;
+    --deep-purple: #4a2c73;
+    --white: #ffffff;
+    --black: #1a1a1a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fc; overflow-x: hidden; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit;       /* 부모 요소(nav 등)의 글자색을 그대로 따름 */
+}
+
+
+/* --- 헤더 레이아웃 (PC 기준) --- */
+header.main-header {
+    position: absolute; top: 0; left: 0; width: 100%; z-index: 1000;
+    background: transparent; border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: 0.3s ease;
+}
+header.main-header:hover { background: var(--white); }
+
+.nav-wrapper { display: flex; justify-content: space-between; align-items: center; height: 100px; }
+
+/* 양끝 정렬 보정 */
+.logo, .header-util-space { width: 200px; flex-shrink: 0; z-index: 1001; }
+.logo { font-size: 1.8rem; font-weight: bold; color: var(--white); letter-spacing: 2px; transition: 0.3s;
+         }
+header:hover .logo { color: var(--deep-purple); }
+
+/* 중앙 GNB */
+.gnb { flex: 1; display: flex; justify-content: center; }
+.main-menu { display: flex; list-style: none; width: 100%; max-width: 900px; 
+             justify-content: space-around; margin-left: 150px; }
+.main-menu li a { text-decoration: none; font-weight: 700; color: var(--white); font-size: 1.1rem; transition: 0.3s; }
+header:hover .main-menu a { color: var(--black); }
+.main-menu li a.active { color: var(--primary-purple); }
+
+.mobile-only-sub { display: none; } /* PC에선 숨김 */
+
+
+/*  로그인  */
+.login { 
+        display: flex;
+        }
+.login-button{ 
+              width: 50px;
+              height: 20px;
+              margin-left: 150px;
+              transform: translateX(300px);
+              background: none;
+              border: none;
+              color: #b8b8ff;
+              font-size: 15px;
+              font-weight: 300;
+              text-decoration-line: underline;              
+}        
+
+
+/* // */
+
+/*  앱스토어 화면 */
+
+.download-btns {
+    display: flex;
+    gap: 15px; /* 버튼 사이 간격 */
+    margin-top: 30px;
+}
+
+.btn-store {
+    display: flex;
+    align-items: center; /* 아이콘과 텍스트 수직 중앙 정렬 */
+    justify-content: center;
+    padding: 12px 25px;
+    border: 1px solid var(--white);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: 0.3s;
+    background: transparent;
+}
+/* 애플 로고 수정 */
+.btn-store i {
+    margin-right: 10px; /* 로고와 글자 사이 간격 */
+    font-size: 1.3rem; /* 아이콘 크기를 글자보다 살짝 크게 설정 */
+    display: inline-block;
+    vertical-align: middle;
+}
+/* SVG 아이콘 스타일 */
+
+
+.icon-svg {
+    margin-right: 10px; /* 로고와 글자 사이 간격 */
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.btn-store:hover {
+    background: var(--white);
+    color: var(--deep-purple);
+}
+
+/* --- 앱 히어로 섹션 --- */
+.app-hero {
+    background: linear-gradient(135deg, #4a2c73 0%, #1a1a1a 100%);
+    padding: 180px 0 100px;
+    color: var(--white);
+    overflow: hidden;
+}
+
+.app-hero-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.app-hero-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hero-text { flex: 1;
+             }
+.hero-text .badge { 
+    background: var(--primary-purple);     
+    padding: 4px 13px; 
+    border-radius: 20px; 
+    font-size: 0.8rem; 
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.hero-text h1 { font-size: 50px;
+                margin: 5px;
+                margin-left: auto;
+                padding-right: 11px;
+}
+
+.hero-text p { font-size: 25px;
+               padding: 1PX;
+               margin-left: auto;
+}
+
+
+
+.download-btns a {
+    display: inline-block;
+    padding: 15px 30px;
+    border: 1px solid var(--white);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 15px;
+    font-weight: bold;
+    transition: 0.3s;
+    margin: 30px;
+}
+.download-btns a:hover {
+    background: var(--white);
+    color: var(--deep-purple);
+}
+
+/* .phone-mockup img { width: 100%; height: 100%; object-fit: cover; } */
+/* --- 주요 기능 섹션 --- */
+.app-features { padding: 100px 0; text-align: center; }
+.section-title h2 { font-size: 2.2rem; color: var(--deep-purple); }
+.section-title .bar { 
+    width: 50px; height: 3px; background: var(--primary-purple); 
+    margin: 20px auto 60px; 
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+.feature-item {
+    background: var(--white);
+    padding: 50px 30px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+.feature-item:hover { transform: translateY(-10px); }
+.feature-item .icon { font-size: 3rem; margin-bottom: 20px; }
+.feature-item h3 { margin-bottom: 15px; color: var(--deep-purple); }
+.feature-item p { color: #777; line-height: 1.6; }
+
+/* --- 푸터 (흰색 배경) --- */
+.white-footer { background: var(--white); padding: 60px 0; border-top: 1px solid #eee; }
+.footer-flex { display: flex; justify-content:space-between; align-items: center;  }
+.footer-logo img { width: 300px; }
+.footer-info { flex: 1; margin-left: 200px; color: #888; font-size: 1rem; line-height: 1.6; }
+.footer-contact strong { display: block; font-size: 1.1rem; color: var(--black); margin-top: 5px; }
+
+/* --- 퀵메뉴 --- */
+.side-quick-menu { position: fixed; right: 0; top: 30%; z-index: 999; }
+.quick-btn {
+    display: block; writing-mode: vertical-rl; padding: 30px 15px; margin-top: 20px;
+    text-decoration: none; color: var(--white); font-weight: bold;
+    border-radius: 20px 0 0 20px; margin-bottom: 5px; background: #9381ff;
+
+}
+.admin-page { background-color: #b8b8ff; }
+
+/* PC 메가 메뉴 패널 */
+.mega-menu-panel {
+    position: absolute; top: 100px; left: 0; width: 100%; background: var(--white);
+    height: 0; overflow: hidden; transition: 0.4s; border-top: 1px solid #eee;
+}
+header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+.panel-content { display: flex; max-width: 610px; margin-left: auto; margin-right:555px;
+                 padding-top: 30px; justify-content: space-around; }
+.panel-column { flex: 1; text-align:center; list-style: none;}
+.panel-column ul li { list-style: none; margin-bottom: 10px;  }
+.panel-column ul li a {  font-size: 0.95rem; text-decoration: none; 
+                         color: #666; font-size: 0.95rem; 
+                         transition: all 0.3s ease; /* 부드러운 변화를 위해 추가 */
+                         display: inline-block;     /* 움직임 효과를 위해 필요 */ }
+
+.panel-column ul li a:hover {
+    color:#dac0ff;    
+    transform: translateX(8px);       
+    font-weight:500         
+}
+
+/* --- 햄버거 및 트리거 숨기기 (PC) --- */
+.menu-trigger, .menu-btn { display:  none; }
+
+/* --- Hero & 컨텐츠 --- */
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+                url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200') no-repeat center/cover;
+    height: 500px; display: flex; align-items: center; color: var(--white);
+}
+.price-content { margin-top: -60px; padding-bottom: 80px; }
+.price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+.price-card { background: var(--white); padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+.detail-box { background: #fcfaff; padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px dashed var(--light-purple); }
+.detail-row { display: flex; justify-content: space-between; font-size: 0.95rem; padding: 5px 0; }
+.reserve-btn { width: 100%; padding: 15px; background: var(--deep-purple); color: var(--white); border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
+
+
+
+/* --- 푸터 (흰색 배경) --- */
+.white-footer { background: var(--white); padding: 60px 0; border-top: 1px solid #eee; }
+.footer-flex { display: flex; justify-content:space-between; align-items: center;  }
+.footer-logo img { width: 300px; }
+.footer-info { flex: 1; margin: 0 150px; color: #888; font-size: 1rem; line-height: 1.6; }
+.footer-contact strong { display: block; font-size: 1.1rem; color: var(--black); margin-top: 5px; }
+
+/* --- 퀵메뉴 --- */
+.side-quick-menu { position: fixed; right: 0; top: 30%; z-index: 999; }
+.quick-btn {
+    display: block; writing-mode: vertical-rl; padding: 30px 15px; margin-top: 20px;
+    text-decoration: none; color: var(--white); font-weight: bold;
+    border-radius: 20px 0 0 20px; margin-bottom: 5px; background: #9381ff;
+
+}
+.admin-page { background-color: #b8b8ff; }
+
+
+
+/* --- 반응형 (모바일 900px 이하) --- */
+@media (max-width: 900px) {
+    .nav-wrapper { height: 70px; }
+    header.main-header { position: fixed; background: var(--white); border-bottom: 1px solid #eee; }
+    .logo { color: var(--deep-purple); width: auto; }
+    .header-util-space { display: none; }
+    
+    /* 햄버거 버튼 보이기 */
+    .menu-btn { display: block; width: 25px; height: 18px; position: relative; z-index: 1002; cursor: pointer; }
+    .menu-btn span { position: absolute; width: 100%; height: 2px; background: var(--deep-purple); transition: 0.3s; }
+    .menu-btn span:nth-child(1) { top: 0; }
+    .menu-btn span:nth-child(2) { top: 8px; }
+    .menu-btn span:nth-child(3) { bottom: 0; }
+
+    .download-btns {
+        justify-content: center;
+        flex-direction: row; /* 모바일에서도 가로 유지 또는 원하면 column으로 변경 가능 */
+    }
+
+    /* 모바일용 GNB 슬라이드 메뉴 */
+
+    .gnb {
+        position: fixed; top: 0; left: -100%; width: 280px; height: 100vh;
+        background: var(--white); transition: 0.4s; display: block; padding: 100px 20px 40px;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.1); z-index: 1001;
+        flex: 1; order:2;
+
+        /* ☑️ 스크롤 추가 */
+        position: fixed; 
+        top: 0; 
+        left: -100%; 
+        width: 280px; 
+        /* 1. 높이를 화면 전체(100vh)로 설정 */
+        height: 100vh;         
+        /* 2. 내용이 넘칠 경우 세로 스크롤 허용 */
+        overflow-y: auto;         
+        /* 3. 모바일 기기에서 부드러운 스크롤 적용 */
+        -webkit-overflow-scrolling: touch;         
+        background: var(--white); 
+        transition: 0.4s; 
+        padding: 80px 20px 40px; /* 상단 닫기 버튼/로고 공간 확보 */
+        box-shadow: 10px 0 30px rgba(0,0,0,0.1); 
+        z-index: 1001;
+        display: block; /* 가로 배열 해제 */
+        flex: 1;
+        display: flex;
+        justify-content: center;
+       
+    }
+    
+    /* 메뉴가 열렸을 때 바깥 본문 스크롤을 막고 싶다면 
+       (선택사항: 자바스크립트가 필요하므로 일단 CSS로 메뉴 내부 스크롤만 해결) */
+    .menu-trigger:checked ~ .gnb {
+        left: 0;
+    }
+
+    .main-menu { display: block; max-width: 100%;}
+    .main-menu li { border-bottom: 1px solid #f0f0f0; padding: 20px 0; }
+    .main-menu li a { color: var(--black); font-size: 1.1rem;
+                      margin-bottom: 10px; display: block;}
+    
+    /* 모바일 서브메뉴 노출 */
+    .mobile-only-sub { display: block; list-style: none; padding-left: 15px; }
+    .mobile-only-sub li { border: none; padding: 5px 0; }
+    .mobile-only-sub li a { font-size: 0.9rem; color: #777; font-weight: 400; }
+
+    /* PC 전용 패널 숨김 */
+    .mega-menu-panel { display: none; }
+
+    /* 메뉴 동작 컨트롤 */
+    .menu-trigger:checked ~ .gnb { left: 0; }
+    .menu-trigger:checked ~ .menu-overlay { display: block; }
+    .menu-trigger:checked ~ .menu-btn span:nth-child(1) { transform: rotate(45deg); top: 8px; }
+    .menu-trigger:checked ~ .menu-btn span:nth-child(2) { opacity: 0; }
+    .menu-trigger:checked ~ .menu-btn span:nth-child(3) { transform: rotate(-45deg); bottom: 8px; }
+
+    .menu-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+    
+    .login-button { display: flex; justify-content: flex-end;
+                    margin-left: auto; } 
+tr
+    /* .nav-right { display: flex; align-items: center; z-index: 3001; }
+.nav-log {
+  width: 40px; height: 40px; background: var(--white-10); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
+  cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
+  color: #e2dcff;
+} */
+
+
+    /* 컨텐츠 레이아웃 조정 */
+    .hero-section { height: 350px; padding-top: 70px; }
+    .footer-flex { flex-direction: column; text-align: center; gap: 30px; }
+    .footer-info { margin: 0; }
+    .side-quick-menu { display: none; }
+
+    /* --- 반응형 대응 --- */f
+
+    .app-hero-flex { flex-direction: column; text-align: center; }
+    .hero-text h1 { font-size: 2.2rem; }
+    .hero-image { margin-top: 50px; }
+    .phone-mockup { transform: rotate(0); width: 250px; height: 500px; }
+    .footer-contact { flex-direction: column; gap: 20px; }
+}
+
+/* 게시판 부분 */
+
+.faq-card-section {
+    padding: 90px 0;
+    background: linear-gradient(180deg, #f7f9fc, #ffffff);
+}
+
+.faq-title {
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    color: #4a2c73;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* 카드 */
+.faq-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid #eee;
+}
+
+.faq-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+}
+
+/* 질문 영역 */
+.faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-q h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.faq-q span {
+    font-size: 22px;
+    transition: 0.3s;
+}
+
+/* 답변 */
+.faq-a {
+    margin-top: 12px;
+    font-size: 15px;
+    color: #555;
+    line-height: 1.5;
+
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: 0.35s ease;
+}
+
+/* active 상태 */
+.faq-card.active {
+    border: 1px solid #2f80ed;
+}
+
+.faq-card.active .faq-a {
+    max-height: 200px;
+    opacity: 1;
+}
+
+.faq-card.active .faq-q span {
+    transform: rotate(90deg);
+    color: #2f80ed;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
