@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import '../css/wallet.css'; // 기존 wellet.css 내용을 이쪽으로 옮겨주세요.
+import '../css/wallet.css'; // 기존 wallet.css 내용을 이쪽으로 옮겨주세요.
 
 const Wallet: React.FC = () => {
   // --- 상태 관리 (State) ---

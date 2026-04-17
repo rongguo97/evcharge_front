@@ -7,6 +7,9 @@ import WalletManager from '../pages/Admin/Member/WalletManager';
 import WithdrawManager from '../pages/Admin/Member/WithdrawManager';
 import Monitor from '../pages/Admin/Service/ReservationMonitor';
 import Log from '../pages/Admin/Community/ActivityLog';
+import AdminChart from '../pages/Admin/DashBoard/AdminChart';
+import StatsAnalysis from '../pages/Admin/DashBoard/StatsAnalysis';
+import PaymentAudit from '../pages/Admin/Payment/PaymentAudit';
 // ... 나머지 컴포넌트들도 같은 방식으로 import
 
 const AdminPage: React.FC = () => {
@@ -38,12 +41,11 @@ const AdminPage: React.FC = () => {
       case "monitor": return <Monitor />;
 
       /* 3. 매출 및 결제 */
-      case "audit": return <div className="p-4">결제 내역 감사 화면</div>;
-      case "refund": return <div className="p-4">환불 처리 화면</div>;
+      case "audit": return <PaymentAudit />;
 
       /* 4. 대시보드 및 통계 */
-      case "charts": return <div className="p-4">시각화 차트 화면</div>;
-      case "analysis": return <div className="p-4">운영 지표 분석 화면</div>;
+      case "charts": return <AdminChart />;
+      case "analysis": return <StatsAnalysis />;
 
       /* 5. 로그 */
       case "log": return <Log />;
@@ -86,8 +88,7 @@ const AdminPage: React.FC = () => {
               <div className="menu-title" onClick={() => toggleMenu('payment')}>매출 및 결제 관리</div>
               {openMenus.payment && (
                 <ul className="sub-menu-list">
-                  <li onClick={() => setActiveMenu("audit")}>결제 내역 감사</li>
-                  <li onClick={() => setActiveMenu("refund")}>환불 처리</li>
+                  <li onClick={() => setActiveMenu("audit")}>결제 내역 관리</li>
                 </ul>
               )}
             </li>
