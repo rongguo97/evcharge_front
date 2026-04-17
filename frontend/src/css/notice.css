@@ -1,0 +1,149 @@
+/* ============================================
+   CHARCAGE 공지사항 페이지 본문 전용 스타일
+   (Header 관련 중복 요소 제거됨)
+   ============================================ */
+
+/* 1. Hero Section (상단 보라색 배너 영역) */
+.hero-section {
+    background-color: #4a2c73;
+    color: #ffffff;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.hero-text h1 { 
+    font-size: 2.8rem; 
+    font-weight: 800; 
+    margin-bottom: 10px; 
+    letter-spacing: -1px;
+}
+
+.hero-text h1 span { 
+    color: #c180ff; /* --primary-color */
+}
+
+.hero-text p.sub-title { 
+    font-size: 1.1rem; 
+    opacity: 0.8; 
+    margin-bottom: 10px; 
+}
+
+/* 2. Notice Board Section (게시판 영역) */
+.notice-container {
+    padding: 80px 0;
+    min-height: 500px;
+    background-color: #fff; /* 배경색 명시 */
+}
+
+.board-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #4a2c73;
+    border-left: 5px solid #c180ff;
+    padding-left: 15px;
+}
+
+/* Notice Table */
+.notice-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #4a2c73;
+}
+
+.notice-table th {
+    background-color: #f9f9fb;
+    padding: 18px 10px;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+.notice-table td {
+    padding: 18px 10px;
+    border-bottom: 1px solid #dee2e6;
+    text-align: center;
+    color: #666;
+}
+
+.notice-table td.title {
+    text-align: left;
+    padding-left: 30px;
+}
+
+.notice-table td.title a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.notice-table td.title a:hover {
+    color: #c180ff;
+}
+
+.notice-table tbody tr:hover {
+    background-color: #fcfaff;
+}
+
+/* 중요 공지 Badge */
+.badge-notice {
+    display: inline-block;
+    padding: 2px 10px;
+    background-color: #c180ff;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+/* 3. Pagination (페이지 번호) */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.page-btn {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dee2e6;
+    background: white;
+    color: #666;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.page-btn.active {
+    background-color: #c180ff;
+    color: white;
+    border-color: #c180ff;
+}
+
+.page-btn:hover:not(.active) {
+    border-color: #c180ff;
+    color: #c180ff;
+}
+
+/* 4. Responsive (반응형 본문 최적화) */
+@media (max-width: 768px) {
+    .hero-text h1 { font-size: 2rem; }
+    .notice-table th:nth-child(3), .notice-table td:nth-child(3) { display: none; }
+    .notice-table { font-size: 0.9rem; }
+    .board-title { font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+    .hero-text h1 { font-size: 1.5rem; }
+    .notice-table th:nth-child(4), .notice-table td:nth-child(4) { display: none; }
+    .badge-notice { display: block; margin-bottom: 5px; }
+}

@@ -60,7 +60,7 @@ function Header() {
               <div className="panel-column"><ul><li><a href="#">브랜드 소개</a></li><li><Link to ="membership">회원가입</Link></li></ul></div>
               <div className="panel-column"><ul><li><a href="#">충전소 찾기</a></li><li><a href="#">충전소 종류</a></li></ul></div>
               <div className="panel-column"><ul><li><Link to ="pay">지갑 충전하기</Link></li><li><Link to ="cash">요금 알아보기</Link></li><li><Link to = "app">APP 소개</Link></li></ul></div>
-              <div className="panel-column"><ul><li><a href="#">공지사항</a></li><li><a href="#">FAQ</a></li><li><a href="#">뉴스</a></li><li><a href="#">고객센터</a></li></ul></div>
+              <div className="panel-column"><ul><li><Link to="notice">공지사항</Link></li><li><Link to="faq">FAQ</Link></li><li><a href="#">뉴스</a></li><li><Link to="customer-center">고객센터</Link></li></ul></div>
 
             </div>
           </div>
