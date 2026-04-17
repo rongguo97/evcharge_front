@@ -1,5 +1,5 @@
 // 📍 [수정] useEffect와 useLocation(라우터 상태 받기용) 추가 임포트
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import StationService from "../services/StationService";
 import type { IStation } from "../types/IStation";
