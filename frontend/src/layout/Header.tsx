@@ -33,7 +33,7 @@ function Header() {
                     <a href="#">브랜드 소개</a>
                   </li>
                   <li>
-                    <Link to="membership">회원가입</Link>
+                    <Link to="login">회원가입 및 로그인</Link>
                   </li>
                 </ul>
               </li>
@@ -91,7 +91,7 @@ function Header() {
                       <a href="#">브랜드 소개</a>
                     </li>
                     <li>
-                      <Link to="membership">회원가입</Link>
+                      <Link to="login">회원가입 및 로그인</Link>
                     </li>
                   </ul>
                 </div>
