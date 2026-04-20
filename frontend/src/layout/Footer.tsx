@@ -12,7 +12,7 @@ const Footer = () => {
       <p>회사이름 : 차카지 </p>
       <p> 대표이사 : 이팀이지 </p>
       <p>사업자번호 : 123-45-67890</p>
-      <p>주소 : 부산광역시 진구 범내골로</p>
+      <p>주소 : 부산광역시 부산구 중앙대로</p>
       <p>E-mail : help00charcage.com</p>
       <p className="copy">© 2026 CHARCAGE. All Rights Reserved.</p>
     </div>
