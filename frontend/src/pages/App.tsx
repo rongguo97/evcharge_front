@@ -15,7 +15,6 @@ function App() {
           관 리 자 페 이 지
         </Link>
       </aside>
-
       <div className="App">
         {/* Hero Section */}
         <section className="app-hero">
@@ -77,7 +76,7 @@ function App() {
               </p>
             </div>
             <div className="feature-item">
-              <div className="icon"></div>
+              <div className="icon">💳</div>
               <h3>차카지 간편 결제 서비스</h3>
               <p>
                 간편결제로 간단하게

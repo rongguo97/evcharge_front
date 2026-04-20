@@ -1,6 +1,7 @@
 // 📍 [수정] useEffect와 useLocation(라우터 상태 받기용) 추가 임포트
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import ReservationService from "../services/ReservationList";
 import StationService from "../services/StationService";
 import type { IStation } from "../types/IStation";
 import {
@@ -112,10 +113,45 @@ function ReservationPage() {
   };
 
   // 📍 [수정됨] 최종 예약 확정 핸들러 (모달 Step 2에서 호출됨)
-  const handleConfirmReservation = () => {
-    // 여기에 실제 백엔드로 예약 정보를 보내는 로직을 추가하시면 됩니다.
-    setModalStep(3); // 완료 알람 대신 모달 3단계(완료 화면)로 이동
-  };
+ const handleConfirmReservation = async () => {
+  try {
+    // 1. 데이터 추출 (가짜 이메일 사용 - DB에 해당 이메일이 미리 있어야 함!)
+    const loggedInEmail = "test@example.com"; 
+    
+    // selectedTime ("14:00 - 15:00")에서 시작 시간만 추출
+    const startTimeStr = selectedTime?.split(" - ")[0]; 
+    if (!startTimeStr || !selectedCharger) {
+      alert("예약 정보를 확인해주세요.");
+      return;
+    }
+
+    // 2. 날짜 포맷팅 (YYYY-MM-DDTHH:mm:ss)
+    const today = new Date();
+    const isoStartTime = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}T${startTimeStr}:00`;
+
+    // 3. 백엔드 @RequestParam 형식에 맞게 URLSearchParams 생성
+    const params = new URLSearchParams();
+    params.append("email", loggedInEmail);
+    params.append("stationId", selectedCharger.stationId || selectedCharger.id);
+    params.append("startTime", isoStartTime);
+
+    // 4. 서비스 호출
+    const response = await ReservationService.addReservation(params);
+
+    // 5. 성공 시 다음 단계로
+    if (response.status === 201 || response.data.success) {
+      setModalStep(3);
+      return;
+    }
+  } catch (error: any) {
+    console.error("예약 전송 실패:", error);
+    if (error.response && error.response.status === 409) {
+      alert(error.response.data.message || "이미 예약된 시간입니다.");
+    } else {
+      alert("서버 연결에 실패했습니다.");
+    }
+  }
+};
 
   // --- [렌더링 전 페이징 데이터 계산 로직] ---
   const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
