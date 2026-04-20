@@ -30,7 +30,7 @@ function Header() {
                 <a href="#">CHARCAGE</a>
                 <ul className="mobile-only-sub">
                   <li>
-                    <a href="#">브랜드 소개</a>
+                    <a href="brand">브랜드 소개</a>
                   </li>
                   <li>
                     <Link to="login">회원가입 및 로그인</Link>
@@ -88,7 +88,7 @@ function Header() {
                 <div className="panel-column">
                   <ul>
                     <li>
-                      <a href="#">브랜드 소개</a>
+                      <a href="brand">브랜드 소개</a>
                     </li>
                     <li>
                       <Link to="login">회원가입 및 로그인</Link>
