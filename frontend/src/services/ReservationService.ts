@@ -28,7 +28,7 @@
  * 예약 추가
  * @param params email, stationId, startTime이 담긴 데이터
  */
-const addReservation = (reservationData: any) => {
+const createReservation = (reservationData: any) => {
   // 백엔드가 @RequestParam으로 받고 있으므로 form-urlencoded 형식으로 보냅니다.
   return common.post("/reservation/add", reservationData, {
     headers: {
@@ -37,6 +37,6 @@ const addReservation = (reservationData: any) => {
   });
 };  
 
-  const StationService = {getAll, get, addReservation};
+  const StationService = {getAll, get, createReservation};
 
   export default StationService;
