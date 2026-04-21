@@ -68,16 +68,16 @@ function Header() {
                 <a href="#">고객지원</a>
                 <ul className="mobile-only-sub">
                   <li>
-                    <a href="#">공지사항</a>
+                    <Link to="notice">공지사항</Link>
                   </li>
                   <li>
-                    <a href="#">FAQ</a>
+                    <Link to="faq">FAQ</Link>
                   </li>
                   <li>
-                    <a href="#">뉴스</a>
+                    <Link to="community">커뮤니티</Link>
                   </li>
                   <li>
-                    <a href="#">고객센터</a>
+                    <Link to="customer-center">고객센터</Link>
                   </li>
                 </ul>
               </li>
@@ -127,7 +127,7 @@ function Header() {
                       <Link to="faq">FAQ</Link>
                     </li>
                     <li>
-                      <a href="#">뉴스</a>
+                      <Link to="community">커뮤니티</Link>
                     </li>
                     <li>
                       <Link to="customer-center">고객센터</Link>

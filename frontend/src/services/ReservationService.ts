@@ -37,6 +37,11 @@ const createReservation = (reservationData: any) => {
   });
 };  
 
-  const StationService = {getAll, get, createReservation};
+//   날짜 및 시간 별 예약 확인
+const getReservationsByDate = (chargerId: number, date: string) => {
+  return common.get(`/api/reservations/slots?chargerId=${chargerId}&date=${date}`);
+};
+
+  const StationService = {getAll, get, createReservation, getReservationsByDate};
 
   export default StationService;
