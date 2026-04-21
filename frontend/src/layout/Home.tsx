@@ -1,6 +1,7 @@
 import StationList from "../pages/StationList";
 import carVideo from "../image/video(fixed).mp4";
 
+
 const Home = () => {
   // 💡 Home에서는 더 이상 map, stations 상태를 직접 관리하지 않습니다.
   // 모든 로직은 StationList 컴포넌트가 알아서 처리하도록 맡깁니다.

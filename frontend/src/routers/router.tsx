@@ -50,7 +50,7 @@ const router = createBrowserRouter([
       // 로그인 페이지
       { path: "/login", element: <Login /> },
       // 브랜드 소개 페이지
-      { path: "/brand", element: <Brand /> },
+     { path: "/brand", element: <Brand /> },
       // 커뮤니티 소개 페이지
       { path: "/community", element: <Community /> }
 
