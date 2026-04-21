@@ -11,6 +11,7 @@ import Notice from "../pages/Notice";
 import FAQ from "../pages/faq";
 import CustomerCenter from "../pages/CustomerService";
 import Login from "../layout/Login";
+import Brand from "../pages/Brand";
 
 
 // (이론)성능 증가 팁 코딩: 코드 스플리팅(Route Code Splitting) 기능(페이지 뜨는 속도가 빨라짐)
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
       // 로그인 페이지
       { path: "/login", element: <Login /> },
       // 브랜드 소개 페이지
-
+      { path: "/brand", element: <Brand /> },
 
 
 
