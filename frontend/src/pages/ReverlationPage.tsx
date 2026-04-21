@@ -656,7 +656,7 @@
                             marginBottom: "8px",
                             background: isSelected ? "#f8f9ff" : "#ffffff",
                             border: isSelected
-                              ? "1px solid #f0f0f0"
+                              ? "1px solid #eaddff"
                               : "1px solid #eaddff",
                             boxShadow: isSelected
                               ? "0 4px 10px rgba(180, 82, 181, 0.15)"
@@ -739,7 +739,7 @@
                                     fontWeight: "normal",
                                   }}
                                 >
-                                  ({isFast ? "* 40분 충전" : "* 60분 충전"})
+                                  ({isFast ? "* 40분 충전" : "* 240분 충전"})
                                 </span>
                               </h4>
 
@@ -755,8 +755,8 @@
                                     borderRadius: "10px",
                                     border: "1px solid #eaddff",
                                     background: "#f8f9ff",
-                                    color: "#B452B5",
-                                    fontWeight: "700",
+                                    color: "black",
+                                    fontWeight: "500",
                                     cursor: "pointer",
                                     fontSize: "13px",
                                   }}
@@ -952,8 +952,9 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        alignItems: "center",
                         marginBottom: "16px",
+                        gap: "15px"
                       }}
                     >
                       <span style={{ color: "#666", fontSize: "15px" }}>
