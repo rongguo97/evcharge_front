@@ -656,7 +656,7 @@
                             marginBottom: "8px",
                             background: isSelected ? "#f8f9ff" : "#ffffff",
                             border: isSelected
-                              ? "1px solid #f0f0f0"
+                              ? "1px solid #eaddff"
                               : "1px solid #eaddff",
                             boxShadow: isSelected
                               ? "0 4px 10px rgba(180, 82, 181, 0.15)"
@@ -739,7 +739,7 @@
                                     fontWeight: "normal",
                                   }}
                                 >
-                                  ({isFast ? "* 40분 충전" : "* 60분 충전"})
+                                  ({isFast ? "* 40분 충전" : "* 240분 충전"})
                                 </span>
                               </h4>
 
@@ -755,8 +755,8 @@
                                     borderRadius: "10px",
                                     border: "1px solid #eaddff",
                                     background: "#f8f9ff",
-                                    color: "#B452B5",
-                                    fontWeight: "700",
+                                    color: "black",
+                                    fontWeight: "500",
                                     cursor: "pointer",
                                     fontSize: "13px",
                                   }}
@@ -943,20 +943,20 @@
                     style={{
                       background: "#f8f9ff",
                       borderRadius: "12px",
-                      padding: "25px",
+                      padding: " 25px 60px",
                       border: "1px solid #eaddff",
-                      marginBottom: "30px",
+                      marginBottom: "25px",
                     }}
                   >
                     {/* 충전소명 */}
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: "10px",
                         marginBottom: "16px",
                       }}
                     >
-                      <span style={{ color: "#666", fontSize: "15px" }}>
+                      <span style={{ color: "#666", fontSize: "15px", padding:"0px 0px 0px 20px" }}>
                         충전소 :
                       </span>
                       <strong style={{ color: "#333", fontSize: "16px" }}>
@@ -968,11 +968,11 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                       gap: "10px",
                         marginBottom: "16px",
                       }}
                     >
-                      <span style={{ color: "#666", fontSize: "15px" }}>
+                      <span style={{ color: "#666", fontSize: "15px", padding:"0px 0px 0px 20px" }}>
                         충전기 :
                       </span>
                       <strong style={{ color: "#333", fontSize: "16px" }}>
@@ -985,11 +985,11 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: "10px",
                         marginBottom: "16px",
                       }}
                     >
-                      <span style={{ color: "#666", fontSize: "15px" }}>
+                      <span style={{ color: "#666", fontSize: "15px", padding:"0px 0px 0px 20px" }}>
                         예약 날짜 :
                       </span>
                       <strong style={{ color: "#333", fontSize: "16px" }}>
@@ -1001,11 +1001,11 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: "10px",
                         alignItems: "center",
                       }}
                     >
-                      <span style={{ color: "#666", fontSize: "15px" }}>
+                      <span style={{ color: "#666", fontSize: "15px" , padding:"0px 0px 0px 20px"}}>
                         예약 시간 :
                       </span>
                       <strong style={{ color: "#B452B5", fontSize: "20px" }}>
@@ -1081,15 +1081,15 @@
                     style={{
                       background: "#f8f9ff",
                       borderRadius: "12px",
-                      padding: "25px",
+                      padding: " 25px 120px",
                       border: "1px solid #eaddff",
-                      marginBottom: "30px",
+                      marginBottom: "25px",
                     }}
                   >
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                         gap: "15px",
                         marginBottom: "16px",
                         color: "#333",
                       }}
@@ -1100,7 +1100,7 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                         gap: "15px",
                         marginBottom: "16px",
                         color: "#333",
                       }}
@@ -1111,7 +1111,7 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                         gap: "15px",
                         marginBottom: "16px",
                         color: "#333",
                       }}
@@ -1125,7 +1125,7 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                         gap: "15px",
                         color: "#333",
                       }}
                     >
@@ -1189,15 +1189,15 @@
                     style={{
                       background: "#f8f9ff",
                       borderRadius: "12px",
-                      padding: "25px",
+                      padding: " 25px 60px",
                       border: "1px solid #eaddff",
-                      marginBottom: "30px",
+                      marginBottom: "25px",
                     }}
                   >
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: "10px",
                         marginBottom: "16px",
                       }}
                     >
@@ -1212,7 +1212,7 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: "10px",
                         marginBottom: "16px",
                       }}
                     >
@@ -1228,7 +1228,7 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: "10px",
                         marginBottom: "16px",
                       }}
                     >
@@ -1243,7 +1243,7 @@
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: "10px",
                         alignItems: "center",
                       }}
                     >
