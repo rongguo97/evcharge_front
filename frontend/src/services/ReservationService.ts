@@ -1,48 +1,34 @@
-  import common from "../common/CommonService";
- 
+import axios from "axios";
 
-  /**
-   * 1) 충전소 전체 조회
-   * @param stationName 충전소명 검색어
-   * @param page 현재 페이지
-   * @param size 페이지당 개수
-   */
-  // StationService.ts
-  const getAll = ( params: {
-    searchKeyword?: string;
-    status?: string;
-    chargerType?: string;
-    chargerMethod?: string;
-    page: number;
-    size: number;
-  }) => {
-    return common.get("/station", { params });
-  };
+// Axios 인스턴스 또는 기본 설정을 사용 중이라고 가정합니다.
+// baseURL이 http://localhost:8080/api 로 설정되어 있다면 아래 코드의 url을 그대로 쓰세요.
 
-    // 충전소 상세 조회 (ID 기준)
+const ReservationService = {
+  
+  // 📍 1. 예약 시간 슬롯 조회 수정 (단수형 reservation 사용, URL 중복 제거)
+  getReservationsByDate: async (chargerId: number, date: string) => {
+    // /api/reservation/slots 가 호출되도록 설정
+    return await axios.get('http://localhost:8080/api/reservation/slots', {
+      params: {
+        chargerId: chargerId,
+        date: date
+      }
+    });
+  },
 
-  const get = (stationId: number ) => {
-    return common.get(`/station/${stationId}`,);
-  };
-
-  /**
- * 예약 추가
- * @param params email, stationId, startTime이 담긴 데이터
- */
-const createReservation = (reservationData: any) => {
-  // 백엔드가 @RequestParam으로 받고 있으므로 form-urlencoded 형식으로 보냅니다.
-  return common.post("/reservation/add", reservationData, {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-};  
-
-//   날짜 및 시간 별 예약 확인
-const getReservationsByDate = (chargerId: number, rDate: string) => {
-  return common.get(`/api/reservations/slots?chargerId=${chargerId}&date=${rDate}`);
+  // 📍 2. 신규 예약 등록 수정 (@RequestParam 방식에 맞춰서 전송)
+  createReservation: async (data: any) => {
+    // 백엔드가 JSON(@RequestBody)이 아닌 @RequestParam을 기다리므로, 
+    // 데이터를 두 번째 인자(Body)가 아닌 세 번째 인자의 params로 넘겨줍니다.
+    return await axios.post('http://localhost:8080/api/reservation/add', null, {
+      params: {
+        email: data.email,
+        stationId: data.stationId,
+        startTime: data.startTime ,// "2026-04-22T09:00:00" 형식의 ISO 문자열
+        endTime: data.endTime
+      }
+    });
+  }
 };
 
-  const StationService = {getAll, get, createReservation, getReservationsByDate};
-
-  export default StationService;
+export default ReservationService;
