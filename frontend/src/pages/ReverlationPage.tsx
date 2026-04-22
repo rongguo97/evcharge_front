@@ -63,9 +63,9 @@
           try {
             const formattedDate = moment(selectedDate).format("YYYY-MM-DD");
             // chargerId 또는 id 등 실제 식별자 키값에 맞게 넣어주세요
-            const chargerId = selectedCharger.chargerId || selectedCharger.id; 
+           const targetId = selectedCharger.stationId || selectedCharger.id; 
 
-            const response = await ReservationService.getReservationsByDate(chargerId, formattedDate);
+            const response = await ReservationService.getReservationsByDate(targetId, formattedDate);
             setReservedList(response.data); 
           } catch (error) {
             console.error("예약 내역 로드 실패:", error);
@@ -125,13 +125,15 @@
       // 충전기 종류(급속/완속)에 맞춰 예약 시간 슬롯 생성
       const generateTimeSlots = (charger: any) => {
         if (!charger) return [];
-        const typeLabel = getTypeLabel(charger.chargerType);
-        const methodLabel = getMethodLabel(charger.chargerMethod);
+        const typeLabel = String(getTypeLabel(charger.chargerType) || "");
+        const methodLabel = String(getMethodLabel(charger.chargerMethod) || "");
+         const rawType = String(charger.chargerType); // 원본 코드 (예: "2")
         let duration = 240;
-        if (typeLabel.includes("급속") || methodLabel.includes("100kW"))
-          duration = 40;
-        else if (methodLabel.includes("50kW")) duration = 70;
-
+        if (typeLabel.includes("급속") || rawType === "2" || rawType === "02" || methodLabel.includes("100kW")) {
+      duration = 40;
+    } else if (methodLabel.includes("50kW")) {
+      duration = 70;
+    }
         const buffer = 10; // 정비 시간(10분)
         const totalMinutes = 24 * 60;
         const slots = [];
@@ -156,6 +158,7 @@
         try {
           const loggedInEmail = "test@example.com"; // 임시 이메일
           const startTimeStr = selectedTime?.split(" - ")[0];
+          const endTimeStr = selectedTime?.split(" - ")[1];
           if (!startTimeStr || !selectedCharger) {
             alert("예약 정보를 확인해주세요.");
             return;
@@ -163,6 +166,7 @@
           // 날짜와 시간을 합쳐서 백엔드 형식에 맞게 조립
           const formattedDate = moment(selectedDate).format("YYYY-MM-DD");
           const isoStartTime = `${formattedDate}T${startTimeStr}:00`;
+          const isoEndTime = `${formattedDate}T${endTimeStr}:00`;
 
           // 📍 any 대신 IReservation 타입을 명시합니다.
           const reservationData: IReservation = {
@@ -170,6 +174,7 @@
             stationId: Number(selectedCharger.stationId || selectedCharger.id), // 📍 Long 타입 대응을 위해 number로 변환
             rDate: formattedDate,
             startTime: isoStartTime,
+            endTime: isoEndTime,
             stationName: selectedStation.stationName, // 필요 정보 추가
             address: selectedStation.address
           };
@@ -239,7 +244,12 @@
 
       //  이미 예약된 슬롯인지 체크 (DB 기반)
       // reservedSlots는 해당 충전기/날짜에 이미 예약된 시간대 리스트라고 가정
-      if (reservedList.includes(slotRange)) return true;
+      //  시작 시간("09:00")만 뽑아서 여유롭게 비교!
+    const startTimeStr = slotRange.split(" - ")[0]; // "09:00 - 13:00"에서 "09:00"만 추출
+    const isAlreadyReserved = reservedList.some((resTime: string) => resTime.includes(startTimeStr));
+    if (isAlreadyReserved) {
+      return true; // 백엔드 데이터에 "09:00"이 포함되어 있으면 예약된 칸으로 처리!
+    }
 
         // 한국 시간 기준으로 오늘 날짜 구하기 (YYYY-MM-DD)
         const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
@@ -947,7 +957,7 @@
                       style={{
                         background: "#f8f9ff",
                         borderRadius: "12px",
-                        padding: " 25px 60px",
+                        padding: " 25px 90px",
                         border: "1px solid #eaddff",
                         marginBottom: "25px",
                       }}
@@ -1193,7 +1203,7 @@
                       style={{
                         background: "#f8f9ff",
                         borderRadius: "12px",
-                        padding: " 25px 60px",
+                        padding: " 25px 100px",
                         border: "1px solid #eaddff",
                         marginBottom: "25px",
                       }}
