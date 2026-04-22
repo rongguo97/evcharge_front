@@ -1,4 +1,5 @@
   import common from "../common/CommonService";
+ 
 
   /**
    * 1) 충전소 전체 조회
@@ -38,8 +39,8 @@ const createReservation = (reservationData: any) => {
 };  
 
 //   날짜 및 시간 별 예약 확인
-const getReservationsByDate = (chargerId: number, date: string) => {
-  return common.get(`/api/reservations/slots?chargerId=${chargerId}&date=${date}`);
+const getReservationsByDate = (chargerId: number, rDate: string) => {
+  return common.get(`/api/reservations/slots?chargerId=${chargerId}&date=${rDate}`);
 };
 
   const StationService = {getAll, get, createReservation, getReservationsByDate};
