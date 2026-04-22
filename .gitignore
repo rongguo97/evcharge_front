@@ -9,3 +9,8 @@ frontend/node_modules
 /dataSources.local.xml
 # 에디터 기반 HTTP 클라이언트 요청
 /httpRequests/
+.DS_Store
+.DS_Store
+.DS_Store
+잡동사니/reactservice/.DS_Store
+.DS_Store
