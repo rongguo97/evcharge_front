@@ -1,16 +1,21 @@
 import { HeadProvider } from "react-head";
 import { RouterProvider } from "react-router-dom";
-import "./App.css"
+import "./App.css";
 import router from "./routers/router";
-// 목적: 리액트가 실행하면 제일 처음 읽는 파일, 여기에 me 를 넣어도 됩니다.
-function App() {
+import { AuthProvider } from "./context/AuthContext"; // 1. AuthProvider 임포트
 
+function App() {
   return (
     <>
-      {/* 메뉴 설정(RouterProvider), 검색엔진 순위 올림(HeadProvider) */}
-      <HeadProvider>
-        <RouterProvider router={router} />
-      </HeadProvider>
+      {/* 2. AuthProvider로 전체를 감싸줍니다. 
+        이렇게 하면 router.ts 안에 정의된 모든 페이지(Login, Home 등)에서 
+        useAuth()를 사용할 수 있게 됩니다. 
+      */}
+      <AuthProvider>
+        <HeadProvider>
+          <RouterProvider router={router} />
+        </HeadProvider>
+      </AuthProvider>
     </>
   );
 }
