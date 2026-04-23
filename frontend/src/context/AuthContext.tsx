@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // 앱이 켜질 때 혹은 새로고침 시 로그인 상태 확인
   const checkLoginStatus = async () => {
     try {
-      const res = await apiClient.get('/me');
+      const res = await apiClient.get('/api/auth/me');
       setUser(res.data);
       setIsLoggedIn(true);
     } catch (err) {
