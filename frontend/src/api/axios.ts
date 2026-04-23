@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // 프로젝트 전체에서 사용할 axios 인스턴스 하나만 딱 만듭니다.
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: 'http://localhost:8080/',
    
   
   // [매우 중요] 백엔드와 쿠키(JWT)를 주고받기 위한 핵심 설정
