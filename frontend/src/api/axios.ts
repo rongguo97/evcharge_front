@@ -11,6 +11,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  
 });
 
 // 외부에서 이 인스턴스를 'apiClient'라는 이름으로 부를 수 있게 내보냅니다.
