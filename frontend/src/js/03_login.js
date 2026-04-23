@@ -73,7 +73,7 @@ import api from '../api/axios'; // axios 설정 가져오기
 
         // 2초 뒤 메인으로 이동
         setTimeout(() => {
-          window.location.href = "/"; 
+          window.location.href = window.location.origin + "/"; 
         }, 2000);
       }
     } catch (error) {

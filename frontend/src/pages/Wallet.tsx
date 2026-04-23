@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // 📍 useEffect 추가
 import { useNavigate } from 'react-router-dom';
+import WalletService from '../services/WalletService'; 
 import '../css/wallet.css';
 import '../css/header.css';
 import '../css/footer.css';
 
-const Pay: React.FC = () => {
+const Wallet: React.FC = () => {
   const navigate = useNavigate();
 
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
@@ -13,27 +14,57 @@ const Pay: React.FC = () => {
   const [payMethod, setPayMethod] = useState<string>("kakao");
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
-  const myTotalPoint = 20000;
+  // 📍 [변경] 고정값이 아니라 상태값으로 관리
+  const [myTotalPoint, setMyTotalPoint] = useState<number>(0); 
   const amounts = [10000, 20000, 30000, 50000];
 
   const currentTotal = selectedAmount || Number(customAmount) || 0;
-
-  // 보완: 포인트가 결제 금액보다 크지 않도록 제한
   const finalPrice = Math.max(0, currentTotal - point);
-
   const savedPoint = Math.floor(finalPrice * 0.1);
 
-  const handlePayment = () => {
+  // 📍 1. 페이지 로드 시 실제 내 포인트 가져오기
+  useEffect(() => {
+    const fetchPoint = async () => {
+      try {
+        const res = await WalletService.getMyWallet();
+        if (res.data.success) {
+          setMyTotalPoint(res.data.result.point); // 서버에서 받은 진짜 포인트 세팅
+        }
+      } catch (e) {
+        console.error("포인트 정보를 가져오는데 실패했습니다.", e);
+      }
+    };
+    fetchPoint();
+  }, []);
+
+  // 📍 2. 결제 버튼 클릭 시 실행되는 서버 연동 로직
+  const handlePayment = async () => {
     if (currentTotal <= 0) {
       alert("충전 금액을 선택하거나 입력해주세요.");
       return;
     }
-    setIsCompleted(true);
+
+    try {
+      // 서버에 "충전할 금액"을 보냅니다.
+      // (참고: 백엔드 로직에 따라 currentTotal 혹은 finalPrice 중 무엇을 보낼지 결정합니다. 
+      // 여기서는 유저가 선택한 원금인 currentTotal을 충전한다고 가정합니다.)
+      const response = await WalletService.chargeWallet(currentTotal);
+
+      if (response.data.success) {
+        setIsCompleted(true); // 성공 시 완료 화면으로 전환
+      }
+    } catch (error: any) {
+      console.error("충전 실패:", error);
+      if (error.response?.status === 403) {
+        alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+      } else {
+        alert("결제 처리 중 오류가 발생했습니다.");
+      }
+    }
   };
 
   if (isCompleted) {
     return (
-
       <div className="payment-page-bg">
         <div className="header-spacer"></div>
         <div className="payment-container completed-box">
@@ -75,7 +106,6 @@ const Pay: React.FC = () => {
 
   return (
     <div>
-
       <div className="payment-page-bg">
         <div className="header-spacer"></div>
         <div className="payment-container">
@@ -87,7 +117,7 @@ const Pay: React.FC = () => {
                 <button
                   key={amt}
                   className={`amount-btn ${selectedAmount === amt ? 'active' : ''}`}
-                  onClick={() => { setSelectedAmount(amt); setCustomAmount(""); setPoint(0); }} // 금액 변경 시 포인트 초기화 권장
+                  onClick={() => { setSelectedAmount(amt); setCustomAmount(""); setPoint(0); }}
                 >
                   {amt.toLocaleString()}원
                 </button>
@@ -140,16 +170,10 @@ const Pay: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className="footer-spacer">
-
-        </div>
+        <div className="footer-spacer"></div>
       </div>
-
-      
     </div>
-
-
   );
 };
 
-export default Pay;
+export default Wallet;
