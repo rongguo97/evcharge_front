@@ -1,20 +1,12 @@
-import { Link } from "react-router-dom";
 import "../css/app.css";
 import "../css/header.css";
 import appwindow from "../image/appwindow.png";
 
 function App() {
   return (
-    
+
     <div>
-      <aside className="side-quick-menu">
-        <Link to="/mypage" className="quick-btn my-page">
-          마 이 페 이 지
-        </Link>
-        <Link to="#" className="quick-btn admin-page">
-          관 리 자 페 이 지
-        </Link>
-      </aside>
+      
       <div className="App">
         {/* Hero Section */}
         <section className="app-hero">

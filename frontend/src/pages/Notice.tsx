@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/header.css';
 import '../css/notice.css';
+import Footer from '../layout/Footer';
 
 interface INotice {
   id: number | string;
@@ -77,6 +78,7 @@ const NoticePage: React.FC = () => {
           <button className="page-btn">&gt;</button>
         </div>
       </main>
+      < Footer />
     </div>
   );
 };

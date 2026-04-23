@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-// import '../css/Brand.css'
+import "../css/brand.css";
+import "../js/Brand.js";
 
 const BrandPage: React.FC = () => {
   useEffect(() => {

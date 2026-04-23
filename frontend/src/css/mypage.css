@@ -1,6 +1,6 @@
 :root {
-    --bg-dark: #0f172a;
-    --card-bg: rgba(255, 255, 255, 0.05);
+    /* --bg-dark: #0f172a;
+    --card-bg: rgba(255, 255, 255, 0.05); */
     --primary-purple: #a855f7;
     --text-white: #ffffff;
 }
@@ -9,7 +9,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fc; overf
 .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
 body {
-    background-color: var(--bg-dark);
+    /* background-color: var(--bg-dark); */
     color: var(--text-white);
     margin: 0;
     font-family: 'Pretendard', sans-serif;
@@ -32,6 +32,18 @@ a {
 }
 
 
+.logoo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px;
+    border: 1px solid var(--primary-purple);
+    color: var(--primary-purple);
+    padding: 25px;
+    text-align: center;
+    border-radius: 25px;
+}
+.logoo:hover {
+    background: var(--primary-purple);
+    color: white;
+
+}
 .main-layout {
     background-color: #0f172a;
 }

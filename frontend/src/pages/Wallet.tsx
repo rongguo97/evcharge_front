@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../css/wallet.css';
 import '../css/header.css';
 import '../css/footer.css';
@@ -76,17 +76,6 @@ const Pay: React.FC = () => {
   return (
     <div>
 
-
-      <aside className="side-quick-menu">
-        <Link to="/mypage" className="quick-btn my-page">
-          마 이 페 이 지
-        </Link>
-
-        <Link to="#" className="quick-btn admin-page">
-          관 리 자 페 이 지
-        </Link>
-      </aside>
-
       <div className="payment-page-bg">
         <div className="header-spacer"></div>
         <div className="payment-container">
@@ -138,7 +127,7 @@ const Pay: React.FC = () => {
               <button className={`pay-btn ${payMethod === 'kakao' ? 'active kakao' : ''}`} onClick={() => setPayMethod('kakao')}>카카오페이</button>
               <button className={`pay-btn ${payMethod === 'toss' ? 'active toss' : ''}`} onClick={() => setPayMethod('toss')}>토스페이</button>
               <button className={`pay-btn ${payMethod === 'naver' ? 'active naver' : ''}`} onClick={() => setPayMethod('naver')}>네이버페이</button>
-            </div>
+            </div><br /><br /><br /><br />
           </section>
 
           <div className="bottom-sticky">

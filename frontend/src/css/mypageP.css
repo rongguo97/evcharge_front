@@ -32,7 +32,19 @@ a {
     z-index: 100;
 }
 
-.logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; }
+.logoo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px;
+    border: 1px solid var(--primary-purple);
+    color: var(--primary-purple);
+    padding: 25px;
+    text-align: center;
+    border-radius: 25px;
+}
+.logoo:hover {
+    background: var(--primary-purple);
+    color: white;
+
+}
+
 .menu span { margin-left: 2rem; font-size: 0.9rem; cursor: pointer; opacity: 0.7; }
 .menu span.active { opacity: 1; color: var(--primary-purple); font-weight: bold; }
 
@@ -54,7 +66,7 @@ a {
     background: linear-gradient(to top, var(--bg-dark), transparent);
 }
 
-.hero-content { position: relative; z-index: 1; }
+/* .hero-content { position: relative; z-index: 1; } */
 .hero-content h2 { font-size: 3rem; margin-bottom: 0.5rem; }
 
 /* 대시보드 그리드 */

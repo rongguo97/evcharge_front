@@ -4,40 +4,48 @@
    ============================================ */
 
 /* --- 앱 히어로 섹션 (상단 배너) --- */
-.app-hero {
+.faq-hero {
     background: linear-gradient(135deg, #4a2c73 0%, #1a1a1a 100%);
-    padding: 180px 0 100px;
+    padding: 20px 0 95px !important;
     color: var(--white);
     overflow: hidden;
 }
 
-.app-hero-flex {
+.faq-hero-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
 }
 
-.hero-text { flex: 1; }
+.faq-text { flex: 1;
+             margin-top: 150px;
+             text-align: center;
+            }
 
-.hero-text .badge { 
+.faq-text .badge { 
     background: var(--primary-purple);     
     padding: 4px 13px; 
     border-radius: 20px; 
     font-size: 0.8rem; 
-    font-weight: bold;
+    font-weight: 500px !important;
     margin-bottom: 10px;
     display: inline-block;
+   
 }
 
-.hero-text h1 { 
-    font-size: 50px;
-    margin: 5px 0;
-    line-height: 1.2;
+.faq-text h1 { 
+    font-size: 51px !important;
+    margin: 10px 0;
+    line-height: 1.2;      
 }
 
-.hero-text p { 
-    font-size: 25px;
+.faq-text p { 
+    font-size: 30px !important;
+    font-weight: 700px !important;
     padding: 10px 0;
+    white-space: nowrap;
+    color: #e68ee9;   
 }
 
 /* 앱스토어 다운로드 버튼 */
