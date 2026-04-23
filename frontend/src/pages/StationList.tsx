@@ -337,7 +337,7 @@ const StationList = () => {
         <div style={{ fontSize: "12px", color: "#777", marginTop: "6px", lineHeight: "1.4", paddingRight: "30px" }}>{group.address}</div>
         <div style={{ fontSize: "12px", color: "#7a5de8", fontWeight: "bold", marginTop: "10px", display: "flex", alignItems: "center", gap: "4px" }}><i className="fa-solid fa-plug" style={{ fontSize: "10px" }}></i>총 충전기: {group.chargers.length}대</div>
         <div style={{ display: "flex", gap: "8px", marginTop: "15px" }}>
-          <button onClick={(e) => { e.stopPropagation(); navigate("/reservation", { state: { preSelectedStation: group } }); }} style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "none", background: "#B452B5", color: "#fff", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}> 예약하기</button>
+          <button onClick={(e) => { e.stopPropagation(); navigate("/main/reservation", { state: { preSelectedStation: group } }); }} style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "none", background: "#B452B5", color: "#fff", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}> 예약하기</button>
           <button onClick={(e) => { e.stopPropagation(); window.open(`https://map.kakao.com/link/to/${encodeURIComponent(group.stationName)},${group.lat},${group.lng}`, "_blank"); }} style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "1px solid #ddd", background: "#fff", color: "#555", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}>길찾기</button>
         </div>
       </div>
