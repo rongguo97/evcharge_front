@@ -1,0 +1,239 @@
+:root {
+    --bg-dark: #0f172a;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --primary-purple: #a855f7;
+    --text-white: #ffffff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fc; overflow-x: hidden; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    margin: 0;
+    font-family: 'Pretendard', sans-serif;
+}
+a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit;       /* 부모 요소(nav 등)의 글자색을 그대로 따름 */
+}
+
+/* 상단 네비게이션 */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem 5%;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+
+.main-layout {
+    background-color: #0f172a;
+}
+
+.logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; }
+.menu span { margin-left: 2rem; font-size: 0.9rem; cursor: pointer; opacity: 0.7; }
+.menu span.active { opacity: 1; color: var(--primary-purple); font-weight: bold; }
+
+/* 히어로 배너 (이미지의 차량 사진 들어가는 부분) */
+.hero-banner {
+    height: 350px;
+    background-image: url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=80&w=2072&auto=format&fit=crop'); /* 전기차 배경 예시 */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 3rem 5%;
+}
+
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, var(--bg-dark), transparent);
+}
+
+.hero-content { position: relative; z-index: 1; }
+.hero-content h2 { font-size: 3rem; margin-bottom: 0.5rem; }
+
+/* 대시보드 그리드 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+    padding: 2rem 5%;
+}
+
+/* Glassmorphism 카드 */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 2rem;
+    border-radius: 24px;
+    margin-bottom: 1.5rem;
+}
+
+.battery-level {
+    height: 30px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.gauge {
+    height: 100%;
+    background: linear-gradient(90deg, #6d28d9, #a855f7);
+    box-shadow: 0 0 15px var(--primary-purple);
+}
+
+.pct {
+    position: absolute;
+    right: 15px; top: 5px; font-size: 0.8rem; font-weight: bold;
+}
+
+/* 리스트 아이템 */
+.history-panel {
+    background: rgba(255,255,255,0.03);
+    padding: 2rem;
+    border-radius: 24px;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.more-btn {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    background: transparent;
+    border: 1px solid var(--primary-purple);
+    color: var(--primary-purple);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.more-btn:hover {
+    background: var(--primary-purple);
+    color: white;
+}
+.gauge {
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6); /* 보라색 네온 효과 */
+}
+.glass-card {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 태블릿 및 모바일 대응 (화면 너비 1024px 이하) */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr; /* 2단 구성을 1단으로 변경 */
+        padding: 1.5rem 5%;
+    }
+
+    .hero-banner {
+        height: 280px; /* 배너 높이 약간 축소 */
+    }
+
+    .hero-content h2 {
+        font-size: 2.2rem;
+    }
+}
+
+/* 스마트폰 대응 (화면 너비 768px 이하) */
+@media (max-width: 768px) {
+    /* 1. 상단 네비게이션 조정 */
+    .top-nav {
+        padding: 1rem 5%;
+        flex-direction: column; /* 로고와 메뉴를 위아래로 */
+        gap: 10px;
+        align-items: center;
+    }
+
+    .menu {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        overflow-x: auto; /* 메뉴가 많을 경우 옆으로 밀어서 보게 함 */
+        white-space: nowrap;
+        padding-bottom: 5px;
+    }
+
+    .menu span {
+        margin: 0 10px;
+        font-size: 0.85rem;
+    }
+
+    /* 2. 메인 배너 텍스트 크기 조정 */
+    .hero-banner {
+        height: 220px;
+        padding: 2rem 5%;
+    }
+
+    .hero-content h2 {
+        font-size: 1.8rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    /* 3. 카드 및 패널 간격 조정 */
+    .glass-card, .history-panel {
+        padding: 1.5rem;
+        border-radius: 16px; /* 모바일에서는 곡률을 살짝 줄임 */
+    }
+
+    .dashboard-grid {
+        gap: 1.5rem;
+    }
+
+    /* 4. 리스트 아이템 가독성 향상 */
+    .list-item {
+        flex-direction: column; /* 날짜, 정보, 가격을 세로로 */
+        gap: 5px;
+        position: relative;
+    }
+
+    .list-item .price {
+        align-self: flex-end; /* 가격만 오른쪽으로 배치 */
+        font-weight: bold;
+        color: var(--primary-purple);
+    }
+
+    .list-item .date {
+        font-size: 0.8rem;
+        opacity: 0.6;
+    }
+}
+
+/* 초소형 모바일 (화면 너비 480px 이하) */
+@media (max-width: 480px) {
+    .hero-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+}
+

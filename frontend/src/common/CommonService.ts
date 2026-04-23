@@ -22,8 +22,8 @@ common.interceptors.response.use(
     const status = error.response?.status;
     if (status && status !== 401) {
       // 401은 새로고침 시 자연스러운 로그인 안한 상태이므로 제외하고 오류 처리
-      const msg = error.response?.data?.message || "오류가 발생했습니다. 관리자에게 문의하세요";
-      alert("[서버 오류] : " + msg);
+      // const msg = error.response?.data?.message || "오류가 발생했습니다. 관리자에게 문의하세요";
+      // alert("[서버 오류] : " + msg);
     }
     return Promise.reject(error);
   },

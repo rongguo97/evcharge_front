@@ -1,22 +1,34 @@
-import { Outlet } from "react-router-dom";
-import Header from "./Header";
+import { Outlet, useLocation } from "react-router-dom"; // useLocation 추가
+import Header from "../layout/Header";
+import Footer from "./Footer";
+import QuickMenu from "./Quickmenu";
 
-// 홈페이지 구조를 표시하는 곳: 머리말, 본문, 꼬리말
 function Layout() {
+  // 1. 현재 페이지의 경로 정보를 가져옵니다.
+  const location = useLocation();
+
+  // 2. 헤더를 숨기고 싶은 경로들을 배열로 정의합니다.
+  // 주소가 '/mypage'나 '/admin'으로 시작하는지 체크합니다.
+  const hideHeaderPaths = ["/mypage", "/admin"];
+  
+  // 3. 현재 경로가 숨김 목록에 포함되어 있는지 확인합니다.
+  const shouldHideHeader = hideHeaderPaths.some(path => 
+    location.pathname.startsWith(path)
+  );
+
   return (
-    <>
-      <div>
-        {/* 머리말 코딩 */}
-        <Header></Header>
+    <div id="wrapper">
+      {/* 4. shouldHideHeader가 false일 때만 Header를 렌더링합니다. */}
+      {!shouldHideHeader && <Header />}
 
-        <div className="container mx-auto mt-8 px-3">
-          {/* 본문: 메뉴를 클릭하면 Outlet 위치에 본문 화면이 표시됩니다. 예) 홈 클릭 -> Home 화면이 Outlet 위치에 표시됨 */}
-          <Outlet />
-        </div>
+      <QuickMenu />
 
-        {/* 꼬리말 코딩*/}
+      <div className="content-area">
+        <Outlet />
       </div>
-    </>
+
+      <Footer />
+    </div>
   );
 }
 
