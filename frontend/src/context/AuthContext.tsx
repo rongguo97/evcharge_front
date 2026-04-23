@@ -29,10 +29,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // 3. 로그아웃 함수
   const logout = async () => {
     try {
+      // 백엔드의 /auth/logout 호출
       await apiClient.post('/auth/logout');
     } catch (err) {
       console.error("로그아웃 요청 중 오류 발생:", err);
     } finally {
+      // 상태 초기화 및 리다이렉트
       setUser(null);
       setIsLoggedIn(false);
       alert("로그아웃 되었습니다.");
@@ -45,15 +47,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    // 📍 모든 상태(user, loading 등)와 함수(logout 등)를 하나의 value에 넣습니다.
+    // 📍 value에 logout과 loading을 모두 포함시켜야 다른 컴포넌트에서 에러가 안 납니다.
     <AuthContext.Provider value={{ user, isLoggedIn, setIsLoggedIn, checkLoginStatus, logout, loading }}>
-      {/* 로딩 중일 때는 아무것도 안 보여주거나 로딩 스피너를 넣을 수 있습니다. */}
-      {!loading ? children : <div style={{textAlign:'center', marginTop:'50px'}}>인증 정보 확인 중...</div>}
+      {/* 📍 로딩 중일 때는 앱 콘텐츠(children) 대신 메시지를 보여줘서 오류를 방지합니다. */}
+      {!loading ? children : (
+        <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '18px', color: '#666' }}>
+          인증 정보 확인 중...
+        </div>
+      )}
     </AuthContext.Provider>
   );
 };
 
-// 4. 커스텀 훅
+// 4. 간편하게 사용하기 위한 커스텀 훅
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
