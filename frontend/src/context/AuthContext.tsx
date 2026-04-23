@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const checkLoginStatus = async () => {
     try {
       // 백엔드 주소에 맞춰 '/auth/me' 호출
-      const res = await apiClient.get('/auth/me'); 
+      const res = await apiClient.get('/me'); 
       setUser(res.data);
       setIsLoggedIn(true);
       console.log("인증 성공: ", res.data);
