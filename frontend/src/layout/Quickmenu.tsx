@@ -6,9 +6,9 @@ const QuickMenu: React.FC = () => {
    
   return (
     <aside className="side-quick-menu">
-      <Link to="/mypage" className="quick-btn my-page">마 이 페 이 지</Link>
+      <Link to="mypage" className="quick-btn my-page">마 이 페 이 지</Link>
       
-      <Link to="/admin" className="quick-btn admin-page">관 리 자 페 이 지</Link>
+      <Link to="admin" className="quick-btn admin-page">관 리 자 페 이 지</Link>
     </aside>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import '../css/door.css' // 기존 CSS 파일을 이 이름으로 저장하세요.
-import doorvideo from '../image/doorvideo.mp4'; // 비디오 파일을 이 경로에 저장하세요.
+// import doorvideo from '../image/door영상이미지.mp4'; // 비디오 파일을 이 경로에 저장하세요.
+import { Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -45,7 +46,7 @@ const Login: React.FC = () => {
     <div className="video-container">
       {/* 배경 비디오 */}
       <video autoPlay muted loop playsInline className="back-video">
-        <source src={doorvideo} type="video/mp4" />
+        <source src="/doorvideo.mp4" type="video/mp4" />
         브라우저가 비디오 태그를 지원하지 않습니다.
       </video>
 
@@ -63,16 +64,16 @@ const Login: React.FC = () => {
           <br />
           <input name="password" type="password" placeholder="password" />
           <button type="submit" className="click-login">login</button>
-          <button 
-            type="button" 
-            className="membership"
-            onClick={() => window.location.href = '/signup'}
-          >
+          <Link to="/main/membership">
+          <button type="button" className="membership" onClick={() => navigate('/signup')}>
             회원가입
           </button>
+          </Link>
         </form>
       </div>
+      
     </div>
+    
   );
 };
 

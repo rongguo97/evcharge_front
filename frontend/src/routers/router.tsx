@@ -12,56 +12,47 @@ import FAQ from "../pages/faq";
 import CustomerCenter from "../pages/CustomerService";
 import Login from "../layout/Login";
 import Brand from "../pages/Brand";
+import Door from "../layout/Door";
+import Communication from "../pages/Communication";
+import AdminPage from "../pages/AdminPage";
+import MyPagep from "../pages/MyPagep";
+import Membership from "../pages/Membership";
 
-import Community from "../pages/Community";
 
 
-// (이론)성능 증가 팁 코딩: 코드 스플리팅(Route Code Splitting) 기능(페이지 뜨는 속도가 빨라짐)
-// 보충설명: 1) 기본: 화면이 뜨면 리액트의 모든 페이지를(부서,사원) 가져옵니다.
-//          2) 메뉴를 클릭할때만 해당 화면을 가져옵니다.(코드 스플리팅 기능)
-//  => 1) Suspense 태그 이용
-//  => 2) lazy(), import() 함수이용
-
-// 인터넷주소와 화면을 연결하는 곳:
 const router = createBrowserRouter([
+  // ✅ Door - 첫 진입 페이지 (navbar 없음)
   {
     path: "/",
+    element: <Door />,
+  },
+
+  // ✅ Layout(navbar) 있는 페이지들
+  {
+    path: "/main",
     element: <Layout />,
     children: [
-      // { index: true, path: "인터넷주소", element: <리액트페이지 /> },
-      // 위와 같이 코딩하면 인터넷주소와 화면이 연결됩니다. 예) /(http://localhost:5173/) 주소는 Home 화면이 뜹니다.
-      // index: true - 첫페이지를 의미
-      { index: true, path: "/", element: <Home /> },
-      // 예약페이지
-      { index: true, path: "/reservation", element: <ReservationPage /> },
-      // 지갑 및 결제 관련 페이지
-      { path: "/pay", element: <Pay /> },
-      { path: "/cash", element: <Cash /> },
-      // 마이페이지
-      { path: "/mypage", element: <MyPage /> },
-      // 관리자 페이지
-      { path: "/admin", element: <Admin /> },
-      // 앱 소개 페이지
-      { path: "/app", element: <App /> },
-      // 공지사항 페이지
-      { path: "/notice", element: <Notice />},
-      // FAQ 페이지
-      { path: "/faq", element: <FAQ /> },
-      // 고객센터 페이지
-      { path: "/customer-center", element: <CustomerCenter /> },
-      // 로그인 페이지
-      { path: "/login", element: <Login /> },
-      // 브랜드 소개 페이지
-      { path: "/brand", element: <Brand /> },
-
-      // 커뮤니티 소개 페이지
-      { path: "/community", element: <Community /> }
-
-
-      
-
+      { index: true, element: <Home /> },
+      { path: "reservation", element: <ReservationPage /> },
+      { path: "pay", element: <Pay /> },
+      { path: "cash", element: <Cash /> },
+      { path: "mypage", element: <MyPage /> },
+      { path: "admin", element: <Admin /> },
+      { path: "app", element: <App /> },
+      { path: "notice", element: <Notice /> },
+      { path: "faq", element: <FAQ /> },
+      { path: "customer-center", element: <CustomerCenter /> },
+      { path: "login", element: <Login /> },
+      { path: "brand", element: <Brand /> },
+      { path: "community", element: <Communication /> },
+      { path: "mypage", element: <MyPage /> },
+      { path: "admin", element: <AdminPage /> },
+      { path: "mypagep", element: <MyPagep /> },
+      { path: "membership", element: <Membership /> },
     ],
   },
 ]);
 
 export default router;
+
+

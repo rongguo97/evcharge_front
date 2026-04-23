@@ -1,5 +1,5 @@
 import '../css/main.css'
-import logo from '../image/logo.png'
+import logo from '../image/브랜드logo.png'
 
 const Footer = () => {
    return (

@@ -30,8 +30,11 @@ header:hover .logo { color: var(--deep-purple); }
 
 /* 중앙 GNB */
 .gnb { flex: 1; display: flex; justify-content: center; }
-.main-menu { display: flex; list-style: none; width: 100%; max-width: 700px; justify-content: space-around; }
-.main-menu li a { text-decoration: none; font-weight: 700; color: var(--white); font-size: 1.1rem; transition: 0.3s; }
+.main-menu { display: flex; list-style: none; width: 100%; 
+             max-width: 950px; justify-content: center;
+             transform: translateX(50px); margin-left: 50px !important; }
+.main-menu li a { text-decoration: none; font-weight: 700;
+                  color: var(--white); font-size: 1.1rem; transition: 0.3s; }
 header:hover .main-menu a { color: var(--black); }
 .main-menu li a.active { color: var(--primary-purple); }
 
@@ -40,12 +43,16 @@ header:hover .main-menu a { color: var(--black); }
 /* PC 메가 메뉴 패널 */
 .mega-menu-panel {
     position: absolute; top: 100px; left: 0; width: 100%; background: var(--white);
-    height: 0; overflow: hidden; transition: 0.4s; border-top: 1px solid #eee;
+    height: 0; overflow: hidden; transition: 0.4s; border-top: 1px solid #eee;   z-index: 999;
 }
-header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-.panel-content { display: flex; max-width: 700px; margin: 0 auto; padding-top: 30px; justify-content: space-around; }
-.panel-column { flex: 1; text-align: center; list-style: none; }
-.panel-column ul li { list-style: none; margin-bottom: 10px; }
+.mega-menu-panel.open {
+    height: 260px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+.panel-content { display: flex; max-width: 665px !important; margin: 0 auto; 
+                 padding-top: 40px; justify-content: center; transform: translateX(-40px); }
+.panel-column { flex: 1; text-align: right; list-style: none; }
+.panel-column ul li { list-style: none; margin-bottom: 60px; padding: 5px; }
 .panel-column ul li a { text-decoration: none; color: #666; font-size: 0.95rem; }
 
 /* --- 햄버거 및 트리거 숨기기 (PC) --- */
@@ -56,7 +63,8 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
 
 @media (max-width: 900px) {
     .nav-wrapper { height: 70px; }
-    header.main-header { position: fixed; background: var(--white); border-bottom: 1px solid #eee; }
+    header.main-header { position: fixed; background: var(--white);
+                         border-bottom: 1px solid #eee;  z-index: 1000; }
     .logo { color: var(--deep-purple); width: auto; }
     .header-util-space { display: none; }
     
@@ -102,9 +110,9 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
         left: 0;
     }
 
-    .main-menu { display: block; max-width: 100%; }
+    .main-menu { display: flex; max-width: 950px !important; }
     .main-menu li { border-bottom: 1px solid #f0f0f0; padding: 15px 0; }
-    .main-menu li a { color: var(--black); font-size: 1.1rem; margin-bottom: 10px; display: block; }
+    .main-menu li a { color: var(--black); font-size: 1.1rem; margin-bottom: 10px; display: block; padding: 0 30px; }
     
     /* 모바일 서브메뉴 노출 */
     .mobile-only-sub { display: block; list-style: none; padding-left: 15px; }
@@ -112,7 +120,16 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
     .mobile-only-sub li a { font-size: 0.9rem; color: #777; font-weight: 400; }
 
     /* PC 전용 패널 숨김 */
-    .mega-menu-panel { display: none; }
+    .mega-menu-panel {  position: absolute;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    height: 0;
+    overflow: hidden;
+    transition: 0.4s;
+    border-top: 1px solid #eee;
+    z-index: 999;}
 
     /* 메뉴 동작 컨트롤 */
     .menu-trigger:checked ~ .gnb { left: 0; }
@@ -132,3 +149,13 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
         z-index: 1000; 
     }
 }
+
+.nav-right { display: flex; align-items: center; z-index: 3001; }
+.nav-log {
+  width: 40px; height: 40px; background: var(--white-10); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
+  cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
+  color: #e2dcff; transform: translateX(500px);
+}
+/* // */

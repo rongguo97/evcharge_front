@@ -87,7 +87,8 @@
 .membership{ 
             display: block;
             justify-content: center;
-            margin-left: 645px;
+            margin-left: 665px;
+            margin-top: 10px;
             text-align: center;
             background: none;
             border: none;

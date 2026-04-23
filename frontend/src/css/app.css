@@ -116,9 +116,11 @@ header:hover .main-menu a { color: var(--black); }
     color: var(--white);
     text-decoration: none;
     border-radius: 30px;
-    margin-right: 15px;
+    margin: 0 auto;
+    justify-items: center;
     font-weight: bold;
     transition: 0.3s;
+
 }
 .download-btns a:hover {
     background: var(--white);

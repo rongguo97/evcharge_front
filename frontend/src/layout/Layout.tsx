@@ -1,6 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom"; // useLocation 추가
 import Header from "../layout/Header";
-import Footer from "./Footer";
 import QuickMenu from "./Quickmenu";
 
 function Layout() {
@@ -27,7 +26,7 @@ function Layout() {
         <Outlet />
       </div>
 
-      <Footer />
+
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../css/CustomerService.css' // 이전에 정리해드린 중복 제거된 css를 연결하세요.
+import '../layout/Footer';
+import Footer from '../layout/Footer';
 
 const CustomerCenter: React.FC = () => {
   // 1. 폼 데이터 상태 관리
@@ -42,7 +44,7 @@ const CustomerCenter: React.FC = () => {
       <section className="app-hero">
         <div className="container">
           <span className="badge">고객지원센터</span>
-          <h1>무엇을 도와드릴까요?</h1>
+          <h1>문제는 빠르게, 해결은 확실하게</h1>
           <p>CHARCAGE는 고객님의 목소리에 항상 귀 기울이고 있습니다.</p>
         </div>
       </section>
@@ -125,6 +127,7 @@ const CustomerCenter: React.FC = () => {
           </div>
         </section>
       </main>
+      < Footer />
     </div>
   );
 };

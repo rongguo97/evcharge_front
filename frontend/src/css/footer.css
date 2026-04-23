@@ -9,7 +9,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fc; overf
 .white-footer { 
     background: var(--white); 
     padding: 60px 0; 
-    border-top: 1px solid #eee; }
+    border-top: 1px solid #eee; 
+    margin-top: 350px;}
 .footer-flex { 
     display: flex; 
     justify-content:space-between; 

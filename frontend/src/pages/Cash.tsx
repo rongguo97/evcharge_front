@@ -2,7 +2,6 @@ import React from 'react';
 import '../css/footer.css';
 import '../css/header.css';
 import '../css/cash.css';
-import { Link } from 'react-router-dom';
 
 interface PricePlan {
   type: 'FAST' | 'SLOW';
@@ -17,13 +16,22 @@ interface PricePlan {
 const PriceCard: React.FC<PricePlan> = ({ type, title, basePrice, memberPrice, nightPrice, competitors, isHighlight }) => (
   <div className={`price-card ${isHighlight ? 'highlight' : ''}`}>
     <div className="card-badge">{type}</div>
-    <h3><span className="cw">{title}</span></h3>
+    <h3><span className="cwb">{title}</span></h3>
     <br />
     <div className="main-amount">{basePrice}<span>원/kWh</span></div>
+    <br /><br /><br /><br />
+    <h2><span className="cw">차카지회원 👤</span></h2>
+    <br />
+    <div className="main-amount">{memberPrice}<span>/kWh</span></div>
+    <br /><br />
+    <h2><span className="cw">심야요금</span></h2>
+    <h3><span className="cwb">회원전용</span></h3>
+    <br />
+    <div className="main-amount">{nightPrice}<span>/kWh</span></div>
+    <br />
     <div className="detail-box">
-      <div className="detail-row"><span>차카지 회원</span><strong>💜 {memberPrice}</strong></div>
-      <div className="detail-row"><span>심야 할인</span><strong className="purple-text">{nightPrice}</strong></div>
-      <br />
+      {/* <div className="detail-row"><span>차카지 회원</span><strong>💜 {memberPrice}</strong></div>
+      <div className="detail-row"><span>심야 할인</span><strong className="purple-text">{nightPrice}</strong></div> */}
       <h2 className="text-PP">요금 비교 해보기 🔎</h2><br />
       {competitors.map((comp, idx) => (
         <p key={idx} className="text-P">{comp.name} &nbsp;&nbsp; {comp.price}원</p>
@@ -67,15 +75,6 @@ const Pricing: React.FC = () => {
 
   return (
     <>
-      
-      <aside className="side-quick-menu">
-        <Link to="/mypage" className="quick-btn my-page">
-          마 이 페 이 지
-        </Link>
-        <Link to="#" className="quick-btn admin-page">
-          관 리 자 페 이 지
-        </Link>
-      </aside>
 
       <div className="pricing-page">
         <section className="hero-section">

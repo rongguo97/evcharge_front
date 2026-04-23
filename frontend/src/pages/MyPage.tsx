@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../css/mypage.css';
-import '../css/footer.css';
+
 
 
 interface UsageHistory {
@@ -20,9 +20,9 @@ const MyPage: React.FC = () => {
   ];
 
   return (
-    <div className="app-wrapper">
-
-      <header className="top-nav">
+    
+<>
+ {/* <header className="top-nav">
         <div className="logo">MyPage</div>
         <nav className="menu">
 
@@ -30,13 +30,14 @@ const MyPage: React.FC = () => {
           <Link to="/mypageP"><span>개인정보</span></Link>
           <Link to="/pay"><span className="active">지갑 충전하기</span></Link>
         </nav>
-      </header>
+      </header> */}
 
       <div className="main-layout">
 
         <section className="hero-banner">
           <div className="overlay"></div>
           <div className="hero-content">
+            
             <h2>Ready to Charge</h2>
             <p>환영합니다. 충전 준비가 완료되었습니다.</p>
           </div>
@@ -77,9 +78,17 @@ const MyPage: React.FC = () => {
             <div className="spacer" style={{ height: '60px' }}></div>
             <button className="more-btn">전체 내역 보기</button>
           </div>
+          
         </div>
+        <div className="app-wrapper">
+        <footer className="top-nav">
+        <div className="logoo"><Link to="/main/mypagep"><span>개인정보 조회</span></Link></div>
+      </footer>
+      <br /><br /><br /><br /><br /><br /><br /><br />
       </div>
     </div>
+</>
+      
   );
 };
 

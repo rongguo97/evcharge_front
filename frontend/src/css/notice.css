@@ -1,36 +1,48 @@
-/* ============================================
-   CHARCAGE 공지사항 페이지 본문 전용 스타일
-   (Header 관련 중복 요소 제거됨)
-   ============================================ */
 
-/* 1. Hero Section (상단 보라색 배너 영역) */
+/* 1. Hero Section (상단 배너 영역) */
 .hero-section {
-    background-color: #4a2c73;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #333333;
     padding: 80px 0;
     text-align: center;
+    border-bottom: 1px solid #dee2e6;   
+    margin-top: 40px;
+       
 }
+
+.hero-text { 
+            margin-top: 100px;
+         
+}
+
 
 .hero-text h1 { 
     font-size: 2.8rem; 
     font-weight: 800; 
-    margin-bottom: 10px; 
     letter-spacing: -1px;
+    color: #ffffff;
+    margin-top: 17px !important;
 }
 
 .hero-text h1 span { 
-    color: #c180ff; /* --primary-color */
+    color: #ffffff; /* --primary-color */
+   
 }
 
 .hero-text p.sub-title { 
-    font-size: 1.1rem; 
+    font-size: 15px !important; 
     opacity: 0.8; 
     margin-bottom: 10px; 
+    color: #c6bccc;  
+    display: inline-block;          
+    border: 1.5px solid #c6bccc;    
+    border-radius: 50px;           
+    padding: 6px 20px;            
 }
 
 /* 2. Notice Board Section (게시판 영역) */
 .notice-container {
-    padding: 80px 0;
+    padding: 1px 0;
     min-height: 500px;
     background-color: #fff; /* 배경색 명시 */
 }
@@ -84,7 +96,7 @@
 }
 
 .notice-table tbody tr:hover {
-    background-color: #fcfaff;
+    background-color: #ffffff;
 }
 
 /* 중요 공지 Badge */
@@ -114,7 +126,7 @@
     align-items: center;
     justify-content: center;
     border: 1px solid #dee2e6;
-    background: white;
+    background: #fcfaff;
     color: #666;
     text-decoration: none;
     border-radius: 4px;

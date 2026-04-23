@@ -5,12 +5,15 @@
     --black: #1a1a1a;
 }
 /* 헤드라인  hero-text*/
+.hero-text h3{
+    color: #eee;
+}
 h3{
     font-weight: bold;
     line-height: 1.6rem;
 }
 .cpp{
-    color: #b8b8ff;
+    color: #a190ff;
 }
 .cpk
 {
@@ -72,38 +75,46 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
 }
 .price-content { margin-top: -60px; padding-bottom: 80px; }
 .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-.price-card { background: linear-gradient(#9b72cf,#b8b8ff); padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); box-shadow: 0 0 20px rgba(155, 62, 255, 0.8)}
+/* .price-card { background:var(--deep-purple) ; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); box-shadow: 0 0 20px rgba(155, 62, 255, 0.8)} */
 .detail-box { background:#ffffff ; padding: 30px; border-radius: 15px; margin: 20px 0; border: 1px dashed var(--light-purple); }
-.detail-row { display: flex; justify-content: space-between; font-size: 1.6rem; padding: 5px 0; }
+.detail-row {display: flex; justify-content: space-between; font-size: 1.6rem; padding: 5px 0; }
 .reserve-btn { width: 100%; padding: 15px; background: var(--deep-purple); color: var(--white); border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
 /* 글자 꾸미기 */
+
+
+.detail-row span{
+    color: hotpink;
+}
 .card-badge{
-    color: rgb(252, 173, 173);
+    color:hotpink;
     font-weight: bold;
     font-size: 2rem;
 }
 .main-amount{
-    color: white;
+    color: rgb(72, 72, 72);
     font-weight: bold;
     font-size: 2rem;
 }
 .cw{
-    color: white;
+    color: hotpink;
     font-weight: bold;
 }
+.cwb{
+    color: gray;
+}
 .detail-row{
-    color:#4a2c73;
+    color:black;
     font-weight: bold;
 }
 .text-P{
-    color: #4a2c73;
+    color: gray;
     font-weight: bold;
     line-height: 2rem;
 }
 .text-PP{
-    color: #9381ff;
+    color: gray;
     line-height: 4rem;
-    border-bottom: 5px solid #9381ff ;
+    border-bottom: 5px solid gray ;
 }
 /* --- 푸터 (흰색 배경) --- */
 .white-footer { background: var(--white); padding: 60px 0; border-top: 1px solid #eee; }

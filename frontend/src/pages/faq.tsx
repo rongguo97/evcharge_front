@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../css/faq.css' // 제공해주신 중복 제거된 faq.css를 사용하세요.
+import '../layout/Footer';
+import Footer from '../layout/Footer';
 
 interface IFAQ {
   question: string;
@@ -38,9 +40,9 @@ const FAQPage: React.FC = () => {
   return (
     <div className="faq-page">
       {/* 1. Hero Section */}
-      <section className="app-hero">
-        <div className="container app-hero-flex">
-          <div className="hero-text">
+      <section className="faq-hero">
+        <div className="container faq -faq-flex">
+          <div className="faq-text">
             <span className="badge">고객지원</span>
             <h1>언제나 만족스러운 CHARCAGE 고객지원센터 입니다.</h1>
             <p>
@@ -73,7 +75,9 @@ const FAQPage: React.FC = () => {
             ))}
           </div>
         </div>
+         < Footer/>
       </section>
+     
     </div>
   );
 };
