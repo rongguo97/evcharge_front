@@ -28,7 +28,23 @@ const ReservationService = {
         endTime: data.endTime
       }
     });
+  },
+  // 📍 1. 예약 확정 전 예상 요금 가져오기
+getEstimatedFee: async (stationId: number, startTime: string, endTime: string) => {
+    return await axios.get('http://localhost:8080/api/reservation/estimate-fee', {
+      params: { stationId, startTime, endTime }
+    });
+  },
+
+  // 📍 2. 현재 내 지갑 잔액 가져오기 (결제 전 잔액 보여주기용)
+  // 지갑 컨트롤러에 이메일로 지갑을 찾는 API가 있다고 가정합니다.
+  getUserWallet: async (email: string) => {
+    return await axios.get(`http://localhost:8080/api/wallet/${email}`);
   }
 };
+
+
+
+
 
 export default ReservationService;

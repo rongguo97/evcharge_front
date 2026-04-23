@@ -15,6 +15,8 @@
     import moment from "moment";
     // 달력 css
     import "../css/calendar.css";
+    // 결제 요금 및 관련 상태 로직
+    
 
     function ReservationPage() {
       const location = useLocation();
@@ -211,12 +213,52 @@
         (_, i) => startPage + i,
       );
 
-      // 결제 관련 임시 데이터
-      const MOCK_RESERVATION_FEE = 2000;
-      const MOCK_CURRENT_POINTS = 5000;
-      const remainPoints = MOCK_CURRENT_POINTS - MOCK_RESERVATION_FEE;
+      // 결제 관련  데이터
+ // --- [3] 결제 및 요금 관련 상태 및 로직 ---
+      const [estimatedFee, setEstimatedFee] = useState<number>(0); // 예상 요금 저장용
+      const [myBalance, setMyBalance] = useState<number>(0);       // 내 잔액 저장용
+      const loggedInEmail = "test@example.com"; // 📍 실제 환경에선 로그인 정보에서 가져오기
 
+      // 📍 결제 정보를 백엔드에서 실시간으로 가져오는 함수
+      const fetchPaymentInfo = async () => {
+        if (!selectedCharger || !selectedTime) return;
 
+        try {
+          // 1. 시간 데이터 포맷팅 (백엔드 전송용)
+          const startTimeStr = selectedTime.split(" - ")[0];
+          const endTimeStr = selectedTime.split(" - ")[1];
+          const formattedDate = moment(selectedDate).format("YYYY-MM-DD");
+          const isoStartTime = `${formattedDate}T${startTimeStr}:00`;
+          const isoEndTime = `${formattedDate}T${endTimeStr}:00`;
+          
+          // 2. 충전소 ID 추출
+          const targetId = selectedCharger.stationId || selectedCharger.id;
+
+          // 3. 백엔드 API 호출 (예상 요금)
+          const feeRes = await ReservationService.getEstimatedFee(targetId, isoStartTime, isoEndTime);
+          // 백엔드 ApiResponse 구조에 따라 result.baseFee 또는 data.baseFee 확인 필요
+          setEstimatedFee(feeRes.data.result?.baseFee || 0); 
+
+          // 4. 백엔드 API 호출 (지갑 잔액)
+          const walletRes = await ReservationService.getUserWallet(loggedInEmail);
+          // 백엔드 필드명이 reserveFund인지 확인 필요
+          setMyBalance(walletRes.data.reserveFund || walletRes.data.result?.reserveFund || 0);
+
+        } catch (error) {
+          console.error("결제 정보 로딩 실패:", error);
+          alert("금액 정보를 가져오지 못했습니다. 다시 시도해주세요.");
+        }
+      };
+
+      // 📍 모달 1단계(정보확인)에서 2단계(결제확인)로 넘어가는 핸들러
+      const handleStepToPayment = async () => {
+        await fetchPaymentInfo(); // 1. 데이터를 먼저 채우고
+        setModalStep(2);          // 2. 화면을 넘깁니다
+      };
+
+    
+
+    
       // --- [예약 달력 최대 선택 가능 날짜 계산 로직] ---
       const getMaxDate = () => {
         const today = moment();
@@ -879,6 +921,7 @@
                 </div>
               </section>
             )}
+          
 
             {/* [STEP 3] 하단 예약 버튼 (모든 정보가 선택되어야만 활성화됨) */}
             <button
@@ -1057,7 +1100,7 @@
                         취소
                       </button>
                       <button
-                        onClick={() => setModalStep(2)}
+                        onClick={handleStepToPayment}
                         style={{
                           flex: 1,
                           padding: "18px",
@@ -1109,7 +1152,7 @@
                         }}
                       >
                         <span>예약 금액 :</span>
-                        <strong>{MOCK_RESERVATION_FEE.toLocaleString()} 원</strong>
+                       <strong>{estimatedFee.toLocaleString()} 원</strong>
                       </div>
                       <div
                         style={{
@@ -1120,7 +1163,7 @@
                         }}
                       >
                         <span>현재 적립금 :</span>
-                        <strong>{MOCK_RESERVATION_FEE.toLocaleString()} 원</strong>
+                       <strong>{myBalance.toLocaleString()} 원</strong>
                       </div>
                       <div
                         style={{
@@ -1133,7 +1176,7 @@
                         <span>차감 금액 :</span>
                         <strong style={{ color: "#DC143C" }}>
                           {" "}
-                          -{remainPoints.toLocaleString()} 원
+                          -{estimatedFee.toLocaleString()} 원
                         </strong>
                       </div>
                       <div
@@ -1145,7 +1188,7 @@
                       >
                         <span>결제 후 잔액 :</span>
                         <strong style={{ color: "#B452B5" }}>
-                          {remainPoints.toLocaleString()} P
+                          {(myBalance - estimatedFee).toLocaleString()} 원
                         </strong>
                       </div>
                     </div>
