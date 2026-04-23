@@ -67,6 +67,7 @@ const Pricing: React.FC = () => {
 
   return (
     <>
+<<<<<<< Updated upstream
       
       <aside className="side-quick-menu">
         <Link to="/mypage" className="quick-btn my-page">
@@ -77,11 +78,12 @@ const Pricing: React.FC = () => {
         </Link>
       </aside>
 
+=======
+>>>>>>> Stashed changes
       <div className="pricing-page">
         <section className="hero-section">
           <div className="container">
             <div className="hero-text">
-              <br /><br />
               <p className="sub-title">Save time. Reserve your charge</p>
               <h1>친환경 이동을 더 똑똑하게<br /><span>차카지 충전 요금 안내</span></h1>
               <h3>복잡한 요금제는 잊으세요. 차카지는 합리적입니다.</h3>

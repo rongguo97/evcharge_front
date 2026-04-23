@@ -40,12 +40,16 @@ function Header() {
               <li>
                 <a href="#">충전소 찾기</a>
                 <ul className="mobile-only-sub">
+<<<<<<< Updated upstream
                   <li>
                     <a href="#">충전소 찾기</a>
                   </li>
                   <li>
                     <a href="#">충전소 종류</a>
                   </li>
+=======
+                  <li><Link to="reservation">충전소 찾기</Link></li>                 
+>>>>>>> Stashed changes
                 </ul>
               </li>
               <li>
@@ -139,6 +143,41 @@ function Header() {
           </nav>
           <div className="header-util-space"></div>
         </div>
+<<<<<<< Updated upstream
+=======
+
+        {/* ✅ 메가메뉴: open 클래스로 제어 */}
+        <div className={`mega-menu-panel ${menuOpen ? "open" : ""}`}>
+          <div className="panel-content">
+            <div className="panel-column">
+              <ul>
+                <li><Link to="brand">브랜드 소개</Link></li>
+              </ul>
+            </div>
+            <div className="panel-column">
+              <ul>
+                <li><Link to="reservation">충전소 찾기</Link></li>              
+              </ul>
+            </div>
+            <div className="panel-column">
+              <ul>
+                <li><Link to="pay">지갑 충전하기</Link></li>
+                <li><Link to="cash">요금 알아보기</Link></li>
+                <li><Link to="app">APP 소개</Link></li>
+              </ul>
+            </div>
+            <div className="panel-column">
+              <ul>
+                <li><Link to="notice">공지사항</Link></li>
+                <li><Link to="faq">자주묻는질문</Link></li>
+                <li><Link to="community">커뮤니티</Link></li>
+                <li><Link to="customer-center">고객센터</Link></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+>>>>>>> Stashed changes
         <div className="menu-overlay"></div>
       </header>
       <aside className="side-quick-menu">

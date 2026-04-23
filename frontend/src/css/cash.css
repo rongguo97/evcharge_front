@@ -65,11 +65,12 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
 .menu-trigger, .menu-btn { display: none; }
 
 /* --- Hero & 컨텐츠 --- */
-.hero-section {
+/* .hero-section {
     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
                 url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200') no-repeat center/cover;
     height: 500px; display: flex; align-items: center; color: var(--white);
-}
+} */
+
 .price-content { margin-top: -60px; padding-bottom: 80px; }
 .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
 .price-card { background: linear-gradient(#9b72cf,#b8b8ff); padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); box-shadow: 0 0 20px rgba(155, 62, 255, 0.8)}
