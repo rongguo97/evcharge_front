@@ -86,7 +86,7 @@ const MyPagep: React.FC = () => {
             </div>
           </div>
           <footer className="top-nav">
-        <div className="logoo"><Link to="/main/mypage"><span>마이페이지</span></Link></div>
+        <div className="logoo02"><Link to="/main/mypage"><span>마이페이지</span></Link></div>
       </footer>
         </div>
        <br /><br /><br /><br /><br /><br /><br /><br />

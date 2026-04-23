@@ -68,7 +68,7 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
 .menu-trigger, .menu-btn { display: none; }
 
 /* --- Hero & 컨텐츠 --- */
-.hero-section {
+.hero-section01 {
     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
                 url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200') no-repeat center/cover;
     height: 500px; display: flex; align-items: center; color: var(--white);

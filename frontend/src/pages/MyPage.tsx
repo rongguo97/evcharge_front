@@ -82,7 +82,7 @@ const MyPage: React.FC = () => {
         </div>
         <div className="app-wrapper">
         <footer className="top-nav">
-        <div className="logoo"><Link to="/main/mypagep"><span>개인정보 조회</span></Link></div>
+        <div className="logoo01"><Link to="/main/mypagep"><span>개인정보 조회</span></Link></div>
       </footer>
       <br /><br /><br /><br /><br /><br /><br /><br />
       </div>

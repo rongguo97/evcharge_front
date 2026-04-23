@@ -6,7 +6,6 @@ function App() {
   return (
 
     <div>
-      
       <div className="App">
         {/* Hero Section */}
         <section className="app-hero">

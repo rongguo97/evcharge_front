@@ -19,11 +19,13 @@ const PriceCard: React.FC<PricePlan> = ({ type, title, basePrice, memberPrice, n
     <h3><span className="cwb">{title}</span></h3>
     <br />
     <div className="main-amount">{basePrice}<span>원/kWh</span></div>
-    <br /><br /><br /><br />
-    <h2><span className="cw">차카지회원 👤</span></h2>
+    <br /><br /><br />
+    <h2><span className="cw">👤</span></h2>
+    <h2><span className="cw">차카지회원</span></h2>
     <br />
     <div className="main-amount">{memberPrice}<span>/kWh</span></div>
     <br /><br />
+    <h2><span className="cw">🌘</span></h2>
     <h2><span className="cw">심야요금</span></h2>
     <h3><span className="cwb">회원전용</span></h3>
     <br />
@@ -32,7 +34,7 @@ const PriceCard: React.FC<PricePlan> = ({ type, title, basePrice, memberPrice, n
     <div className="detail-box">
       {/* <div className="detail-row"><span>차카지 회원</span><strong>💜 {memberPrice}</strong></div>
       <div className="detail-row"><span>심야 할인</span><strong className="purple-text">{nightPrice}</strong></div> */}
-      <h2 className="text-PP">요금 비교 해보기 🔎</h2><br />
+      <h2 className="text-PP">요금 비교</h2><br />
       {competitors.map((comp, idx) => (
         <p key={idx} className="text-P">{comp.name} &nbsp;&nbsp; {comp.price}원</p>
       ))}
@@ -77,7 +79,7 @@ const Pricing: React.FC = () => {
     <>
 
       <div className="pricing-page">
-        <section className="hero-section">
+        <section className="hero-section01">
           <div className="container">
             <div className="hero-text">
               <br /><br />
@@ -90,6 +92,7 @@ const Pricing: React.FC = () => {
                 <br />
                 <span className="cpk">급속, 완속</span> 요금제 확인하고 <span className="cpk">심야</span> 요금까지 확인하세요.
               </h3>
+              <br /><br /><br />
             </div>
           </div>
         </section>
