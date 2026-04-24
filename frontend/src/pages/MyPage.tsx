@@ -58,10 +58,74 @@ const MyPage: React.FC = () => {
     }
   };
 
+  // --- [3] 충전 제어 핸들러 ---
+  const handleStart = async (id: number) => {
+    try {
+      await ReservationService.startCharging(id);
+      alert("충전을 시작합니다!");
+      fetchAllData(); // 상태 갱신
+    } catch (error: any) {
+      alert(error.response?.data?.message || "충전 시작 실패");
+    }
+  };
+
+  const handleEnd = async (id: number) => {
+    try {
+      await ReservationService.endCharging(id);
+      alert("충전이 종료되었습니다. 정산이 완료되었습니다.");
+      fetchAllData(); // 지갑 잔액과 예약 상태 갱신
+    } catch (error: any) {
+      alert(error.response?.data?.message || "충전 종료 실패");
+    }
+  };
+
+  // --- [4] 초기 데이터 로드 및 타이머 로직 ---
   useEffect(() => {
     // 페이지 진입 시 두 데이터를 모두 가져옴
     Promise.all([fetchWalletData(), fetchUsageHistory()]);
   }, []);
+
+  useEffect(() => {
+    if (!reservation || reservation.status === 'COMPLETED' || reservation.status === 'CANCELLED') {
+      setTimeLeft("00:00");
+      return;
+    }
+
+    if (reservation.status === 'RESERVED') {
+      setTimeLeft("00:00");
+      setIsOverdue(false);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const end = new Date(reservation.endTime).getTime();
+      const diff = end - now;
+
+      if (diff > 0) {
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimeLeft(`${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`);
+        setIsOverdue(false);
+      } else {
+        const overTime = Math.abs(diff);
+        const overMins = Math.floor(overTime / (1000 * 60));
+        const overSecs = Math.floor((overTime % (1000 * 60)) / 1000);
+        setTimeLeft(`+ ${overMins < 10 ? '0' + overMins : overMins}:${overSecs < 10 ? '0' + overSecs : overSecs}`);
+        setIsOverdue(true);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [reservation]);
+
+  const formatTime = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
 
   return (
     <div className="main-layout">
