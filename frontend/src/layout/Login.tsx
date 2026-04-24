@@ -40,7 +40,7 @@ export default function App() {
   };
 
   const handleMembership = () => {
-    navigate('/membership'); // 회원가입 경로
+    navigate('/main/membership'); // 회원가입 경로
   };
 
   return (
