@@ -32,15 +32,15 @@ a {
     z-index: 100;
 }
 
-.logoo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px;
-    border: 1px solid var(--primary-purple);
-    color: var(--primary-purple);
-    padding: 25px;
+.logoo02 { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px;
+    border: 1px solid #b8b8ff;
+    color: #b8b8ff;
+    padding: 15px 25px 15px 25px;
     text-align: center;
-    border-radius: 25px;
+    border-radius: 15px;
 }
-.logoo:hover {
-    background: var(--primary-purple);
+.logoo02:hover {
+    background: #9381ff;
     color: white;
 
 }

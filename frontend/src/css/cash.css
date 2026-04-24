@@ -65,10 +65,10 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
 .panel-column ul li a { text-decoration: none; color: #666; font-size: 0.95rem; }
 
 /* --- 햄버거 및 트리거 숨기기 (PC) --- */
-.menu-trigger, .menu-btn { display: none; }
+/* .menu-trigger, .menu-btn { display: none; } */
 
 /* --- Hero & 컨텐츠 --- */
-.hero-section {
+.hero-section01 {
     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
                 url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200') no-repeat center/cover;
     height: 500px; display: flex; align-items: center; color: var(--white);
@@ -124,13 +124,13 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
 .footer-contact strong { display: block; font-size: 1.1rem; color: var(--black); margin-top: 5px; }
 
 /* --- 퀵메뉴 --- */
-.side-quick-menu { position: fixed; right: 0; top: 30%; z-index: 999; }
+/* .side-quick-menu { position: fixed; right: 0; top: 30%; z-index: 999; }
 .quick-btn {
     display: block; writing-mode: vertical-rl; padding: 30px 15px; margin-top: 20px;
     text-decoration: none; color: var(--white); font-weight: bold;
     border-radius: 20px 0 0 20px; margin-bottom: 5px; background: #9381ff;
 
-}
+} */
 .admin-page { background-color: #b8b8ff; }
 
 /* --- 반응형 (모바일 900px 이하) --- */
@@ -141,11 +141,11 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
     .header-util-space { display: none; }
     
     /* 햄버거 버튼 보이기 */
-    .menu-btn { display: block; width: 25px; height: 18px; position: relative; z-index: 1002; cursor: pointer; }
+    /* .menu-btn { display: block; width: 25px; height: 18px; position: relative; z-index: 1002; cursor: pointer; }
     .menu-btn span { position: absolute; width: 100%; height: 2px; background: var(--deep-purple); transition: 0.3s; }
     .menu-btn span:nth-child(1) { top: 0; }
     .menu-btn span:nth-child(2) { top: 8px; }
-    .menu-btn span:nth-child(3) { bottom: 0; }
+    .menu-btn span:nth-child(3) { bottom: 0; } */
 
     /* 모바일용 GNB 슬라이드 메뉴 */
     .gnb {
