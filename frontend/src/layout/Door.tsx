@@ -118,9 +118,15 @@ export default function Door() {
           <button type="submit" className="click-login" disabled={isLoading}>
             {isLoading ? "로그인 중..." : "login"}
           </button>
-          <button type="button" className="membership" onClick={handleMembership}>
-            membership
-          </button>
+          <Link to="/main/membership">
+            <button
+              type="button"
+              className="membership"
+              onClick={handleMembership}
+            >
+              membership
+            </button>
+          </Link>
         </form>
       </div>
     </div>

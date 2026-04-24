@@ -100,6 +100,28 @@ function Header() {
                 <li><Link to="cash">요금 알아보기</Link></li>
                 <li><Link to="app">APP 소개</Link></li>
               </ul>
+            </nav>
+
+            {/* 3. 로그인/로그아웃 버튼 (우측 상단) */}
+            <div className="nav-right">
+              {isLoggedIn ? (
+                <div className="user-info-area" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                  <span className="user-name" style={{ fontSize: '14px', color: '#333' }}>
+                    <strong>{user?.memberName || '사용자'}</strong>님
+                  </span>
+                  <button 
+                    onClick={logout} 
+                    className="nav-log" 
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link to="login" className="nav-log">
+                  log
+                </Link>
+              )}
             </div>
             <div className="panel-column">
               <ul>

@@ -1,14 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react'; // useState 추가
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../api/axios'; // 💡 만들어둔 axios 인스턴스
-import { useAuth } from '../context/AuthContext'; // 💡 인증 컨텍스트
 import doorVideo from '../image/door영상이미지.mp4';
 import '../css/door.css';
-
+import apiClient from '../api/axios'; // 1. apiClient 임포트
+import { useAuth } from '../context/AuthContext'; // 2. useAuth 임포트
 export default function App() {
+
+  
   const titleRef = useRef<HTMLHeadingElement>(null);
   const navigate = useNavigate();
-  const { checkLoginStatus } = useAuth(); // ✅ 로그인 후 상태를 즉시 갱신하기 위함
+  const { checkLoginStatus } = useAuth(); // 3. 로그인 상태 갱신 함수 가져오기
+
+  // 입력값 관리를 위한 상태
+  const [memberId, setMemberId] = useState("");
+  const [password, setPassword] = useState("");
 
   // 1. 입력값 상태 관리 (DB로 보낼 데이터)
   const [email, setEmail] = useState('');
@@ -35,38 +40,31 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // 🚀 2. 실제 로그인 로직 (DB 연동)
+  // 4. 실제 로그인 처리 로직
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     try {
-      // 백엔드 로그인 API 호출 (주소는 백엔드 설계에 맞춤)
-      const response = await apiClient.post('/api/auth/login', {
-        email: email,
+      // 백엔드 MemberController의 @PostMapping("/auth/login") 호출
+      const response = await apiClient.post('/auth/login', {
+        email: memberId, // 사용자가 입력한 값(memberId 상태)을 'email'이라는 이름표로 전송
         password: password
       });
 
       if (response.status === 200) {
-        // JWT 토큰 저장 (백엔드가 주는 구조에 따라 response.data.accessToken 등 확인)
-        const token = response.data.accessToken || response.data.result.accessToken;
-        if (token) {
-          localStorage.setItem('accessToken', token);
-        }
-
-        // 중요: 토큰 저장 후 바로 유저 정보를 불러와 전역 상태(Header 등) 갱신
+        alert("로그인 성공!");
+        // 5. Context의 유저 정보를 최신화 (이걸 해야 헤더에 이름이 뜹니다)
         await checkLoginStatus(); 
-
-        alert("성공적으로 로그인되었습니다!");
-        navigate('/main'); 
+        navigate('/main'); // 메인 페이지로 이동
       }
     } catch (error: any) {
-      console.error("로그인 에러:", error);
-      alert("이메일 또는 비밀번호가 올바르지 않습니다.");
+      console.error("로그인 실패:", error);
+      alert("아이디 또는 비밀번호를 확인해주세요.");
     }
   };
 
   const handleMembership = () => {
-    navigate('/membership'); 
+    navigate('/main/membership');
   };
 
   return (
@@ -82,29 +80,31 @@ export default function App() {
 
       <div className="login-box">
         <form className="login-product" onSubmit={handleLogin}>
-          {/* 3. value와 onChange 연결 (하드코딩 방지) */}
+          {/* value와 onChange 연결 */}
           <input 
-            type="email" 
-            placeholder="email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            name="id" 
+            placeholder="id" 
+            value={memberId}
+            onChange={(e) => setMemberId(e.target.value)}
           />
           <br />
           <input 
-            type="password" 
+            type="password"
+            name="password" 
             placeholder="password" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
           <button type="submit" className="click-login">
             login
           </button>
+          
           <button type="button" className="membership" onClick={handleMembership}>
-            membership
+            membership 
           </button>
+          
         </form>
+        
       </div>
     </div>
   );
