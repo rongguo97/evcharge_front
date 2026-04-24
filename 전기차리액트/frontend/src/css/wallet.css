@@ -1,0 +1,230 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans KR', sans-serif;  overflow-x: hidden; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+
+/* 본문 */
+
+.payment-page-bg {
+  width: 100%;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding-top: 100px; /* 헤더 공간 */
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+                url('https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop') no-repeat center/cover;
+ display: flex; align-items: center; color: var(--white);
+}
+
+
+.payment-container {
+  max-width: 480px;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding: 30px 30px 50px 30px;
+  background-color: #f5f3ff; /* 본문 배경을 약간 투명한 흰색으로 */
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #4c1d95; 
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+
+.amount-btn {
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  color: #1a1a1a; 
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.amount-btn.active {
+  border-color: #7c3aed;
+  background-color: #f5f3ff;
+  color: #7c3aed;
+}
+
+.custom-input {
+  width: 100%;
+  padding: 18px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 2px solid #ddd;
+  font-size: 1rem;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.section-label {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.my-point {
+  color: #666;
+  font-weight: 600;
+}
+
+.point-input-wrapper input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.all-use-btn {
+  padding: 15px;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pay-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pay-btn {
+  padding: 20px;
+  border-radius: 15px;
+  border: 2px solid #eee;
+  background: #fff;
+  font-weight: 800;
+  color: #1a1a1a; /* 글자색 강조 */
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+.pay-icon { margin-right: 12px; color: #ccc; }
+
+.pay-btn.kakao.active { background-color: #fff9c4; border-color: #fbc02d; }
+.pay-btn.toss.active { background-color: #e3f2fd; border-color: #2196f3; }
+.pay-btn.naver.active { background-color: #e8f5e9; border-color: #4caf50; }
+
+
+.bottom-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -10px 20px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.summary-label { color: #333; font-weight: 700; }
+.total-price { color: #7c3aed; font-size: 1.4rem; font-weight: 900; }
+
+.pay-submit-btn {
+  width: 100%;
+  padding: 20px;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+
+.complete-title { color: #7c3aed; font-weight: 800; margin-top: 10px; }
+.complete-desc { color: #666; font-weight: 600; }
+.receipt-divider { border: none; border-top: 1px dashed #ccc; margin: 15px 0; }
+
+
+.completed-box {
+  max-width: 550px !important; 
+  padding: 50px 40px !important;
+  text-align: center;
+}
+
+.status-icon { font-size: 5rem; margin-bottom: 20px; }
+.complete-title { font-size: 2rem; color: #4c1d95; margin-bottom: 10px; font-weight: 800; }
+.complete-desc { color: #6b7280; font-weight: 600; margin-bottom: 30px; }
+
+
+.receipt-box.large {
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+
+.receipt-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: #4b5563; font-weight: 600; }
+.used-point { color: #ef4444; }
+.total-row { margin-top: 15px; padding-top: 15px; border-top: 2px dashed #eee; font-size: 1.3rem; font-weight: 800; color: #111827; }
+.final-amt { color: #7c3aed; }
+
+
+.point-reward-card {
+  margin-top: 25px;
+  background: #f5f3ff;
+  border: 2px solid #ddd6fe;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.reward-label { font-size: 0.9rem; color: #6d28d9; font-weight: 700; margin-bottom: 5px; }
+.reward-value { font-size: 1.5rem; color: #1e1b4b; margin-bottom: 5px; }
+.reward-value strong { color: #7c3aed; font-size: 1.8rem; }
+.reward-info { font-size: 0.8rem; color: #7c3aed; font-weight: 600; }
+
+/* 메인으로 돌아가기 버튼 */
+.go-main-btn {
+  width: 100%;
+  padding: 20px;
+  background-color: #4c1d95;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.go-main-btn:hover { background-color: #3b0764; transform: translateY(-2px); }
+
+.header-spacer { height: 120px; }
+.footer-spacer { height: 100px; }
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.all-use-btn {
+  margin-left: 10px;
+}
