@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from '../api/axios.ts'; 
+import apiClient from '../api/axios'; 
 import '../css/Membership.css';
 
 const Membership: React.FC = () => {
   const navigate = useNavigate();
 
-  // 1. carModel(차종)을 추가하여 상태 초기화
   const [formData, setFormData] = useState({
     memberName: '',
     email: '',
     password: '',
     confirmPassword: '',
     carNumber: '',
-    carModel: '',    // 차종 필드 추가
+    carModel: '',
     phoneNumber: '',
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,22 +31,45 @@ const Membership: React.FC = () => {
       return;
     }
 
+    if (formData.password.length < 8) {
+      alert("비밀번호는 8자 이상이어야 합니다.");
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      // 2. 백엔드 MemberDto 구조에 맞춰 모든 데이터 전송
-      await apiClient.post('/auth/register', {
+      /**
+       * ✅ 수정 포인트 1: API 주소 중복 해결
+       * 콘솔에 /api/api/auth/register라고 떴다면, 
+       * apiClient(axios)의 baseURL에 이미 /api가 포함된 것입니다.
+       * 따라서 여기서는 '/auth/register'라고만 적어야 합니다.
+       */
+      const response = await apiClient.post('/auth/register', {
         email: formData.email,
         password: formData.password,
         memberName: formData.memberName,
         carNumber: formData.carNumber,
-        carModel: formData.carModel, // 💡 차종 데이터 전송 추가
+        carModel: formData.carModel,
         phoneNumber: formData.phoneNumber
       });
 
-      alert(`${formData.memberName}님, 차카지 가입을 환영합니다!`);
-      navigate('/'); 
+      if (response.status === 200 || response.status === 201) {
+        alert(`${formData.memberName}님, 가입을 환영합니다!`);
+        navigate('/'); 
+      }
     } catch (error: any) {
-      console.error('회원가입 에러:', error);
-      alert(error.response?.data?.message || "회원가입에 실패했습니다. 입력 정보를 확인해주세요.");
+      /**
+       * ✅ 수정 포인트 2: 상세 에러 로그 확인
+       * 403 에러가 계속된다면 백엔드의 SecurityConfig에서 
+       * /api/auth/register를 permitAll() 설정했는지 확인이 필요합니다.
+       */
+      console.error('회원가입 에러 상세:', error.response?.data || error);
+      
+      const serverMessage = error.response?.data?.message || "회원가입에 실패했습니다.";
+      alert(`가입 실패: ${serverMessage}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,6 +115,7 @@ const Membership: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
+                  autoComplete="email"
                 />
               </div>
 
@@ -104,6 +129,7 @@ const Membership: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
+                  autoComplete="new-password"
                 />
               </div>
 
@@ -117,20 +143,20 @@ const Membership: React.FC = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
+                  autoComplete="new-password"
                 />
               </div>
 
-              {/* 💡 차종 입력 필드에 상태(value, onChange)를 연결함 */}
               <div className="info-item full-width">
                 <label>차종</label>
                 <input
                   type="text"
-                  name="carModel" // 💡 name 추가
+                  name="carModel"
                   className="membership-input"
                   placeholder="예: Tesla Model 3"
                   required
-                  value={formData.carModel} // 💡 value 연결
-                  onChange={handleChange}   // 💡 onChange 연결
+                  value={formData.carModel}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -161,8 +187,8 @@ const Membership: React.FC = () => {
               </div>
 
               <div className="profile-actions membership-actions">
-                <button type="submit" className="edit-btn">
-                  가입 신청하기
+                <button type="submit" className="edit-btn" disabled={isLoading}>
+                  {isLoading ? "처리 중..." : "가입 신청하기"}
                 </button>
                 <br />
                 <p className="login-link">
