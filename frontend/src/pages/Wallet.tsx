@@ -95,7 +95,7 @@ const Wallet: React.FC = () => {
             </div>
           </div>
 
-          <button className="go-main-btn" onClick={() => navigate('/')}>
+          <button className="go-main-btn" onClick={() => navigate('/main')}>
             메인으로 돌아가기
           </button>
         </div>
