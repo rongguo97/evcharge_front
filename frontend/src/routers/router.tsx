@@ -5,7 +5,6 @@ import Pay from "../pages/Wallet";
 import Cash from "../pages/Cash";
 import MyPage from "../pages/MyPage";
 import App from "../pages/App";
-import Admin from "../pages/AdminPage";
 import ReservationPage from "../pages/ReverlationPage";
 import Notice from "../pages/Notice";
 import FAQ from "../pages/faq";
@@ -36,7 +35,6 @@ const router = createBrowserRouter([
       { path: "pay", element: <Pay /> },
       { path: "cash", element: <Cash /> },
       { path: "mypage", element: <MyPage /> },
-      { path: "admin", element: <Admin /> },
       { path: "app", element: <App /> },
       { path: "notice", element: <Notice /> },
       { path: "faq", element: <FAQ /> },
@@ -45,7 +43,7 @@ const router = createBrowserRouter([
       { path: "brand", element: <Brand /> },
       { path: "community", element: <Communication /> },
       { path: "mypage", element: <MyPage /> },
-      { path: "admin", element: <AdminPage /> },
+      { path: "adminpage", element: <AdminPage /> },
       { path: "mypagep", element: <MyPagep /> },
       { path: "membership", element: <Membership /> },
     ],
