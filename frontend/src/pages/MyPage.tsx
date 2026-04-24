@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import WalletService from "../services/WalletService";
 import ReservationService from "../services/ReservationService";
-import chargeGaugeIcon from "../image/mypagecharge.png"; // 📍 폴더명 img로 맞춤
+import chargeGaugeIcon from "../image/mypagecharge.png"; 
 import { useAuth } from "../context/AuthContext"; 
 import "../css/mypage.css";
 
+// 📍 예약 내역 타입 정의 (날짜, 시간, 충전소, 결제금액)
 interface UsageHistory {
   date: string;
+  time: string;
   station: string;
-  amount: string;
   price: string;
 }
 
@@ -22,9 +23,10 @@ const MyPage: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState<string>("00:00"); 
   const [isOverdue, setIsOverdue] = useState<boolean>(false); 
 
+  // 초기 상태는 빈 배열로 두고, 데이터를 불러오기 전까지 보여줄 더미 데이터를 세팅해 둡니다.
   const [historyData, setHistoryData] = useState<UsageHistory[]>([
-    { date: "04.07", station: "부산 시청역 스테이션", amount: "12.5kWh", price: "- 3,200원" },
-    { date: "04.02", station: "해운대 LCT 스테이션", amount: "25.0kWh", price: "- 7,500원" },
+    { date: "2026.04.07", time: "14:00 ~ 15:30", station: "부산 시청역 스테이션", price: "3,200원" },
+    { date: "2026.04.02", time: "09:00 ~ 11:00", station: "해운대 LCT 스테이션", price: "7,500원" },
   ]);
 
   // --- [2] 데이터 로딩 함수들 ---
@@ -37,7 +39,7 @@ const MyPage: React.FC = () => {
   const fetchWalletData = async () => {
     try {
       const response = await WalletService.getMyWallet();
-      if (response.data.success) {
+      if (response.data && response.data.success) {
         setWallet({
           reserveFund: response.data.result.reserveFund || 0,
           point: response.data.result.point || 0,
@@ -51,17 +53,42 @@ const MyPage: React.FC = () => {
   const fetchCurrentRes = async () => {
     try {
       const res = await ReservationService.getCurrentReservation();
-      setReservation(res.data.result);
+      if (res.data && res.data.result) {
+        setReservation(res.data.result);
+      }
     } catch (e) {
       setReservation(null);
     }
   };
 
+  // 📍 [안전 모드] 지금은 에러 방지를 위해 실제 연동 코드를 주석 처리했습니다!
+  // 나중에 ReservationService.ts에 함수를 확실히 만들고 나서 주석을 푸시면 됩니다.
   const fetchUsageHistory = async () => {
     try {
-      // API 연결 시 주석 해제: const response = await apiClient.get('/api/usage/history');
+      /*
+      const response = await (ReservationService as any).getReservationHistory(); 
+      
+      if (response.data && response.data.success) {
+        const formattedData = response.data.result.map((item: any) => {
+          const startDate = new Date(item.startTime);
+          const endDate = new Date(item.endTime);
+          
+          const dateStr = `${startDate.getFullYear()}.${String(startDate.getMonth() + 1).padStart(2, '0')}.${String(startDate.getDate()).padStart(2, '0')}`;
+          const timeStr = `${String(startDate.getHours()).padStart(2, '0')}:${String(startDate.getMinutes()).padStart(2, '0')} ~ ${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`;
+
+          return {
+            date: dateStr,
+            time: timeStr,
+            station: item.stationName || item.station?.stationName || "충전소 정보 없음",
+            price: item.price ? `${item.price.toLocaleString()}원` : "결제 안됨",
+          };
+        });
+        
+        setHistoryData(formattedData); 
+      } 
+      */
     } catch (error) {
-      console.error("이용 내역 조회 실패:", error);
+      console.error("예약 내역 조회 실패:", error);
     }
   };
 
@@ -97,14 +124,12 @@ const MyPage: React.FC = () => {
       return;
     }
 
-    // RESERVED 상태일 때는 타이머 작동 안함 (00:00 고정)
     if (reservation.status === "RESERVED") {
       setTimeLeft("00:00");
       setIsOverdue(false);
       return;
     }
 
-    // CHARGING 상태일 때만 타이머 작동
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const end = new Date(reservation.endTime).getTime();
@@ -150,23 +175,26 @@ const MyPage: React.FC = () => {
             {/* 1. 충전 제어 카드 */}
             <div className="glass-card" style={{ backdropFilter: 'blur(15px)' }}>
               <span>충전 제어</span>
+              
+              <img
+                src={chargeGaugeIcon}
+                alt="Charging Gauge"
+                style={{
+                  height: "130px",
+                  marginTop: "15px",
+                  marginBottom: "10px",
+                  display: "block",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              />
+
               {!reservation ? (
-                <div className="no-res" style={{ marginTop: "15px" }}>진행 중인 예약이 없습니다.</div>
+                <div className="no-res" style={{ marginTop: "15px", textAlign: "center", color: "#aaa" }}>
+                  진행 중인 예약이 없습니다.
+                </div>
               ) : (
                 <div className="charging-control" style={{ textAlign: "center" }}>
-                  <img
-                    src={chargeGaugeIcon}
-                    alt="Charging Gauge"
-                    style={{
-                      height: "200px",
-                      marginBottom: "10px",
-                      display: "block",
-                      marginLeft: "auto",
-                      marginRight: "auto",
-                    }}
-                  />
-
-                  {/* 📍 박스와 충전소 이름을 빼고 깔끔하게 예약 시간만 남김 */}
                   <p style={{ margin: "10px 0", color: "#aaa", fontSize: "0.95rem" }}>
                     예약 시간: {formatTime(reservation.startTime)} ~ {formatTime(reservation.endTime)}
                   </p>
@@ -220,10 +248,22 @@ const MyPage: React.FC = () => {
               )}
             </div>
 
+            {/* 2. 차량 정보 카드 */}
+            <div className="glass-card" style={{ backdropFilter: 'blur(15px)' }}>
+              <span>내 차량 ({user?.carModel || '미등록'})</span>
+              <div className="battery-level">
+                <div className="gauge" style={{ width: '72%' }}></div>
+                <span className="pct">72%</span>
+              </div>
+              <p style={{ fontSize: '0.8rem', marginTop: '10px', color: '#ccc' }}>
+                차량번호: {user?.carNumber || '번호 미등록'}
+              </p>
+            </div>
+
             {/* 3. 적립금 카드 */}
             <div className="glass-card" style={{ backdropFilter: 'blur(15px)' }}>
               <span>적립금</span>
-              <h3 style={{ color: '#b088f9' }}>{wallet.reserveFund.toLocaleString()} P</h3>
+              <h3 style={{ color: '#b088f9' }}>{wallet.reserveFund.toLocaleString()} 원</h3>
             </div>
             
             {/* 4. 포인트 카드 */}
@@ -233,23 +273,48 @@ const MyPage: React.FC = () => {
             </div>
           </div>
 
-          {/* 5. 최근 이용 리포트 */}
+          {/* 5. 최근 예약 리포트 */}
           <div className="history-panel" style={{ backdropFilter: 'blur(15px)' }}>
-            <h3>최근 이용 리포트</h3>
+            <h3>최근 예약 리포트</h3>
+            
             {historyData.length > 0 ? (
               historyData.map((item, index) => (
-                <div className="list-item" key={index}>
-                  <div className="date">{item.date}</div>
-                  <div className="info">{item.station} - {item.amount}</div>
-                  <div className="price">{item.price}</div>
+                <div className="list-item" key={index} style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  padding: '15px 0', 
+                  borderBottom: '1px solid rgba(255,255,255,0.05)' 
+                }}>
+                  {/* 날짜 & 시간 (왼쪽) */}
+                  <div className="date-time" style={{ flex: '1.2', textAlign: 'left' }}>
+                    <div style={{ color: '#fff', fontSize: '0.9rem', fontWeight: '500' }}>{item.date}</div>
+                    <div style={{ color: '#aaa', fontSize: '0.8rem', marginTop: '4px' }}>{item.time}</div>
+                  </div>
+                  
+                  {/* 충전소 이름 (가운데) */}
+                  <div className="info" style={{ flex: '2', textAlign: 'center', color: '#fff', fontSize: '0.95rem' }}>
+                    {item.station}
+                  </div>
+                  
+                  {/* 결제 금액 (오른쪽) */}
+                  <div className="price" style={{ flex: '1', textAlign: 'right', color: '#b088f9', fontSize: '1rem', fontWeight: 'bold' }}>
+                    {item.price}
+                  </div>
                 </div>
               ))
             ) : (
-              <p style={{ padding: "20px", textAlign: "center", color: "#999" }}>최근 이용 내역이 없습니다.</p>
+              <p style={{ padding: "20px", textAlign: "center", color: "#999" }}>최근 예약 내역이 없습니다.</p>
             )}
+            
             <div className="spacer" style={{ height: "40px" }}></div>
-            <button className="more-btn">전체 내역 보기</button>
+            <button className="more-btn" style={{
+              width: '100%', padding: '15px', background: 'transparent',
+              border: '1px solid #b088f9', color: '#b088f9', borderRadius: '10px',
+              cursor: 'pointer', transition: '0.3s'
+            }}>전체 내역 보기</button>
           </div>
+
         </div>
 
         <div className="app-wrapper">
