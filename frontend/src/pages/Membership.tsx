@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from '../api/axios.ts'; // apiClient 대신 api로 이름을 맞춤
+import apiClient from '../api/axios.ts'; 
 import '../css/Membership.css';
 
 const Membership: React.FC = () => {
   const navigate = useNavigate();
 
-  // 1. 상태 변수를 백엔드 MemberDto 구조에 맞게 초기화
+  // 1. carModel(차종)을 추가하여 상태 초기화
   const [formData, setFormData] = useState({
-    memberName: '',    // name에서 변경
+    memberName: '',
     email: '',
     password: '',
     confirmPassword: '',
-    carNumber: '',     // carInfo에서 변경
-    phoneNumber: '',   // carInfo에서 변경
+    carNumber: '',
+    carModel: '',    // 차종 필드 추가
+    phoneNumber: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +22,6 @@ const Membership: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // 2. 비동기 통신(async) 적용
   const handleMembership = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -31,20 +31,20 @@ const Membership: React.FC = () => {
     }
 
     try {
-      // 3. 백엔드로 데이터 전송
+      // 2. 백엔드 MemberDto 구조에 맞춰 모든 데이터 전송
       await apiClient.post('/auth/register', {
         email: formData.email,
         password: formData.password,
         memberName: formData.memberName,
         carNumber: formData.carNumber,
+        carModel: formData.carModel, // 💡 차종 데이터 전송 추가
         phoneNumber: formData.phoneNumber
       });
 
       alert(`${formData.memberName}님, 차카지 가입을 환영합니다!`);
-      navigate('/'); // 가입 성공 후 로그인 페이지로 이동
+      navigate('/'); 
     } catch (error: any) {
       console.error('회원가입 에러:', error);
-      // 백엔드에서 보낸 에러 메시지가 있으면 출력, 없으면 기본 메시지
       alert(error.response?.data?.message || "회원가입에 실패했습니다. 입력 정보를 확인해주세요.");
     }
   };
@@ -72,7 +72,7 @@ const Membership: React.FC = () => {
                 <label>이름</label>
                 <input
                   type="text"
-                  name="memberName" // name -> memberName
+                  name="memberName"
                   className="membership-input"
                   placeholder="성함을 입력하세요"
                   required
@@ -120,14 +120,17 @@ const Membership: React.FC = () => {
                 />
               </div>
 
-              {/* 차종은 DTO에 없으므로 필요한 경우 추가하거나, carNumber 등에 통합해서 보내야 합니다. 
-                  일단 디자인 유지를 위해 남겨두되 데이터 바인딩은 제외했습니다. */}
+              {/* 💡 차종 입력 필드에 상태(value, onChange)를 연결함 */}
               <div className="info-item full-width">
                 <label>차종</label>
                 <input
                   type="text"
+                  name="carModel" // 💡 name 추가
                   className="membership-input"
                   placeholder="예: Tesla Model 3"
+                  required
+                  value={formData.carModel} // 💡 value 연결
+                  onChange={handleChange}   // 💡 onChange 연결
                 />
               </div>
 
@@ -135,9 +138,10 @@ const Membership: React.FC = () => {
                 <label>차량번호</label>
                 <input
                   type="text"
-                  name="carNumber" // carInfo -> carNumber
+                  name="carNumber"
                   className="membership-input"
                   placeholder="예: 12가 3456"
+                  required
                   value={formData.carNumber}
                   onChange={handleChange}
                 />
@@ -147,9 +151,10 @@ const Membership: React.FC = () => {
                 <label>전화번호</label>
                 <input
                   type="text"
-                  name="phoneNumber" // carInfo -> phoneNumber
+                  name="phoneNumber"
                   className="membership-input"
                   placeholder="010-0000-0000"
+                  required
                   value={formData.phoneNumber}
                   onChange={handleChange}
                 />
