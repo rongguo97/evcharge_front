@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // Link 제거
-import doorVideo from '../image/door영상이미지.mp4';
-import '../css/door.css';
+import { useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Link 제거
+import doorVideo from "../image/door영상이미지.mp4";
+import "../css/door.css";
 
 export default function App() {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -36,11 +36,11 @@ export default function App() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/main'); // 로그인 후 이동할 경로
+    navigate("/main"); // 로그인 후 이동할 경로
   };
 
   const handleMembership = () => {
-    navigate('/membership'); // 회원가입 경로
+    navigate("/membership"); // 회원가입 경로
   };
 
   return (
@@ -57,16 +57,24 @@ export default function App() {
       </div>
 
       <div className="login-box">
-        <form className="login-product" onSubmit={handleLogin}> {/* action 제거 */}
+        <form className="login-product" onSubmit={handleLogin}>
+          {" "}
+          {/* action 제거 */}
           <input name="id" placeholder="id" />
           <br />
           <input name="password" placeholder="password" />
           <button type="submit" className="click-login">
             login
           </button>
-          <button type="button" className="membership" onClick={handleMembership}>
-            membership
-          </button>
+          <Link to="/main/membership">
+            <button
+              type="button"
+              className="membership"
+              onClick={handleMembership}
+            >
+              membership
+            </button>
+          </Link>
         </form>
       </div>
     </div>
