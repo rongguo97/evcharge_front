@@ -28,6 +28,10 @@ header.main-header:hover { background: var(--white); }
 .logo { font-size: 1.8rem; font-weight: bold; color: var(--white); letter-spacing: 2px; transition: 0.3s; }
 header:hover .logo { color:#5300c7 !important;}
 
+/* 로그인창 */
+
+
+
 /* 중앙 GNB */
 .gnb { flex: 1; display: flex; justify-content: center; }
 .main-menu { display: flex; list-style: none; width: 100%; 
@@ -151,8 +155,25 @@ header:hover .main-menu a { color:#5300c7 !important; }
 }
 
 .nav-right { display: flex; align-items: center; z-index: 3001; }
+
 .nav-log {
   width: 40px; height: 40px; background: var(--white-10); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
+  cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
+  color: #e2dcff; transform: translateX(500px);
+}
+/* 2. 이름과 버튼을 직접 감싸는 박스: 둘을 가로로 묶음 */
+.user-info-nav {
+    display: flex;          /* 가로 배치 */
+    align-items: center;    /* 세로 중앙 */
+    gap: 11px;              /* 이름과 버튼 사이 간격 */
+    margin-right: 15px;     /* 전체적인 오른쪽 여백 */
+}
+
+/* 3. 사용자 이름 스타일 */
+.user-name {
+    width: 40px; height: 40px; background: var(--white-10); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
   cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
