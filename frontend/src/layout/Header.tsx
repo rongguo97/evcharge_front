@@ -43,7 +43,7 @@ function Header() {
                 <a href="#">충전소 찾기</a>
                 <ul className="mobile-only-sub">
                   <li>
-                    <Link to="membership">충전소 찾기</Link>
+                    <Link to="reservation">충전소 찾기</Link>
                   </li>
                 </ul>
               </li>
@@ -107,7 +107,7 @@ function Header() {
             <div className="panel-column">
               <ul>
                 <li>
-                  <Link to="membership">충전소 찾기</Link>
+                  <Link to="reservation">충전소 찾기</Link>
                 </li>
               </ul>
             </div>

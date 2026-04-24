@@ -1,3 +1,4 @@
+frontend/node_modules
 frontend/node_modules/ream
 frontend/node_modules/.bin/acorn
 frontend/node_modules/.bin/acorn.cmd
@@ -301,3 +302,4 @@ frontend/node_modules/lightningcss-win32-x64-msvc/LICENSE
 frontend/node_modules/lightningcss-win32-x64-msvc/lightningcss.win32-x64-msvc.node
 frontend/node_modules/lightningcss-win32-x64-msvc/package.json
 frontend/node_modules/lightningcss-win32-x64-msvc/README.md
+frontend/node_modules/.vite/deps/_metadata.json
