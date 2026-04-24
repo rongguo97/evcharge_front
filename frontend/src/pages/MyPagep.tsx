@@ -1,8 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import '../css/mypageP.css';
-
-
+import React from "react";
+import { Link } from "react-router-dom";
+import "../css/mypageP.css";
 
 interface UserProfile {
   name: string;
@@ -26,7 +24,7 @@ const MyPagep: React.FC = () => {
     carInfo: "Tesla Model 3 (12가 3456)",
     role: "회원",
     membership: "VIP PREMIUM",
-    fullJoinDate: "2024년 08월 01일"
+    fullJoinDate: "2024년 08월 01일",
   };
 
   return (
@@ -35,10 +33,8 @@ const MyPagep: React.FC = () => {
         <section className="hero-banner mini">
           <div className="overlay"></div>
           <div className="hero-content">
-            
             {/* <h2>Account Settings</h2>
             <p>회원님의 소중한 정보를 안전하게 관리하세요.</p><br /> */}
-            
           </div>
         </section>
 
@@ -47,7 +43,10 @@ const MyPagep: React.FC = () => {
             <div className="profile-header">
               {/* <div className="avatarr-large">{userData.name.charAt(0)}</div> */}
               <div className="profile-title">
-                <h3>{userData.name} <span className="badge-gold">{userData.grade}</span></h3>
+                <h3>
+                  {userData.name}{" "}
+                  <span className="badge-gold">{userData.grade}</span>
+                </h3>
                 <p>가입일: {userData.joinDate}</p>
               </div>
             </div>
@@ -80,21 +79,32 @@ const MyPagep: React.FC = () => {
             </div>
 
             <div className="profile-actions">
-              <button className="edit-btn" onClick={() => alert('정보 수정 페이지로 이동합니다.')}>
+              <button
+                className="edit-btn"
+                onClick={() => alert("정보 수정 페이지로 이동합니다.")}
+              >
                 정보 수정하기
               </button>
             </div>
           </div>
           <footer className="top-nav">
-        <div className="logoo"><Link to="/main/mypage"><span>마이페이지</span></Link></div>
-      </footer>
+            <div className="logoo02">
+              <Link to="/main/mypage">
+                <span>마이페이지</span>
+              </Link>
+            </div>
+          </footer>
         </div>
-       <br /><br /><br /><br /><br /><br /><br /><br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
-   
-
     </>
-
   );
 };
 
