@@ -8,7 +8,9 @@ import '../css/door.css';
 export default function Door() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const navigate = useNavigate();
-  const { checkLoginStatus } = useAuth();
+  
+  // 📍 login 함수를 Context에서 가져옵니다. (QuickMenu를 깨우는 스위치)
+  const { login } = useAuth(); 
 
   const [memberId, setMemberId] = useState(''); 
   const [password, setPassword] = useState('');
@@ -38,39 +40,30 @@ export default function Door() {
         password: password
       });
 
-      console.log("🔥 서버 응답 전체 데이터:", response.data);
+      console.log("🔥 서버 응답 데이터:", response.data);
 
-      // 1. 모든 가능성 있는 경로에서 토큰 추출 시도
       let token = null;
-      
-      // 서버 응답이 객체인 경우 (가장 흔함)
       if (typeof response.data === 'object') {
-        token = 
-          response.data.accessToken || 
-          response.data.token || 
-          response.data.result?.accessToken || 
-          response.data.result?.token ||
-          response.data.data?.token ||
-          response.data.jwt; // 혹시 이름이 jwt일 경우
+        token = response.data.accessToken || response.data.token || response.data.result?.accessToken;
       } 
       
-      // 2. 만약 Body에 없고 Header에 있는 경우 (특수한 백엔드 설정)
       if (!token) {
         token = response.headers['authorization'] || response.headers['Authorization'];
       }
 
       if (token) {
-        // Bearer 접두사가 포함되어 오는지 확인 후 저장
         const finalToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
         localStorage.setItem('accessToken', finalToken);
         
-        await checkLoginStatus(); // 전역 상태 업데이트
+        // 📍 [가장 중요] 전광판 불 켜기! 
+        // 서버에서 준 유저 정보(response.data)를 Context에 즉시 주입합니다.
+        // 이때 QuickMenu가 반응해서 화면에 나타납니다.
+        login(response.data); 
+
         alert("로그인에 성공했습니다!");
         navigate('/main');
       } else {
-        // 토큰을 정말 찾을 수 없을 때
-        console.error("❌ 토큰 필드명을 찾을 수 없습니다. 서버 응답:", response.data);
-        alert("로그인은 되었으나 인증 토큰(Key)을 찾을 수 없습니다. F12 콘솔을 확인하세요.");
+        alert("인증 토큰을 찾을 수 없습니다.");
       }
     } catch (error: any) {
       console.error("로그인 실패:", error.response?.data || error);
