@@ -46,7 +46,7 @@ export default function App() {
     try {
       // 백엔드 MemberController의 @PostMapping("/auth/login") 호출
       const response = await apiClient.post('/auth/login', {
-        memberId: memberId,
+        email: memberId, // 사용자가 입력한 값(memberId 상태)을 'email'이라는 이름표로 전송
         password: password
       });
 
@@ -54,7 +54,7 @@ export default function App() {
         alert("로그인 성공!");
         // 5. Context의 유저 정보를 최신화 (이걸 해야 헤더에 이름이 뜹니다)
         await checkLoginStatus(); 
-        navigate('/'); // 메인 페이지로 이동
+        navigate('/main'); // 메인 페이지로 이동
       }
     } catch (error: any) {
       console.error("로그인 실패:", error);
@@ -63,7 +63,7 @@ export default function App() {
   };
 
   const handleMembership = () => {
-    navigate('/membership');
+    navigate('/main/membership');
   };
 
   return (
@@ -103,7 +103,9 @@ export default function App() {
           <button type="button" className="membership" onClick={handleMembership}>
             membership 
           </button>
+          
         </form>
+        
       </div>
     </div>
   );
