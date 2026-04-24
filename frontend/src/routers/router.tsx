@@ -12,7 +12,6 @@ import FAQ from "../pages/faq";
 import CustomerCenter from "../pages/CustomerService";
 import Login from "../layout/Login";
 import Brand from "../pages/Brand";
-import Door from "../layout/Door";
 import Communication from "../pages/Communication";
 import AdminPage from "../pages/AdminPage";
 import MyPagep from "../pages/MyPagep";
@@ -24,7 +23,7 @@ const router = createBrowserRouter([
   // ✅ Door - 첫 진입 페이지 (navbar 없음)
   {
     path: "/",
-    element: <Door />,
+    element: <Home />,
   },
 
   // ✅ Layout(navbar) 있는 페이지들
