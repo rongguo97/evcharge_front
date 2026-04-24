@@ -1,17 +1,23 @@
-
+import React, { useEffect } from 'react';
 import StationList from '../pages/StationList'; 
-import carVideo from '../image/main영상이미지.mp4'
-import '../css/main.css';
+import carVideo from '../image/main영상이미지.mp4';
 import heroImg from '../image/충전소.png';
 import Footer from '../layout/Footer';
+import { useAuth } from '../context/AuthContext'; // 유저 상태 연동
+import '../css/main.css';
 
+const Home: React.FC = () => {
+  const { isLoggedIn, user } = useAuth(); //  유저 정보 가져오기
 
+  useEffect(() => {
+    // 페이지 진입 시 스크롤 최상단 이동 및 데이터 Prefetch 등이 필요할 때 사용
+    console.log("메인 페이지 로드됨. 로그인 상태:", isLoggedIn);
+  }, [isLoggedIn]);
 
-const Home = () => {
   return (
     <div className="home-container">
 
-      {/* 1. 상단: 동영상 섹션 */}
+      {/* 1. 상단: 동영상 섹션 (동적 텍스트 적용) */}
       <section className="hero">
         <div className="video-background">
           <video autoPlay muted loop playsInline className="bg-video">
@@ -19,13 +25,17 @@ const Home = () => {
           </video>
         </div>
         <div className="hero-content">
-          <h1 className="hero-title">친환경 이동을 더 똑똑하게</h1>
+          <h1 className="hero-title">
+            {/* 💡 하드코딩 대신 로그인 유저 이름 반영 가능 */}
+            {isLoggedIn ? `${user?.memberName}님을 위한 스마트한 충전` : "친환경 이동을 더 똑똑하게"}
+          </h1>
           <p className="hero-sub">Save time, Reserve your charge</p>
         </div>
       </section>
 
 
-      {/* 2. 중간: 지도 섹션 (지역 이동 기능은 StationList 내부에 포함됨) */}
+      {/* 2. 중간: 지도 및 충전소 섹션 */}
+      {/* 💡 StationList 내부에서 이미 apiClient를 통해 DB 데이터를 가져오고 있어야 함 */}
       <section
         className="map-section"
         style={{
@@ -36,31 +46,36 @@ const Home = () => {
         }}
       >
         <br />
-        {/* 💡 모든 기능(지역 선택, 이동, 마커)이 들어있는 컴포넌트 하나만 띄웁니다. */}
         <StationList />
       </section>
 
-{/* 3번째 section */}
-<main className="hero-section">
-  {/* 배경 이미지 */}
-  <img src={heroImg} alt="" className="hero-bg" />
+      {/* 3. 메인 배너 섹션: 사이드바 링크 및 레이아웃 유지 */}
+      <main className="hero-section">
+        {/* 배경 이미지 */}
+        <img src={heroImg} alt="배경" className="hero-bg" />
 
-  <nav className="sidebar">
-    <ul>
-      <li><a href="#none">충전예약</a></li>
-      <li><a href="#none">서비스개요</a></li>
-      <li><a href="#none">App서비스</a></li>
-      <li><a href="#none">서비스</a></li>
-    </ul>
-  </nav>
-  <div className="main-content">
-    <h1>READY TO CHARGE</h1>
-  </div>
-</main>
-  {/* Footer */}
+        <nav className="sidebar">
+          <ul>
+            {/* 💡 하드코딩된 #none 대신 실제 라우터 주소 연동 */}
+            <li><a href="/membership">충전소 찾기</a></li>
+            <li><a href="/brand">서비스개요</a></li>
+            <li><a href="/app">App서비스</a></li>
+            <li><a href="/customer-center">고객센터</a></li>
+          </ul>
+        </nav>
+        
+        <div className="main-content">
+          <h1>READY TO CHARGE</h1>
+          {/* 로그인 상태에 따라 버튼 추가 노출 가능 */}
+          {!isLoggedIn && (
+            <a href="/login" className="main-start-btn">지금 시작하기</a>
+          )}
+        </div>
+      </main>
+
+      {/* Footer */}
       <Footer />
     </div>
-  
   );
 };
 

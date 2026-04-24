@@ -15,13 +15,16 @@ export default function App() {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
 
+  // 1. 입력값 상태 관리 (DB로 보낼 데이터)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  // 타이틀 애니메이션 (기존 유지)
   useEffect(() => {
     const title = titleRef.current;
     if (!title) return;
-
     const text = title.innerText;
     title.innerHTML = "";
-
     [...text].forEach((char) => {
       const span = document.createElement("span");
       span.innerText = char === " " ? "\u00A0" : char;
@@ -31,11 +34,9 @@ export default function App() {
       span.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg)`;
       title.appendChild(span);
     });
-
     const timer = setTimeout(() => {
       title.classList.add("active");
     }, 100);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -74,9 +75,7 @@ export default function App() {
       </video>
 
       <div className="content">
-        <h1 id="target-title" ref={titleRef}>
-          CHACARGE
-        </h1>
+        <h1 id="target-title" ref={titleRef}>CHACARGE</h1>
       </div>
 
       <div className="login-box">
