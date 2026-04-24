@@ -1,29 +1,20 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8080/api/wallet';
+import apiClient from '../api/axios'; // 1. 우리가 만든 설정을 가져옵니다.
 
 const WalletService = {
-  // 📍 내 지갑 정보 가져오기 (적립금, 포인트)
+  // 📍 내 지갑 정보 가져오기
   getMyWallet: async () => {
-    const token = localStorage.getItem("token"); // 🔑 로그인 시 저장된 토큰
-    return await axios.get(`${API_URL}/my`, {
-      headers: {
-        Authorization: `Bearer ${token}` // 신분증 부착
-      }
-    });
+    // 2. apiClient를 쓰면 withCredentials: true 덕분에 쿠키가 자동으로 실립니다.
+    // 더이상 localStorage나 headers 설정을 일일이 할 필요가 없어요!
+    return await apiClient.get('/wallet/my'); 
   },
+
+  // 📍 지갑 충전하기
   chargeWallet: async (amount: number) => {
-    const token = localStorage.getItem("token"); // 🔑 신분증 꺼내기
-    return await axios.post(`http://localhost:8080/api/wallet/charge`, null, {
-      params: { amount }, // 📍 URL 쿼리 파라미터로 전달 (?amount=10000)
-      headers: {
-        Authorization: `Bearer ${token}` // 보안 통과용
-      }
+    // 3. 주소도 /api/wallet/charge로 짧게 써도 됩니다 (baseURL 설정 덕분)
+    return await apiClient.post('/wallet/charge', null, {
+      params: { amount } 
     });
   }
 };
- 
-  
-
 
 export default WalletService;

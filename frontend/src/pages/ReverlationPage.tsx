@@ -16,10 +16,12 @@
     // 달력 css
     import "../css/calendar.css";
     // 결제 요금 및 관련 상태 로직
+    import { useAuth } from '../context/AuthContext';
     
 
     function ReservationPage() {
       const location = useLocation();
+      const { user } = useAuth();
 
       // --- [1] 상태 관리 ---
       const [keyword, setKeyword] = useState(""); // 검색어
@@ -157,8 +159,12 @@
 
       // 📍 1. 최종 예약 처리 로직 (IReservation 타입 적용)
       const handleConfirmReservation = async () => {
+        if (!user) {
+      alert("로그인이 필요한 서비스입니다.");
+      return;
+    }
         try {
-          const loggedInEmail = "test@example.com"; // 임시 이메일
+          const loggedInEmail = user?.email; // 임시 이메일
           const startTimeStr = selectedTime?.split(" - ")[0];
           const endTimeStr = selectedTime?.split(" - ")[1];
           if (!startTimeStr || !selectedCharger) {
@@ -217,7 +223,7 @@
  // --- [3] 결제 및 요금 관련 상태 및 로직 ---
       const [estimatedFee, setEstimatedFee] = useState<number>(0); // 예상 요금 저장용
       const [myBalance, setMyBalance] = useState<number>(0);       // 내 잔액 저장용
-      const loggedInEmail = "test@example.com"; // 📍 실제 환경에선 로그인 정보에서 가져오기
+      const loggedInEmail = user?.email; // 📍 실제 환경에선 로그인 정보에서 가져오기
 
       // 📍 결제 정보를 백엔드에서 실시간으로 가져오는 함수
       const fetchPaymentInfo = async () => {
