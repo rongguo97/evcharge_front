@@ -113,7 +113,7 @@ const Pricing: React.FC = () => {
   return (
     <>
       <div className="pricing-page">
-        <section className="hero-section">
+        <section className="hero-section01">
           <div className="container">
             <div className="hero-text">
               <br />
