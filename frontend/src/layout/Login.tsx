@@ -1,20 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../api/axios'; // axios 설정 파일
-import { useAuth } from '../context/AuthContext'; // 1. useAuth 추가
+import apiClient from '../api/axios'; 
+import { useAuth } from '../context/AuthContext'; 
 import doorVideo from '../image/door영상이미지.mp4';
 import '../css/door.css';
 
 const Login: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const navigate = useNavigate();
-  const { checkLoginStatus } = useAuth(); // 2. Context에서 함수 가져오기
+  const { checkLoginStatus } = useAuth(); 
 
-  // 입력값 관리를 위한 상태
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // 타이틀 애니메이션 로직 (기존 유지)
+  // 타이틀 애니메이션 (기존 유지)
   useEffect(() => {
     const title = titleRef.current;
     if (!title) return;
@@ -35,28 +34,39 @@ const Login: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // 3. 수정된 로그인 요청 로직
+  // 🚀 수정된 로그인 로직
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
+    // 1. [보안] 빈 값 및 공백 체크 (이게 없으면 빈 값으로 통과될 수 있음)
+    if (!email.trim() || !password.trim()) {
+      alert("이메일과 비밀번호를 정확히 입력해주세요.");
+      return;
+    }
+
     try {
-      // 백엔드 /api/auth/login에 데이터 전송
+      // 2. 서버에 로그인 요청
       const response = await apiClient.post('/auth/login', {
         email: email,
         password: password
       });
 
+      // 3. 성공 처리 (상태 코드 200 확인)
       if (response.status === 200) {
-        // ★ 핵심: 로그인이 성공했으니 서버에 "나 누구야?"라고 다시 물어서 
-        // AuthProvider의 isLoggedIn 상태를 true로 동기화합니다.
+        // ★ 매우 중요: 세션/쿠키 정보를 바탕으로 유저 정보를 즉시 동기화
         await checkLoginStatus(); 
         
-        alert("로그인 성공! 반갑습니다.");
-        navigate('/main'); // 상태가 업데이트된 후 안전하게 이동
+        alert("로그인에 성공하였습니다!");
+        navigate('/main'); // 성공 시에만 메인으로 이동
       }
     } catch (error: any) {
-      console.error("로그인 에러:", error);
-      alert("이메일 또는 비밀번호가 틀렸습니다.");
+      // 4. 실패 처리 (아이디/비번 틀림, 서버 에러 등)
+      console.error("Login Error:", error);
+      if (error.response?.status === 401) {
+        alert("이메일 또는 비밀번호가 일치하지 않습니다.");
+      } else {
+        alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
@@ -73,11 +83,12 @@ const Login: React.FC = () => {
       <div className="login-box">
         <form className="login-product" onSubmit={handleLogin}>
           <input 
+            type="email" //  일반 text보다 email 타입이 브라우저 검증에 유리
             name="email" 
             placeholder="email" 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            required // HTML5 유효성 검사 추가
           />
           <br />
           <input 
