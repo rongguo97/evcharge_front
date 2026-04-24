@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext"; 
 import "../css/header.css";
-import { useAuth } from '../context/AuthContext';
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,9 +9,13 @@ function Header() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
-    alert("로그아웃 되었습니다.");
-    navigate("/");
+    // 💡 AuthContext에 추가한 logout 함수를 호출합니다.
+    if (logout) {
+      await logout();
+      localStorage.removeItem('accessToken'); // JWT 토큰도 삭제
+      alert("로그아웃 되었습니다.");
+      navigate("/");
+    }
   };
 
   return (
@@ -68,10 +71,15 @@ function Header() {
         </nav>
 
         <div className="nav-right">
+          {/* 로그인 상태에 따라 이름과 로그아웃 버튼 노출 */}
           {isLoggedIn ? (
             <div className="user-info-nav">
-              <span className="user-name">{user?.memberName}님</span>
-              <button onClick={handleLogout} className="nav-log">logout</button>
+              <span className="user-name" style={{ marginRight: '10px', color: '#333' }}>
+                {user?.memberName || '사용자'}님
+              </span>
+              <button onClick={handleLogout} className="nav-log" style={{ cursor: 'pointer' }}>
+                logout
+              </button>
             </div>
           ) : (
             <Link to="login" className="nav-log">login</Link>
