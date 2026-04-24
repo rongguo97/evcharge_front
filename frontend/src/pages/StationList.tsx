@@ -337,7 +337,7 @@ const StationList = () => {
         <div style={{ fontSize: "12px", color: "#777", marginTop: "6px", lineHeight: "1.4", paddingRight: "30px" }}>{group.address}</div>
         <div style={{ fontSize: "12px", color: "#7a5de8", fontWeight: "bold", marginTop: "10px", display: "flex", alignItems: "center", gap: "4px" }}><i className="fa-solid fa-plug" style={{ fontSize: "10px" }}></i>총 충전기: {group.chargers.length}대</div>
         <div style={{ display: "flex", gap: "8px", marginTop: "15px" }}>
-          <button onClick={(e) => { e.stopPropagation(); navigate("/main/reservation", { state: { preSelectedStation: group } }); }} style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "none", background: "#B452B5", color: "#fff", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}> 예약하기</button>
+          <button onClick={(e) => { e.stopPropagation(); navigate("/reservation", { state: { preSelectedStation: group } }); }} style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "none", background: "#B452B5", color: "#fff", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}> 예약하기</button>
           <button onClick={(e) => { e.stopPropagation(); window.open(`https://map.kakao.com/link/to/${encodeURIComponent(group.stationName)},${group.lat},${group.lng}`, "_blank"); }} style={{ flex: 1, padding: "10px 0", borderRadius: "8px", border: "1px solid #ddd", background: "#fff", color: "#555", fontSize: "13px", fontWeight: "900", cursor: "pointer" }}>길찾기</button>
         </div>
       </div>
@@ -361,10 +361,14 @@ const StationList = () => {
   return (
     <div ref={wholeContainerRef} style={{ display: "flex", width: "100%", height: "100%", position: "relative", boxSizing: "border-box", background: "#f4f5fa" }}>
       {/* 사이드바 메뉴  */}
-      <aside style={{ width: "450px", height: "100%", display: "flex", flexDirection: "column", gap: "20px", zIndex: 10, padding: "20px", boxSizing: "border-box", background: "linear-gradient(145deg, #ffffff, #f0f1f8)", position: "relative" }}>
+      <aside style={{ width: "450px", height: "100%", display: "flex",
+                      flexDirection: "column", gap: "20px", zIndex: 10, 
+                      padding: "25px", boxSizing: "border-box", 
+                      background: "linear-gradient(145deg, #ffffff, #f0f1f8)",
+                      position: "relative", marginTop:"-23px" }}>
         {/* 검색바 섹션 */}
-        <section style={{ background: "transparent", padding: "0 0 5px 0", zIndex: 30 }}>
-          <div style={{ position: "relative", width: "100%" }}>
+        <section style={{ background: "transparent", padding: "0 0 5px 0", zIndex: 30,}}>
+          <div style={{ position: "relative", width: "100%",}}>
             <input type="text" placeholder="충전소, 주소를 검색하세요" value={searchTerm} onFocus={() => setIsFilterOpen(true)} onChange={(e) => setSearchTerm(e.target.value)} style={{ width: "100%", padding: "16px 50px 16px 20px", borderRadius: "14px", border: "2px solid #929292", background: "#F5F5F5", fontSize: "16px", fontWeight: "700", outline: "none", color: "#333", boxSizing: "border-box" }} />
             <svg style={{ position: "absolute",right: "20px", top: "50%",transform: "translateY(-50%)",width: "22px",height: "22px",color: "#000" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </div>
@@ -479,8 +483,8 @@ const StationList = () => {
       )}
 
       {/* 오른쪽 메인 화면: 카카오 지도 영역 */}
-      <main style={{ flex: 1, position: "relative", height: "100%", margin: "0px 20px 0px 0px", padding: "15px", boxSizing: "border-box", background: "#E8E6F2" }}>
-        <div id="map" style={{ width: "100%", height: "100%", overflow: "hidden", boxShadow: "10px 10px 25px rgba(0, 0, 0, 0.03)", border: "1px solid #eaddff", borderRadius: "20px" }} />
+      <main style={{ flex: 1, position: "relative", height: "91%", margin: "0px 20px 0px 0px", padding: "15px", boxSizing: "border-box", background: "#E8E6F2" }}>
+        <div id="map" style={{ width: "100%", height: "100%", overflow: "hidden", boxShadow: "10px 10px 25px rgba(0, 0, 0, 0.03)",border: "1px solid #eaddff", borderRadius: "20px" }} />
       </main>
     </div>  
   );

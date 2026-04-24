@@ -134,7 +134,7 @@ header:hover .mega-menu-panel { height: 220px; box-shadow: 0 10px 20px rgba(0,0,
   margin-bottom: 20px; gap: 12px;
 }
 .search-box {
-  display: flex; flex: 1; max-width: 400px;
+  display: flex; flex: 1; max-width: 590px;
   border: 1.5px solid #e0d6f5; border-radius: 12px;
   overflow: hidden; background: var(--white);
   transition: border-color 0.3s;

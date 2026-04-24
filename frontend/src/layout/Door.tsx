@@ -1,42 +1,47 @@
 import { useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Link 제거
 import doorVideo from '../image/door영상이미지.mp4';
 import '../css/door.css';
 
-const Door = () => {
+export default function App() {
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // 실제로 사용
 
   useEffect(() => {
     const title = titleRef.current;
     if (!title) return;
 
     const text = title.innerText;
-    title.innerHTML = '';
+    title.innerHTML = "";
 
     [...text].forEach((char) => {
-      const span = document.createElement('span');
-      span.innerText = char === ' ' ? '\u00A0' : char;
+      const span = document.createElement("span");
+      span.innerText = char === " " ? "\u00A0" : char;
 
       const randomX = Math.floor(Math.random() * 1000) - 500;
       const randomY = Math.floor(Math.random() * 1000) - 500;
       const randomRotate = Math.floor(Math.random() * 360);
 
       span.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg)`;
+
       title.appendChild(span);
     });
 
     const timer = setTimeout(() => {
-      title.classList.add('active');
+      title.classList.add("active");
     }, 100);
 
     return () => clearTimeout(timer);
   }, []);
 
-const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  navigate('/main');  
-};
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate('/main'); // 로그인 후 이동할 경로
+  };
+
+  const handleMembership = () => {
+    navigate('/membership'); // 회원가입 경로
+  };
 
   return (
     <div className="video-container">
@@ -46,25 +51,24 @@ const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
       </video>
 
       <div className="content">
-        <h1 id="target-title" ref={titleRef}>CHACARGE</h1>
+        <h1 id="target-title" ref={titleRef}>
+          CHACARGE
+        </h1>
       </div>
 
       <div className="login-box">
-        <form className="login-product" onSubmit={handleLogin}>
+        <form className="login-product" onSubmit={handleLogin}> {/* action 제거 */}
           <input name="id" placeholder="id" />
           <br />
           <input name="password" placeholder="password" />
-          <button type="submit" className="click-login">login</button>
-          <Link to="/main/membership">
-          <button type="button" className="membership" onClick={() => navigate('/signup')}>
-            회원가입
+          <button type="submit" className="click-login">
+            login
           </button>
-          </Link>
+          <button type="button" className="membership" onClick={handleMembership}>
+            membership
+          </button>
         </form>
       </div>
-      
     </div>
   );
-};
-
-export default Door;
+}
