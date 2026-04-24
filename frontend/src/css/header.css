@@ -157,7 +157,7 @@ header:hover .main-menu a { color:#5300c7 !important; }
 .nav-right { display: flex; align-items: center; z-index: 3001; }
 
 .nav-log {
-  width: 40px; height: 40px; background: var(--white-10); border-radius: 50%;
+  width: 55px; height: 45px; background: var(--white-10); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
   cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
@@ -173,7 +173,7 @@ header:hover .main-menu a { color:#5300c7 !important; }
 
 /* 3. 사용자 이름 스타일 */
 .user-name {
-    width: 40px; height: 40px; background: var(--white-10); border-radius: 50%;
+    width: 55px; height: 45px; background: var(--white-10); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
   cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
