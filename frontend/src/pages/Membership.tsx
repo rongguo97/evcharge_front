@@ -6,13 +6,13 @@ import '../css/Membership.css';
 const Membership: React.FC = () => {
   const navigate = useNavigate();
 
+  // 📍 carModel 제거
   const [formData, setFormData] = useState({
     memberName: '',
     email: '',
     password: '',
     confirmPassword: '',
     carNumber: '',
-    carModel: '',
     phoneNumber: '',
   });
 
@@ -39,18 +39,12 @@ const Membership: React.FC = () => {
     setIsLoading(true);
 
     try {
-      /**
-       * ✅ 수정 포인트 1: API 주소 중복 해결
-       * 콘솔에 /api/api/auth/register라고 떴다면, 
-       * apiClient(axios)의 baseURL에 이미 /api가 포함된 것입니다.
-       * 따라서 여기서는 '/auth/register'라고만 적어야 합니다.
-       */
+      // 📍 전송 데이터에서 carModel 제외
       const response = await apiClient.post('/auth/register', {
         email: formData.email,
         password: formData.password,
         memberName: formData.memberName,
         carNumber: formData.carNumber,
-        carModel: formData.carModel,
         phoneNumber: formData.phoneNumber
       });
 
@@ -59,13 +53,7 @@ const Membership: React.FC = () => {
         navigate('/'); 
       }
     } catch (error: any) {
-      /**
-       * ✅ 수정 포인트 2: 상세 에러 로그 확인
-       * 403 에러가 계속된다면 백엔드의 SecurityConfig에서 
-       * /api/auth/register를 permitAll() 설정했는지 확인이 필요합니다.
-       */
       console.error('회원가입 에러 상세:', error.response?.data || error);
-      
       const serverMessage = error.response?.data?.message || "회원가입에 실패했습니다.";
       alert(`가입 실패: ${serverMessage}`);
     } finally {
@@ -147,18 +135,7 @@ const Membership: React.FC = () => {
                 />
               </div>
 
-              <div className="info-item full-width">
-                <label>차종</label>
-                <input
-                  type="text"
-                  name="carModel"
-                  className="membership-input"
-                  placeholder="예: Tesla Model 3"
-                  required
-                  value={formData.carModel}
-                  onChange={handleChange}
-                />
-              </div>
+              {/* 차종(carModel) 입력창 제거 완료 */}
 
               <div className="info-item full-width">
                 <label>차량번호</label>
