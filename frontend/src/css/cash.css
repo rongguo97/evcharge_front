@@ -65,7 +65,7 @@ header:hover .mega-menu-panel { height: 260px; box-shadow: 0 10px 20px rgba(0,0,
 .panel-column ul li a { text-decoration: none; color: #666; font-size: 0.95rem; }
 
 /* --- 햄버거 및 트리거 숨기기 (PC) --- */
-.menu-trigger, .menu-btn { display: none; }
+/* .menu-trigger, .menu-btn { display: none; } */
 
 /* --- Hero & 컨텐츠 --- */
 .hero-section {
