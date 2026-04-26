@@ -43,19 +43,18 @@ const Wallet: React.FC = () => {
       alert("충전 금액을 선택하거나 입력해주세요.");
       return;
     }
-
+    
     try {
-      // 서버에 "충전할 금액"을 보냅니다.
-      // (참고: 백엔드 로직에 따라 currentTotal 혹은 finalPrice 중 무엇을 보낼지 결정합니다. 
-      // 여기서는 유저가 선택한 원금인 currentTotal을 충전한다고 가정합니다.)
-      const response = await WalletService.chargeWallet(currentTotal);
+      // 💡 수정된 부분: WalletService.chargeWallet이 이제 '/payment/charge'를 호출하므로,
+      // 이 한 번의 호출로 백엔드에서 '충전'과 '결제 데이터 저장'이 모두 수행됩니다.
+      const response = await WalletService.chargeWallet(finalPrice);
 
       if (response.data.success) {
         setIsCompleted(true); // 성공 시 완료 화면으로 전환
       }
     } catch (error: any) {
       console.error("충전 실패:", error);
-      if (error.response?.status === 403) {
+      if (error.response?.status === 403 || error.response?.status === 401) {
         alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
       } else {
         alert("결제 처리 중 오류가 발생했습니다.");
@@ -103,7 +102,7 @@ const Wallet: React.FC = () => {
       </div>
     );
   }
-
+  
   return (
     <div>
       <div className="payment-page-bg">
@@ -162,7 +161,7 @@ const Wallet: React.FC = () => {
 
           <div className="bottom-sticky">
             <div className="price-summary">
-              <span className="summary-label">최종 결제 금액   </span>
+              <span className="summary-label">최종 결제 금액  </span>
               <span className="total-price">{finalPrice.toLocaleString()}원</span>
             </div>
             <button className="pay-submit-btn" onClick={handlePayment}>
