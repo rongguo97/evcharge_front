@@ -10,10 +10,13 @@ const WalletService = {
 
   // 📍 지갑 충전하기
   chargeWallet: async (amount: number) => {
-    // 3. 주소도 /api/wallet/charge로 짧게 써도 됩니다 (baseURL 설정 덕분)
-    return await apiClient.post('/wallet/charge', null, {
+    // 3. 백엔드 PaymentController 주소(/api/payment/charge)에 맞게 수정
+    return await apiClient.post('/payment/charge', null, {
       params: { amount } 
     });
+  },
+  getPaymentHistory: async () => {
+    return await apiClient.get('/payment/history');
   }
 };
 

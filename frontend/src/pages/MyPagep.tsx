@@ -53,23 +53,23 @@ const MyPagep: React.FC = () => {
 
             <div className="info-grid">
               <div className="info-item">
-                <label>이메일 주소</label>
+                <label>이름</label>
                 <div className="value">{userData.email}</div>
               </div>
               <div className="info-item">
-                <label>회원 고유 코드</label>
+                <label>이메일주소</label>
                 <div className="value">{userData.userCode}</div>
               </div>
               <div className="info-item">
-                <label>등록 차량 정보</label>
+                <label>차량번호</label>
                 <div className="value">{userData.carInfo}</div>
               </div>
               <div className="info-item">
-                <label>계정 권한</label>
+                <label>계정등급</label>
                 <div className="value">{userData.role}</div>
               </div>
               <div className="info-item">
-                <label>현재 멤버십 등급</label>
+                <label>전화번호</label>
                 <div className="value-highlight">{userData.membership}</div>
               </div>
               <div className="info-item">
