@@ -79,7 +79,7 @@ function Header() {
           <div className="nav-right">
             {isLoggedIn ? (
               <div className="user-info-nav">
-                <span className="user-name"><strong>{user?.memberName || '사용자'}</strong>님</span>
+                <span className="user-name"><strong>{user?.memberName || user?.name || user?.username || '사용자'}</strong>님</span>
                 <button onClick={handleLogout} className="nav-log">logout</button>
               </div>
             ) : (
