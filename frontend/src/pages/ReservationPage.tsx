@@ -2,8 +2,7 @@
     import { useLocation } from "react-router-dom";
     import ReservationService from "../services/ReservationService";
     import StationService from "../services/StationService";
-    import type { IStation } from "../types/IStation";
-    import type { IReservation } from "../types/IReservation"; // 📍 인터페이스 임포트
+    import type { IStation } from "../types/IStation"; 
     import {
       getStatusLabel,
       getTypeLabel,
@@ -177,7 +176,7 @@
           const isoEndTime = `${formattedDate}T${endTimeStr}:00`;
 
           // 📍 any 대신 IReservation 타입을 명시합니다.
-          const reservationData: IReservation = {
+          const reservationData = {
             email: loggedInEmail,
             stationId: Number(selectedCharger.stationId || selectedCharger.id), // 📍 Long 타입 대응을 위해 number로 변환
             rDate: formattedDate,
@@ -281,54 +280,50 @@
       };
 
       const isSlotDisabled = (
-    slotRange: string, selectedDate: moment.MomentInput, ch: any, reservedList: any
-      ) => {
-        const now = new Date();
+  slotRange: string,
+  selectedDate: moment.MomentInput,
+  ch: any,
+  reservedList: any
+) => {
+  const now = new Date();
 
-        //  충전기 상태 체크 (고장, 점검, 통신장애, 계획정지 등)
-      const status = getStatusLabel(ch.status);
-      const brokenStatuses = ["고장/점검", "통신장애", "계획정지"];
-      if (brokenStatuses.includes(status)) return true;
+  // --- [1단계: 충전기 자체 상태 체크] ---
+  const status = getStatusLabel(ch.status);
+  const brokenStatuses = ["고장/점검", "통신장애", "계획정지"];
+  if (brokenStatuses.includes(status)) return true;
 
-      //  이미 예약된 슬롯인지 체크 (DB 기반)
-      // reservedSlots는 해당 충전기/날짜에 이미 예약된 시간대 리스트라고 가정
-      //  시작 시간("09:00")만 뽑아서 여유롭게 비교!
-    const startTimeStr = slotRange.split(" - ")[0]; // "09:00 - 13:00"에서 "09:00"만 추출
-    const isAlreadyReserved = reservedList.some((resTime: string) => resTime.includes(startTimeStr));
-    if (isAlreadyReserved) {
-      return true; // 백엔드 데이터에 "09:00"이 포함되어 있으면 예약된 칸으로 처리!
-    }
+  // --- [2단계: 날짜 및 현재 시간 체크 (무조건 실행)] ---
+  const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split("T")[0];
 
-        // 한국 시간 기준으로 오늘 날짜 구하기 (YYYY-MM-DD)
-        const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-          .toISOString()
-          .split("T")[0];
+  const formattedSelectedDate = moment(selectedDate).format("YYYY-MM-DD");
+  const startTimeStr = slotRange.split(" - ")[0]; // "09:00"
 
-        // 1. 선택한 날짜가 오늘보다 이전이면 무조건 막음
-        const formattedSelectedDate = moment(selectedDate).format("YYYY-MM-DD");
-        if (formattedSelectedDate < today) return true;
+  // 2-1. 오늘보다 이전 날짜면 차단
+  if (formattedSelectedDate < today) return true;
 
-        // 2. 선택한 날짜가 오늘일 경우
-        if (formattedSelectedDate === today) {
-          // slotRange가 "09:00 - 13:00" 형태이므로 앞의 "09:00"만 추출
-          const startTimeStr = slotRange.split(" - ")[0];
-          const [slotHour, slotMinute] = startTimeStr.split(":").map(Number);
+  // 2-2. 오늘 날짜라면 현재 시간(+10분 여유)보다 이전 슬롯 차단
+  if (formattedSelectedDate === today) {
+    const [slotHour, slotMinute] = startTimeStr.split(":").map(Number);
+    const slotStartTime = new Date();
+    slotStartTime.setHours(slotHour, slotMinute, 0, 0);
 
-          // 비교를 위한 슬롯 시작 시간 객체 생성
-          const slotStartTime = new Date();
-          slotStartTime.setHours(slotHour, slotMinute, 0, 0);
+    const limitTime = new Date(now.getTime() + 10 * 60000);
+    if (slotStartTime < limitTime) return true;
+  }
 
-          // [핵심] 현재 시간보다 10분 뒤의 시각을 계산
-          const limitTime = new Date(now.getTime() + 10 * 60000);
+  // --- [3단계: 이미 예약된 슬롯인지 체크 (데이터 있을 때만)] ---
+  // 📍 여기서 return false를 하지 않고, 배열일 때만 some 체크를 합니다.
+  if (reservedList && Array.isArray(reservedList)) {
+    const isAlreadyReserved = reservedList.some((resTime: string) => 
+      resTime && resTime.includes(startTimeStr)
+    );
+    if (isAlreadyReserved) return true;
+  }
 
-          // 슬롯 시작 시간이 (현재+10분)보다 이전이면 true(차단)
-          if (slotStartTime < limitTime) {
-            return true;
-          }
-        }
-
-        return false;
-      };
+  return false; // 모든 통과 관문을 넘어야 예약 가능(false)
+};
 
       return (
         <div
