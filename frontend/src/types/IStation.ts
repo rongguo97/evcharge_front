@@ -23,10 +23,10 @@ export interface IStation {
     sido: string;                // 시도
     gunggu: string;              // 군구
     address: string             // 주소
-    stationName: String;         // 충전소명
-    modelL: String;              // 기종(대)
-    modelS: String;              // 기종(소)
-    fastChargeAmount: String;    // 급속충전량
+    stationName: string;         // 충전소명
+    modelL: string;              // 기종(대)
+    modelS: string;              // 기종(소)
+    fastChargeAmount: string;    // 급속충전량
     chargerType: number;         // 충전기타입
 
 }

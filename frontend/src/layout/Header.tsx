@@ -50,9 +50,9 @@ function Header() {
               </li>
               <li>
                 {/* 라우터 설정에 따라 reservation 혹은 membership으로 맞추세요 */}
-                <Link to="/main/reservation">충전소 찾기</Link>
+                <Link to="/main/reservation">충전소 예약</Link>
                 <ul className="mobile-only-sub">
-                  <li><Link to="/main/reservation">충전소 찾기</Link></li>
+                  <li><Link to="/main/reservation">충전소 예약</Link></li>
                 </ul>
               </li>
               <li>
@@ -80,7 +80,7 @@ function Header() {
             {isLoggedIn ? (
               <div className="user-info-nav">
                 <span className="user-name"><strong>{user?.memberName || user?.name || user?.username || '사용자'}</strong>님</span>
-                <button onClick={handleLogout} className="nav-log">logout</button>
+                <button onClick={handleLogout} className="nav-log">log</button>
               </div>
             ) : (
               <Link to="/main/door" className="nav-log">log</Link>
