@@ -1,3 +1,4 @@
+
 import apiClient from '../api/axios'; // 1. 공통 설정 임포트 (baseURL 등 포함)
 
 const ReservationService = {
@@ -55,8 +56,11 @@ const ReservationService = {
   getReservationHistory: async () => {
     // 💡 백엔드 컨트롤러의 @GetMapping("/history")와 매칭
     return await apiClient.get('/reservation/history');
+  },
+  cancelReservation: async (reservationId: number) => {
+    // 백엔드에서 설정한 @PutMapping("/{reservationId}/cancel") 주소와 맞춥니다.
+   return await apiClient.put(`/reservation/${reservationId}/cancel`);
   }
-  
 };
 
 export default ReservationService;
