@@ -407,10 +407,6 @@ const MyPage: React.FC = () => {
           )}
         </div>
       </div>
-
-      <footer style={{ marginTop: '40px', textAlign: 'center', paddingBottom: '40px' }}>
-        <Link to="/main/mypagep" style={{ color: '#888', textDecoration: 'none', fontSize: '0.85rem' }}>계정 및 차량 정보 수정</Link>
-      </footer>
     </div>
   );
 };
