@@ -1,22 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { type IMemberExtended } from '../../../types/IMember';
+import apiClient from '../../../api/axios'; // 📍 공통 axios 인스턴스 사용
 import '../../../css/AdminPage.css';
 
-const MemberList: React.FC = () => {
-  const [members, setMembers] = useState<IMemberExtended[]>([]);
-  const [loading, setLoading] = useState(true);
+// 1. 백엔드 MemberDto 구조에 맞춘 인터페이스 정의
+interface IMember {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  role: string;
+  createdAt: string;
+  status: string; // 예: 'ACTIVE', 'BANNED'
+}
 
+const MemberList: React.FC = () => {
+  const [members, setMembers] = useState<IMember[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 2. 회원 목록 로드 함수
   const fetchMembers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('/api/admin/members');
-      // 백엔드 응답 구조에 맞게 데이터 추출
-      const memberData = Array.isArray(res.data) ? res.data : res.data?.data;
-      setMembers(Array.isArray(memberData) ? memberData : []);
-    } catch (err) {
+      setError(null);
+      
+      // 📍 백엔드 API 호출
+      const res = await apiClient.get('/admin/members');
+      
+      // 공통 응답 객체 구조 대응
+      const data = Array.isArray(res.data) ? res.data : res.data?.data;
+      
+      if (Array.isArray(data)) {
+        setMembers(data);
+      } else {
+        setMembers([]);
+      }
+    } catch (err: any) {
       console.error("회원 목록 로드 실패:", err);
-      setMembers([]);
+      setError("서버 연결에 실패했습니다. 백엔드 로그를 확인하세요.");
     } finally {
       setLoading(false);
     }
@@ -26,107 +47,79 @@ const MemberList: React.FC = () => {
     fetchMembers();
   }, []);
 
-  // 1. 권한 변경 함수 (인터페이스 타입 'USER' | 'ADMIN'에 맞춤)
-  const handleRoleChange = async (memberCode: number, currentRole: IMemberExtended['role']) => {
-    // IMemberExtended['role'] 타입을 사용하여 newRole의 타입 에러 해결
-    const newRole: IMemberExtended['role'] = currentRole === 'USER' ? 'ADMIN' : 'USER';
-    
-    if (!window.confirm(`회원의 권한을 ${newRole}로 변경하시겠습니까?`)) return;
+  // 3. 회원 상태 변경 핸들러 (예: 차단/해제)
+  const toggleMemberStatus = async (id: number, currentStatus: string) => {
+    const action = currentStatus === 'ACTIVE' ? '차단' : '활성화';
+    if (!window.confirm(`이 회원을 ${action}하시겠습니까?`)) return;
 
     try {
-      // 백엔드 API 호출 (DB에도 ROLE_ 없이 저장되는 경우)
-      await axios.put(`/api/admin/members/${memberCode}/role`, { role: newRole });
-      alert("권한이 변경되었습니다.");
-      
-      // 로컬 상태 업데이트
-      setMembers(prev => 
-        prev.map(m => m.memberCode === memberCode ? { ...m, role: newRole } : m)
-      );
+      await apiClient.put(`/admin/members/${id}/status`);
+      alert(`${action} 처리가 완료되었습니다.`);
+      fetchMembers(); // 목록 새로고침
     } catch (err) {
-      console.error("권한 변경 에러:", err);
-      alert("변경 실패");
+      alert("상태 변경 중 오류가 발생했습니다.");
     }
   };
 
-  // 2. 스타일 함수 (React.CSSProperties 타입 명시)
-  const getSelectStyle = (isAdmin: boolean): React.CSSProperties => ({
-    padding: '4px',
-    borderRadius: '4px',
-    border: `1px solid ${isAdmin ? '#ff7300' : '#d9d9d9'}`,
-    backgroundColor: isAdmin ? '#fff7e6' : '#fff',
-    color: isAdmin ? '#ff7300' : '#333',
-    fontWeight: isAdmin ? 'bold' : 'normal'
-  });
-
-  if (loading) return <div className="p-4 text-white">로딩 중...</div>;
+  if (loading) return <div className="p-4 text-white">회원 정보를 불러오는 중...</div>;
+  if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
     <div className="admin-card">
-      <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', alignItems: 'center' }}>
-        <h3 style={{ margin: 0 }}>회원 및 권한 관리</h3>
+      <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h3>회원 관리</h3>
+          <p className="table-desc">가입된 전체 회원 정보를 조회하고 관리합니다.</p>
+        </div>
         <button onClick={fetchMembers} className="refresh-btn">새로고침</button>
       </div>
 
       <table className="admin-table">
         <thead>
           <tr>
-            <th>코드</th>
-            <th>이메일(이름)</th>
-            <th>연락처</th>
-            <th>등급</th>
+            <th>ID</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>전화번호</th>
             <th>권한</th>
+            <th>가입일</th>
             <th>상태</th>
             <th>관리</th>
           </tr>
         </thead>
         <tbody>
           {members.length > 0 ? (
-            members.map((member) => {
-              // 📍 'ROLE_ADMIN'이 아닌 'ADMIN'으로 비교 (인터페이스와 일치)
-              const isAdmin = member.role === 'ADMIN';
-
-              return (
-                <tr key={member.memberCode}>
-                  <td>{member.memberCode}</td>
-                  <td>
-                    <strong>{member.email}</strong><br/>
-                    <small style={{ color: '#888' }}>({member.memberName})</small>
-                  </td>
-                  <td style={{ fontSize: '12px' }}>{member.phoneNumber}</td>
-                  <td>
-                    <span className={`grade-badge ${(member.grade || 'BRONZE').toLowerCase()}`}>
-                      {member.grade || 'BRONZE'}
-                    </span>
-                  </td>
-                  <td>
-                    <select 
-                      value={member.role} 
-                      onChange={(e) => handleRoleChange(member.memberCode, e.target.value as IMemberExtended['role'])}
-                      className={`role-select ${isAdmin ? 'admin-select' : ''}`}
-                      style={getSelectStyle(isAdmin)}
-                    >
-                      {/* 📍 value 값을 'USER', 'ADMIN'으로 수정 */}
-                      <option value="USER">USER</option>
-                      <option value="ADMIN">ADMIN</option>
-                    </select>
-                  </td>
-                  <td>
-                    {member.isDeleted === 'Y' ? (
-                      <span style={{ color: '#ff4d4f' }}>탈퇴</span>
-                    ) : (
-                      <span style={{ color: '#52c41a' }}>정상</span>
-                    )}
-                  </td>
-                  <td>
-                    <button className="edit-btn-sm">수정</button>
-                  </td>
-                </tr>
-              );
-            })
+            members.map((member) => (
+              <tr key={member.id}>
+                <td>{member.id}</td>
+                <td><strong>{member.name}</strong></td>
+                <td>{member.email}</td>
+                <td>{member.phone || '-'}</td>
+                <td>
+                  <span className={`role-badge ${member.role?.toLowerCase()}`}>
+                    {member.role === 'ROLE_ADMIN' ? '관리자' : '일반'}
+                  </span>
+                </td>
+                <td>{new Date(member.createdAt).toLocaleDateString()}</td>
+                <td>
+                  <span className={`status-dot ${member.status?.toLowerCase()}`}>
+                    {member.status === 'ACTIVE' ? '활동중' : '정지'}
+                  </span>
+                </td>
+                <td>
+                  <button 
+                    className="action-btn-sm"
+                    onClick={() => toggleMemberStatus(member.id, member.status)}
+                  >
+                    {member.status === 'ACTIVE' ? '차단' : '해제'}
+                  </button>
+                </td>
+              </tr>
+            ))
           ) : (
             <tr>
-              <td colSpan={7} style={{ textAlign: 'center', padding: '30px', color: '#aaa' }}>
-                회원 데이터가 없습니다.
+              <td colSpan={8} style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+                가입된 회원이 없습니다.
               </td>
             </tr>
           )}
