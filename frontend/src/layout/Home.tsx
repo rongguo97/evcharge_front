@@ -6,6 +6,7 @@ import Footer from '../layout/Footer';
 import { useAuth } from '../context/AuthContext'; // 유저 상태 연동
 import '../css/main.css';
 import Header from '../layout/Header';
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const { isLoggedIn, user } = useAuth(); //  유저 정보 가져오기
@@ -58,10 +59,10 @@ const Home: React.FC = () => {
         <nav className="sidebar">
           <ul>
             {/* 💡 하드코딩된 #none 대신 실제 라우터 주소 연동 */}
-            <li><a href="/membership">충전소 찾기</a></li>
-            <li><a href="/brand">서비스개요</a></li>
-            <li><a href="/app">App서비스</a></li>
-            <li><a href="/customer-center">고객센터</a></li>
+           <li><Link to="/main/reservation">충전소찾기</Link></li>
+            <li><Link to="/main/brand">서비스개요</Link></li>
+            <li><Link to="/main/app">APP서비스</Link></li>
+            <li><Link to="/main/customer-center">서비스센터</Link></li>
           </ul>
         </nav>
         
