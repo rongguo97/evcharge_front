@@ -52,7 +52,7 @@ export default function Door() {
        * 회원가입 시 'email' 필드를 사용했으므로, 로그인 시에도 'email'로 보냅니다.
        * 만약 403 에러가 계속된다면 주소를 '/auth/login'으로 수정해보세요.
        */
-      const response = await apiClient.post('/api/auth/login', {
+      const response = await apiClient.post('/auth/login', {
         email: memberId, 
         password: password
       });
