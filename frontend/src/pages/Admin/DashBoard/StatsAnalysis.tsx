@@ -1,45 +1,75 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
   Legend, ResponsiveContainer, LineChart, Line
 } from 'recharts';
 
-// 임시 데이터 (실제로는 API에서 가져온 IOperationStats[] 형태)
-const data = [
-  { date: '04-10', reservCount: 120, cancelCount: 12, revenue: 450000 },
-  { date: '04-11', reservCount: 132, cancelCount: 15, revenue: 520000 },
-  { date: '04-12', reservCount: 101, cancelCount: 25, revenue: 380000 }, // 취소 급증
-  { date: '04-13', reservCount: 134, cancelCount: 18, revenue: 480000 },
-  { date: '04-14', reservCount: 155, cancelCount: 10, revenue: 610000 },
-  { date: '04-15', reservCount: 170, cancelCount: 14, revenue: 680000 },
-  { date: '04-16', reservCount: 185, cancelCount: 22, revenue: 720000 },
-];
+// 1. 백엔드 DTO 구조에 맞춘 인터페이스 정의
+interface IOperationStats {
+  date: string;
+  reservCount: number;
+  cancelCount: number;
+  revenue: number;
+}
 
 const StatsAnalysis: React.FC = () => {
-  // 현황판에 들어갈 요약 데이터 계산
-  const totalReserv = data.reduce((sum, cur) => sum + cur.reservCount, 0);
-  const totalCancel = data.reduce((sum, cur) => sum + cur.cancelCount, 0);
-  const avgCancelRate = ((totalCancel / totalReserv) * 100).toFixed(1);
+  const [data, setData] = useState<IOperationStats[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // 2. 백엔드 API 호출
+  useEffect(() => {
+    const fetchAnalysisData = async () => {
+      try {
+        // 실제 백엔드 엔드포인트 (예시)
+        const res = await axios.get<IOperationStats[]>('/api/admin/stats/analysis');
+        
+        if (res.data && Array.isArray(res.data)) {
+          setData(res.data);
+        } else {
+          console.error("데이터 형식이 올바르지 않습니다.");
+          setData([]);
+        }
+      } catch (err) {
+        console.error("분석 데이터 로드 실패:", err);
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalysisData();
+  }, []);
+
+  // 3. 데이터 계산 로직 (데이터가 있을 때만 실행)
+  const totalReserv = data.reduce((sum, cur) => sum + (cur.reservCount || 0), 0);
+  const totalCancel = data.reduce((sum, cur) => sum + (cur.cancelCount || 0), 0);
+  const totalRevenue = data.reduce((sum, cur) => sum + (cur.revenue || 0), 0);
+  const avgCancelRate = totalReserv > 0 
+    ? ((totalCancel / totalReserv) * 100).toFixed(1) 
+    : "0.0";
+
+  if (loading) return <div style={{ padding: '20px', color: '#fff' }}>데이터 분석 중...</div>;
 
   return (
     <div className="stats-analysis-page" style={{ padding: '20px' }}>
       
-      {/* 1. 현황판 (Scorecards) */}
+      {/* 1. 현황판 (Scorecards) - 실시간 계산된 값 반영 */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '30px' }}>
-        <SummaryCard title="누적 예약" value={`${totalReserv}건`} color="#a5a9d8" />
-        <SummaryCard title="누적 취소" value={`${totalCancel}건`} color="#ff4d4f" />
+        <SummaryCard title="누적 예약" value={`${totalReserv.toLocaleString()}건`} color="#a5a9d8" />
+        <SummaryCard title="누적 취소" value={`${totalCancel.toLocaleString()}건`} color="#ff4d4f" />
         <SummaryCard title="평균 취소율" value={`${avgCancelRate}%`} color="#ffa940" isWarning={Number(avgCancelRate) > 10} />
-        <SummaryCard title="총 매출액" value={`${data.reduce((sum, cur) => sum + cur.revenue, 0).toLocaleString()}원`} color="#52c41a" />
+        <SummaryCard title="총 매출액" value={`${totalRevenue.toLocaleString()}원`} color="#52c41a" />
       </div>
 
       {/* 2. 추이 그래프 (Trend Graphs) */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         
-        {/* 예약 vs 취소 추이 (막대 그래프) */}
+        {/* 예약 vs 취소 추이 */}
         <div className="admin-card" style={cardStyle}>
           <h4 style={{ marginBottom: '15px' }}>예약 및 취소 현황 추이</h4>
           <div style={{ width: '100%', height: 300 }}>
-            <ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="date" />
@@ -53,11 +83,11 @@ const StatsAnalysis: React.FC = () => {
           </div>
         </div>
 
-        {/* 매출액 변화 추이 (선 그래프) */}
+        {/* 매출액 변화 추이 */}
         <div className="admin-card" style={cardStyle}>
           <h4 style={{ marginBottom: '15px' }}>일별 매출액 변동</h4>
           <div style={{ width: '100%', height: 300 }}>
-            <ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="date" />
@@ -77,7 +107,7 @@ const StatsAnalysis: React.FC = () => {
 
 // 재사용 가능한 현황판 카드 컴포넌트
 const SummaryCard = ({ title, value, color, isWarning }: any) => (
-  <div style={{ ...cardStyle, borderTop: `4px solid ${color}` }}>
+  <div style={{ ...cardStyle, borderTop: `4px solid ${color}`, minHeight: '100px' }}>
     <div style={{ color: '#888', fontSize: '14px', marginBottom: '8px' }}>{title}</div>
     <div style={{ fontSize: '24px', fontWeight: 'bold', color: isWarning ? '#ff4d4f' : '#333' }}>{value}</div>
   </div>
