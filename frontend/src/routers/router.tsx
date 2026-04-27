@@ -4,13 +4,12 @@ import Home from "../layout/Home";
 import Pay from "../pages/Wallet";
 import Cash from "../pages/Cash";
 import MyPage from "../pages/MyPage";
-import AppIntro from "../pages/AppIntroduction"; 
+import App from "../pages/AppIntroduction";
 import Notice from "../pages/Notice";
 import FAQ from "../pages/faq";
 import CustomerCenter from "../pages/CustomerService";
 import Login from "../layout/Login";
 import Brand from "../pages/Brand";
-import Door from "../layout/Door"; 
 import Communication from "../pages/Communication";
 import AdminPage from "../pages/AdminPage";
 import MyPagep from "../pages/MyPagep";
@@ -40,7 +39,7 @@ const router = createBrowserRouter([
       { path: "reservation", element: <ReservationPage /> },
       { path: "pay", element: <Pay /> },
       { path: "cash", element: <Cash /> },
-      { path: "app", element: <AppIntro /> },
+      { path: "app", element: <App /> },
       { path: "notice", element: <Notice /> },
       { path: "faq", element: <FAQ /> },
       { path: "community", element: <Communication /> },
@@ -61,7 +60,7 @@ const router = createBrowserRouter([
   // 3️⃣ [예외 처리] 잘못된 주소로 들어왔을 때 Door로 리다이렉트 (선택 사항)
   {
     path: "*",
-    element: <Door />,
+    element: <Home />,
   }
 ]);
 
