@@ -50,9 +50,9 @@ function Header() {
               </li>
               <li>
                 {/* 라우터 설정에 따라 reservation 혹은 membership으로 맞추세요 */}
-                <Link to="/main/reservation">충전소 찾기</Link>
+                <Link to="/main/reservation">충전소 예약</Link>
                 <ul className="mobile-only-sub">
-                  <li><Link to="/main/reservation">충전소 찾기</Link></li>
+                  <li><Link to="/main/reservation">충전소 예약</Link></li>
                 </ul>
               </li>
               <li>
