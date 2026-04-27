@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import "../css/brand.css";
 import "../js/Brand.js";
+import "../layout/Footer.js";
+import Footer from "../layout/Footer.js";
 
 const BrandPage: React.FC = () => {
   useEffect(() => {
@@ -318,6 +320,7 @@ const BrandPage: React.FC = () => {
           />
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
