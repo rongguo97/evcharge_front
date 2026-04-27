@@ -12,5 +12,6 @@ export interface IMemberExtended {
   updateTime: string;      // UPDATE_TIME
   
   // TB_WALLET 등과 조인해서 가져오는 추가 필드
-  point: number;           
+  reserveFund: number; 
+  point: number;          
 }

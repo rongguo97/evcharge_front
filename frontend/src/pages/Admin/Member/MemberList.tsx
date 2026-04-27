@@ -1,43 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import apiClient from '../../../api/axios'; // 📍 공통 axios 인스턴스 사용
+// 📍 인증 정보가 담긴 apiClient 사용
+import apiClient from '../../../api/axios'; 
+import { type IMemberExtended } from '../../../types/IMember';
 import '../../../css/AdminPage.css';
 
-// 1. 백엔드 MemberDto 구조에 맞춘 인터페이스 정의
-interface IMember {
-  id: number;
-  email: string;
-  name: string;
-  phone: string;
-  role: string;
-  createdAt: string;
-  status: string; // 예: 'ACTIVE', 'BANNED'
-}
-
 const MemberList: React.FC = () => {
-  const [members, setMembers] = useState<IMember[]>([]);
+  const [members, setMembers] = useState<IMemberExtended[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // 2. 회원 목록 로드 함수
+  // 1. 회원 목록 로드 (GET /api/admin/members)
   const fetchMembers = async () => {
     try {
       setLoading(true);
-      setError(null);
-      
-      // 📍 백엔드 API 호출
+      // apiClient의 baseURL(/api)이 적용되어 호출 경로는 /admin/members가 됨
       const res = await apiClient.get('/admin/members');
       
-      // 공통 응답 객체 구조 대응
-      const data = Array.isArray(res.data) ? res.data : res.data?.data;
-      
-      if (Array.isArray(data)) {
-        setMembers(data);
-      } else {
-        setMembers([]);
-      }
-    } catch (err: any) {
+      const memberData = Array.isArray(res.data) ? res.data : res.data?.data;
+      setMembers(Array.isArray(memberData) ? memberData : []);
+    } catch (err) {
       console.error("회원 목록 로드 실패:", err);
-      setError("서버 연결에 실패했습니다. 백엔드 로그를 확인하세요.");
+      setMembers([]);
     } finally {
       setLoading(false);
     }
@@ -47,79 +29,113 @@ const MemberList: React.FC = () => {
     fetchMembers();
   }, []);
 
-  // 3. 회원 상태 변경 핸들러 (예: 차단/해제)
-  const toggleMemberStatus = async (id: number, currentStatus: string) => {
-    const action = currentStatus === 'ACTIVE' ? '차단' : '활성화';
-    if (!window.confirm(`이 회원을 ${action}하시겠습니까?`)) return;
+  // 2. 회원 상태 변경 함수 (PUT /api/admin/members/{email}/status)
+  // 백엔드 컨트롤러의 updateMemberStatus API와 연동
+  const handleStatusChange = async (email: string, currentStatus: string) => {
+    const nextStatus = currentStatus === 'Y' ? 'N' : 'Y';
+    const statusText = nextStatus === 'Y' ? '탈퇴' : '복구';
+
+    if (!window.confirm(`해당 회원을 ${statusText} 처리하시겠습니까?`)) return;
 
     try {
-      await apiClient.put(`/admin/members/${id}/status`);
-      alert(`${action} 처리가 완료되었습니다.`);
-      fetchMembers(); // 목록 새로고침
+      // 백엔드: @PathVariable String email, @RequestParam String status
+      await apiClient.put(`/admin/members/${email}/status`, null, {
+        params: { status: nextStatus }
+      });
+      
+      alert(`${statusText} 처리가 완료되었습니다.`);
+      
+      // 로컬 상태 즉시 업데이트 (사용자 경험 향상)
+      setMembers(prev => 
+        prev.map(m => m.email === email ? { ...m, isDeleted: nextStatus } : m)
+      );
     } catch (err) {
-      alert("상태 변경 중 오류가 발생했습니다.");
+      console.error("상태 변경 에러:", err);
+      alert("변경 처리에 실패했습니다.");
     }
   };
 
   if (loading) return <div className="p-4 text-white">회원 정보를 불러오는 중...</div>;
-  if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
     <div className="admin-card">
-      <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h3>회원 관리</h3>
-          <p className="table-desc">가입된 전체 회원 정보를 조회하고 관리합니다.</p>
-        </div>
+      <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', alignItems: 'center' }}>
+        <h3 style={{ margin: 0 }}>회원 및 상태 관리</h3>
         <button onClick={fetchMembers} className="refresh-btn">새로고침</button>
       </div>
 
       <table className="admin-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>전화번호</th>
+            <th>이메일(이름)</th>
+            <th>연락처 / 차량번호</th>
+            <th>등급</th>
             <th>권한</th>
-            <th>가입일</th>
+            <th>예치금</th>
             <th>상태</th>
             <th>관리</th>
           </tr>
         </thead>
         <tbody>
           {members.length > 0 ? (
-            members.map((member) => (
-              <tr key={member.id}>
-                <td>{member.id}</td>
-                <td><strong>{member.name}</strong></td>
-                <td>{member.email}</td>
-                <td>{member.phone || '-'}</td>
-                <td>
-                  <span className={`role-badge ${member.role?.toLowerCase()}`}>
-                    {member.role === 'ROLE_ADMIN' ? '관리자' : '일반'}
-                  </span>
-                </td>
-                <td>{new Date(member.createdAt).toLocaleDateString()}</td>
-                <td>
-                  <span className={`status-dot ${member.status?.toLowerCase()}`}>
-                    {member.status === 'ACTIVE' ? '활동중' : '정지'}
-                  </span>
-                </td>
-                <td>
-                  <button 
-                    className="action-btn-sm"
-                    onClick={() => toggleMemberStatus(member.id, member.status)}
-                  >
-                    {member.status === 'ACTIVE' ? '차단' : '해제'}
-                  </button>
-                </td>
-              </tr>
-            ))
+            members.map((member) => {
+              const isActive = member.isDeleted === 'N' || !member.isDeleted;
+
+              return (
+                <tr key={member.email}>
+                  <td>
+                    <strong>{member.email}</strong><br/>
+                    <small style={{ color: '#888' }}>({member.memberName})</small>
+                  </td>
+                  <td style={{ fontSize: '12px' }}>
+                    {member.phoneNumber}<br/>
+                    <span style={{ color: '#aaa' }}>{member.carNumber}</span>
+                  </td>
+                  <td>
+                    <span className={`grade-badge ${(member.grade || 'BRONZE').toLowerCase()}`}>
+                      {member.grade || 'BRONZE'}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`role-badge ${member.role?.toLowerCase()}`}>
+                      {member.role}
+                    </span>
+                  </td>
+                  <td style={{ textAlign: 'right', fontWeight: 'bold' }}>
+                    {/* 📍 point 대신 reserveFund 컬럼 대응 */}
+                    {(member.reserveFund ?? 0).toLocaleString()} P
+                  </td>
+                  <td>
+                    {member.isDeleted === 'Y' ? (
+                      <span style={{ color: '#ff4d4f', fontWeight: 'bold' }}>탈퇴</span>
+                    ) : (
+                      <span style={{ color: '#52c41a', fontWeight: 'bold' }}>정상</span>
+                    )}
+                  </td>
+                  <td>
+                    {/* 📍 관리 버튼을 탈퇴/복구 기능으로 연결 */}
+                    <button 
+                      className={`status-btn-sm ${member.isDeleted === 'Y' ? 'restore' : 'delete'}`}
+                      onClick={() => handleStatusChange(member.email, member.isDeleted)}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        border: '1px solid #ccc',
+                        backgroundColor: member.isDeleted === 'Y' ? '#e6f7ff' : '#fff1f0',
+                        color: member.isDeleted === 'Y' ? '#1890ff' : '#ff4d4f'
+                      }}
+                    >
+                      {member.isDeleted === 'Y' ? '복구' : '탈퇴'}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
-              <td colSpan={8} style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
-                가입된 회원이 없습니다.
+              <td colSpan={7} style={{ textAlign: 'center', padding: '30px', color: '#aaa' }}>
+                회원 데이터가 없습니다.
               </td>
             </tr>
           )}
