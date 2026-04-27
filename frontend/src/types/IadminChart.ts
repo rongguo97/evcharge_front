@@ -7,4 +7,5 @@ export interface IDailyStats {
   registCount: number;  // 당일 신규 가입자 수
   pointTopup: number;   // 당일 포인트 충전 총액 (원)
   cancelCount: number;  // 당일 예약 취소 건수
+  revenue: number;
 }
