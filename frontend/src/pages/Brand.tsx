@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import "../css/brand.css";
 import "../js/Brand.js";
+<<<<<<< HEAD
 import "../layout/Header.js";
+=======
+import "../layout/Footer.js";
+>>>>>>> ef163990b753239ea3ab47db169e3c54e7010202
 import Footer from "../layout/Footer.js";
 
 const BrandPage: React.FC = () => {
