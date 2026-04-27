@@ -34,9 +34,17 @@ header:hover .logo { color:#5300c7 !important;}
 
 /* 중앙 GNB */
 .gnb { flex: 1; display: flex; justify-content: center; }
-.main-menu { display: flex; list-style: none; width: 100%; 
-             max-width: 950px; justify-content: center;
-             transform: translateX(50px); margin-left: 50px !important; }
+.main-menu { display: flex; list-style: none; width: 100%;  flex-wrap: nowrap;
+             max-width: 950px; justify-content:space-around; gap: 9rem !important;
+             flex-wrap: nowrap;
+             }
+.main-menu li {
+    display: flex; flex-wrap: nowrap;
+    align-items: center;
+    white-space: nowrap;    /* ← 글자 줄바꿈 방지 */
+    flex-shrink: 0; 
+  
+}             
 .main-menu li a { text-decoration: none; font-weight: 700;
                   color: var(--white); font-size: 1.1rem; transition: 0.3s; }
 header:hover .main-menu a { color:#5300c7 !important; }
@@ -46,18 +54,22 @@ header:hover .main-menu a { color:#5300c7 !important; }
 
 /* PC 메가 메뉴 패널 */
 .mega-menu-panel {
-    position: absolute; top: 100px; left: 0; width: 100%; background: var(--white);
-    height: 0; overflow: hidden; transition: 0.4s; border-top: 1px solid #eee;   z-index: 999;
-}
+    position: absolute; top: 100px; left: 0; width: 100%; 
+    background: var(--white);
+    height: 0; overflow: hidden;
+    transition: 0.4s; border-top: 1px solid #eee;   z-index: 999;
+} 
 .mega-menu-panel.open {
-    height: 260px;
+    height: 270px;
     box-shadow: 0 10px 20px rgba(57, 1, 78, 0.05);
 }
-.panel-content { display: flex; max-width: 650px !important; margin: 0 auto; 
-                 padding-top: 40px; justify-content: center; transform: translateX(-3rem); }
-.panel-column { flex: 1; text-align: right; list-style: none; }
-.panel-column ul li { list-style: none; margin-bottom: 60px; padding: 5px; }
+.panel-content { display: flex; max-width: 950px !important; margin: 0 auto; 
+                 padding-top: 40px; justify-content: space-around !important;
+                  padding: 30px 40px 70px !important;}
+.panel-column { flex: 1; text-align: center; list-style: none; }
+.panel-column ul li { list-style: none; margin-bottom: 60px; padding: 5px; transform: translateX(11.5rem);}
 .panel-column ul li a { text-decoration: none; color: #666; font-size: 0.95rem; }
+
 
 /* --- 햄버거 및 트리거 숨기기 (PC) --- */
 .menu-trigger, .menu-btn { display: none; }
@@ -161,7 +173,7 @@ header:hover .main-menu a { color:#5300c7 !important; }
   display: flex; align-items: center; justify-content: center;
   font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
   cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
-  color: #e2dcff; transform: translateX(500px);
+  color: #e2dcff; transform: translateX(350px);
 }
 /* 2. 이름과 버튼을 직접 감싸는 박스: 둘을 가로로 묶음 */
 .user-info-nav {
