@@ -442,7 +442,7 @@ const StationList = () => {
                 } else if (menu.title === "간편 예약") {
                   navigate("/main/reservation"); // 간편 예약 경로
                 } else if (menu.title === "예약 관리") {
-                  navigate("/main/my-reservations"); // 예약 관리 경로 (임의 주소)
+                  navigate("/main/mypage"); // 예약 관리 경로 (임의 주소)
                 }
               }} style={{ display: "flex", alignItems: "center", padding: "24px", background: "linear-gradient(135deg, #FAF8FF 0%, #B4A0D9 100%)", borderRadius: "28px", boxShadow: "0 8px 20px rgba(122, 93, 232, 0.05)", cursor: "pointer", transition: "all 0.2s ease", border: "1px solid rgba(0,0,0,0.03)" }}>
               <div style={{ width: "70px", height: "80px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", marginRight: "20px", flexShrink: 0, overflow: "hidden" }}><img src={menu.icon} alt={menu.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /></div>
