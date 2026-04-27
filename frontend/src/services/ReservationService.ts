@@ -33,23 +33,30 @@ const ReservationService = {
     return await apiClient.get(`/wallet/${email}`);
   },
 
-  // 📍 5. [신규] 현재 활성화된 예약 조회 (마이페이지 타이머 및 제어용)
+  // 📍 5. 현재 활성화된 예약 조회 (마이페이지 타이머 및 제어용)
   getCurrentReservation: async () => {
-    // 💡 백엔드의 @GetMapping("/current")와 매칭됩니다.
+    // 💡 백엔드의 @GetMapping("/current")와 매칭
     return await apiClient.get('/reservation/current');
   },
 
-  // 📍 6. [신규] 충전 시작 처리
+  // 📍 6. 충전 시작 처리
   startCharging: async (reservationId: number) => {
-    // 💡 백엔드의 @PutMapping("/{reservationId}/start")와 매칭됩니다.
+    // 💡 백엔드의 @PutMapping("/{reservationId}/start")와 매칭
     return await apiClient.put(`/reservation/${reservationId}/start`);
   },
 
-  // 📍 7. [신규] 충전 종료 및 최종 정산 처리
+  // 📍 7. 충전 종료 및 최종 정산 처리
   endCharging: async (reservationId: number) => {
-    // 💡 백엔드의 @PutMapping("/{reservationId}/end")와 매칭됩니다.
+    // 💡 백엔드의 @PutMapping("/{reservationId}/end")와 매칭
     return await apiClient.put(`/reservation/${reservationId}/end`);
+  },
+
+  // 📍 8. [신규 추가] 내 예약 내역 전체 조회 (마이페이지 최근 예약 리포트용)
+  getReservationHistory: async () => {
+    // 💡 백엔드 컨트롤러의 @GetMapping("/history")와 매칭
+    return await apiClient.get('/reservation/history');
   }
+  
 };
 
 export default ReservationService;
