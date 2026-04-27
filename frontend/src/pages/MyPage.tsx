@@ -6,7 +6,7 @@ import chargeGaugeIcon from "../image/mypagecharge.png";
 import { useAuth } from "../context/AuthContext"; 
 import "../css/mypage.css";
 
-// 📍 예약 및 결제 내역 통합 타입 정의
+// 📍 이용 내역 타입 정의
 interface UsageHistory {
   reservationId: number;
   date: string;
@@ -30,10 +30,9 @@ const MyPage: React.FC = () => {
   
   const [showAllHistory, setShowAllHistory] = useState<boolean>(false);
   const [filterType, setFilterType] = useState<string>("ALL");
-
-  // 💡 커스텀 드롭다운 상태
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
+  // 📍 전체 데이터 로드
   const fetchAllData = async () => {
     setIsLoading(true);
     try {
@@ -81,6 +80,7 @@ const MyPage: React.FC = () => {
 
       let combinedData: UsageHistory[] = [];
 
+      // 1. 예약 내역 데이터 가공
       if (resResponse.data && resResponse.data.code === 1 && Array.isArray(resResponse.data.result)) {
         const resData = resResponse.data.result.map((item: any) => {
           const startDate = new Date(item.startTime);
@@ -98,6 +98,7 @@ const MyPage: React.FC = () => {
         combinedData = [...combinedData, ...resData];
       }
 
+      // 2. 결제 및 환불 내역 데이터 가공 (📍 REFUND 색상 및 기호 수정)
       if (payResponse.data && payResponse.data.success && Array.isArray(payResponse.data.result)) {
         const payData = payResponse.data.result.map((item: any) => {
           const dateObj = new Date(item.createdAt);
@@ -111,11 +112,18 @@ const MyPage: React.FC = () => {
           if (item.paymentType === "TOPUP") {
             stationText = "적립금 충전";
             amountText = `+${item.amount.toLocaleString()}원`;
-            amountColor = '#4ade80'; 
-          } else if (item.paymentType === "RESERVE_USAGE") {
+            amountColor = '#4ade80'; // 초록색
+          } 
+          else if (item.paymentType === "REFUND") { 
+            // 📍 환불 내역: 초록색(+)으로 표시
+            stationText = item.stationName ? `${item.stationName} (취소 환불)` : "예약 취소 환불";
+            amountText = `+${item.amount.toLocaleString()}원`;
+            amountColor = '#4ade80'; // 초록색
+          }
+          else if (item.paymentType === "RESERVE_USAGE") {
             stationText = item.stationName ? `${item.stationName} ` : "적립금 사용";
-            amountText = `-${item.amount.toLocaleString()}P`;
-            amountColor = '#f87171'; 
+            amountText = `-${item.amount.toLocaleString()}원`;
+            amountColor = '#f87171'; // 빨간색
           }
 
           return {
@@ -157,10 +165,32 @@ const MyPage: React.FC = () => {
     } catch (error: any) { alert(error.response?.data?.message || "종료 실패"); }
   };
 
+  const handleCancel = async (id: number, startTime: string) => {
+    const now = new Date().getTime();
+    const start = new Date(startTime).getTime();
+    const diffMins = (start - now) / (1000 * 60);
+
+    if (diffMins < 10) {
+      alert("예약 취소는 시작 10분 전까지만 가능합니다.");
+      return;
+    }
+
+    if (!window.confirm("예약을 취소하시겠습니까? 취소 시 사용된 적립금은 즉시 환불됩니다.")) return;
+
+    try {
+      await ReservationService.cancelReservation(id);
+      alert("예약이 취소되었습니다. 적립금이 환불되었습니다.");
+      fetchAllData(); // 지갑 잔액 및 내역 동시 갱신
+    } catch (error: any) {
+      alert(error.response?.data?.message || "취소 실패");
+    }
+  };
+
   useEffect(() => { fetchAllData(); }, []);
 
+  // 타이머 로직: RESERVED 상태에서는 작동하지 않음
   useEffect(() => {
-    if (!reservation || ["COMPLETED", "CANCELLED", "RESERVED"].includes(reservation.status)) {
+    if (!reservation || ["RESERVED", "COMPLETED", "CANCELLED"].includes(reservation.status)) {
       setTimeLeft("00:00");
       setIsOverdue(false);
       return;
@@ -184,6 +214,7 @@ const MyPage: React.FC = () => {
         setIsOverdue(true);
       }
     }, 1000);
+
     return () => clearInterval(timer);
   }, [reservation]);
 
@@ -196,7 +227,7 @@ const MyPage: React.FC = () => {
 
   const filteredHistory = historyData.filter(item => {
     if (filterType === "ALL") return true;
-    if (filterType === "WALLET") return item.type === "TOPUP" || item.type === "RESERVE_USAGE";
+    if (filterType === "WALLET") return ["TOPUP", "RESERVE_USAGE", "REFUND"].includes(item.type);
     return item.type === filterType;
   });
 
@@ -234,13 +265,34 @@ const MyPage: React.FC = () => {
                   margin: "10px 0",
                   textShadow: isOverdue ? "0 0 15px rgba(255, 77, 77, 0.5)" : "0 0 15px rgba(176, 136, 249, 0.5)" 
                 }}>{timeLeft}</h1>
+                
                 <button 
                   onClick={() => reservation.status === "RESERVED" ? handleStart(reservation.reservationId) : handleEnd(reservation.reservationId)}
                   className={reservation.status === "RESERVED" ? "start-btn" : "end-btn"}
-                  style={{ width: "100%", padding: "12px", border: `1px solid ${reservation.status === 'RESERVED' ? '#b088f9' : '#ff4d4d'}`, color: reservation.status === 'RESERVED' ? '#b088f9' : '#ff4d4d', background: "transparent", borderRadius: "10px", cursor: "pointer", fontWeight: "bold" }}
+                  style={{ 
+                    width: "100%", padding: "12px", borderRadius: "10px", fontWeight: "bold",
+                    border: `1px solid ${reservation.status === 'RESERVED' ? '#b088f9' : '#ff4d4d'}`, 
+                    color: reservation.status === 'RESERVED' ? '#b088f9' : '#ff4d4d', 
+                    background: "transparent", cursor: "pointer", marginBottom: "8px" 
+                  }}
                 >
                   {reservation.status === "RESERVED" ? "충전 시작" : "충전 종료"}
                 </button>
+
+                {reservation.status === "RESERVED" && (
+                  <button 
+                    onClick={() => handleCancel(reservation.reservationId, reservation.startTime)}
+                    style={{ 
+                      width: "100%", padding: "10px", borderRadius: "10px",
+                      border: "1px solid #ff4d4d", // 📍 빨간색 테두리로 수정
+                      color: "#ff4d4d",             // 📍 빨간색 글씨로 수정
+                      background: "rgba(255, 255, 255, 0.05)", 
+                      cursor: "pointer", fontSize: "0.85rem" 
+                    }}
+                  >
+                    예약 취소
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -266,41 +318,24 @@ const MyPage: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
             <h3 style={{ margin: 0 }}>최근 이용 내역</h3>
             
-            {/* 💡 필터 드롭다운 부분 */}
             <div style={{ position: 'relative' }}>
-              {/* 드롭다운 트리거 (이전처럼 투명하게 복구) */}
               <div 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 style={{ 
-                  background: 'transparent', 
-                  color: '#b088f9', 
-                  border: 'none',           
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',        
-                  fontWeight: 'bold',         
-                  display: 'flex',
-                  alignItems: 'center',
-                  userSelect: 'none'
+                  background: 'transparent', color: '#b088f9', border: 'none', 
+                  cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold', 
+                  display: 'flex', alignItems: 'center', userSelect: 'none'
                 }}
               >
                 {filterLabels[filterType]}
                 <span style={{ fontSize: '0.7rem', marginLeft: '6px' }}>▼</span>
               </div>
 
-              {/* 드롭다운 목록 박스 (보라색 테두리 및 다크 테마 유지) */}
               {isDropdownOpen && (
                 <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '10px',
-                  background: '#1a1a1a',
-                  
-                  borderRadius: '10px',
-                  overflow: 'hidden',
-                  zIndex: 100,
-                  minWidth: '110px',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.6)'
+                  position: 'absolute', top: '100%', right: 0, marginTop: '10px',
+                  background: '#1a1a1a', borderRadius: '10px', overflow: 'hidden',
+                  zIndex: 100, minWidth: '110px', boxShadow: '0 4px 20px rgba(0,0,0,0.6)'
                 }}>
                   {Object.entries(filterLabels).map(([key, label]) => (
                     <div 
@@ -313,10 +348,8 @@ const MyPage: React.FC = () => {
                       style={{
                         padding: '12px 15px',
                         color: filterType === key ? '#b088f9' : '#fff',
-                        fontSize: '0.85rem',
-                        cursor: 'pointer',
+                        fontSize: '0.85rem', cursor: 'pointer',
                         borderBottom: key !== 'WALLET' ? '1px solid rgba(255,255,255,0.05)' : 'none',
-                        transition: 'background 0.2s',
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(176, 136, 249, 0.15)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
