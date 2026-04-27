@@ -50,6 +50,7 @@ const router = createBrowserRouter([
       { path: "mypage", element: <MyPage /> },
       { path: "mypagep", element: <MyPagep /> },
       { path: "admin", element: <AdminPage /> },
+      { path: "edit", element: <Editmember /> },
       
       // 별도의 로그인 페이지가 main 내부에 필요한 경우 유지
       { path: "login", element: <Login /> }, 
