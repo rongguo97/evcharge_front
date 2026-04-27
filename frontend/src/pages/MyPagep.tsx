@@ -1,110 +1,102 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; 
 import "../css/mypageP.css";
 
-interface UserProfile {
-  name: string;
-  grade: string;
-  joinDate: string;
-  email: string;
-  userCode: string;
-  carInfo: string;
-  role: string;
-  membership: string;
-  fullJoinDate: string;
-}
-
 const MyPagep: React.FC = () => {
-  const userData: UserProfile = {
-    name: "차카지",
-    grade: "VIP 등급",
-    joinDate: "2024.08.01",
-    email: "chakaji_user@example.com",
-    userCode: "#CKJ-9982-X",
-    carInfo: "Tesla Model 3 (12가 3456)",
-    role: "회원",
-    membership: "VIP PREMIUM",
-    fullJoinDate: "2024년 08월 01일",
-  };
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <p>사용자 정보를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="error-layout">
+        <div className="glass-card error-card">
+          <h2>접근 권한이 없습니다.</h2>
+          <p>로그인이 필요합니다.</p>
+          <Link to="/auth/login" className="login-link">로그인 하러가기</Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="main-layout">
-        <section className="hero-banner mini">
-          <div className="overlay"></div>
-          <div className="hero-content">
-            {/* <h2>Account Settings</h2>
-            <p>회원님의 소중한 정보를 안전하게 관리하세요.</p><br /> */}
-          </div>
-        </section>
+    <div className="main-layout">
+      <section className="hero-banner mini">
+        <div className="overlay"></div>
+        <div className="hero-content"></div>
+      </section>
 
-        <div className="profile-container">
-          <div className="glass-card profile-card">
-            <div className="profile-header">
-              {/* <div className="avatarr-large">{userData.name.charAt(0)}</div> */}
-              <div className="profile-title">
-                <h3>
-                  {userData.name}{" "}
-                  <span className="badge-gold">{userData.grade}</span>
-                </h3>
-                <p>가입일: {userData.joinDate}</p>
-              </div>
-            </div>
-
-            <div className="info-grid">
-              <div className="info-item">
-                <label>이름</label>
-                <div className="value">{userData.email}</div>
-              </div>
-              <div className="info-item">
-                <label>이메일주소</label>
-                <div className="value">{userData.userCode}</div>
-              </div>
-              <div className="info-item">
-                <label>차량번호</label>
-                <div className="value">{userData.carInfo}</div>
-              </div>
-              <div className="info-item">
-                <label>계정등급</label>
-                <div className="value">{userData.role}</div>
-              </div>
-              <div className="info-item">
-                <label>전화번호</label>
-                <div className="value-highlight">{userData.membership}</div>
-              </div>
-              <div className="info-item">
-                <label>최초 가입일</label>
-                <div className="value">{userData.fullJoinDate}</div>
-              </div>
-            </div>
-
-            <div className="profile-actions">
-              <button
-                className="edit-btn"
-                onClick={() => alert("정보 수정 페이지로 이동합니다.")}
-              >
-                정보 수정하기
-              </button>
+      <div className="profile-container">
+        <div className="glass-card profile-card">
+          <div className="profile-header">
+            <div className="profile-title">
+              <h3>
+                {user.memberName}{" "}
+                {/* 상단 배지는 기존 badge-gold 디자인 유지 */}
+                <span className="badge-gold">
+                  {user.role === "ROLE_ADMIN" ? "관리자" : "유저"}
+                </span>
+              </h3>
+              <p>가입일: {user.insertTime || "정보 없음"}</p>
             </div>
           </div>
-          <footer className="top-nav">
-            <div className="logoo02">
-              <Link to="/main/mypage">
-                <span>마이페이지</span>
-              </Link>
+
+          <div className="info-grid">
+            <div className="info-item">
+              <label>이름</label>
+              <div className="value">{user.memberName}</div>
             </div>
-          </footer>
+            <div className="info-item">
+              <label>이메일주소</label>
+              <div className="value">{user.email}</div>
+            </div>
+            <div className="info-item">
+              <label>차량번호</label>
+              <div className="value">{user.carNumber || "미등록"}</div>
+            </div>
+            <div className="info-item">
+              <label>계정권한</label>
+              {/* 계정권한 텍스트 변환 적용 */}
+              <div className="value">
+                {user.role === "ROLE_ADMIN" ? "관리자" : "유저"}
+              </div>
+            </div>
+            <div className="info-item">
+              <label>전화번호</label>
+              <div className="value">{user.phoneNumber || "미등록"}</div>
+            </div>
+            <div className="info-item">
+              <label>최초 가입일</label>
+              <div className="value">{user.insertTime || "정보 없음"}</div>
+            </div>
+          </div>
+
+          <div className="profile-actions">
+            <button
+              className="edit-btn"
+              onClick={() => alert("정보 수정 페이지 준비 중입니다.")}
+            >
+              정보 수정하기
+            </button>
+          </div>
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        
+        <footer className="top-nav">
+          <div className="logoo02">
+            <Link to="/main/mypage">
+              <span>마이페이지</span>
+            </Link>
+          </div>
+        </footer>
       </div>
-    </>
+    </div>
   );
 };
 
