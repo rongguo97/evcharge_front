@@ -5,6 +5,7 @@ import heroImg from '../image/충전소.png';
 import Footer from '../layout/Footer';
 import { useAuth } from '../context/AuthContext'; // 유저 상태 연동
 import '../css/main.css';
+import Header from '../layout/Header';
 
 const Home: React.FC = () => {
   const { isLoggedIn, user } = useAuth(); //  유저 정보 가져오기
@@ -16,7 +17,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-
+  <Header />
       {/* 1. 상단: 동영상 섹션 (동적 텍스트 적용) */}
       <section className="hero">
         <div className="video-background">
