@@ -14,7 +14,7 @@ function Header() {
       try {
         await logout();
         alert("로그아웃 되었습니다.");
-        navigate("/");
+        navigate("/main/door");
       } catch (error) {
         console.error("로그아웃 중 오류 발생:", error);
       }
@@ -83,7 +83,7 @@ function Header() {
                 <button onClick={handleLogout} className="nav-log">log</button>
               </div>
             ) : (
-              <Link to="/main/door" className="nav-log">log</Link>
+              <Link to= "/main/login" className="nav-log">log</Link>
             )}
           </div>
           <div className="header-util-space"></div>

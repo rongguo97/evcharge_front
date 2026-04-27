@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// 📍 인증 정보가 담긴 apiClient 사용
+import apiClient from '../../../api/axios'; 
 import { type IMemberExtended } from '../../../types/IMember';
 import '../../../css/AdminPage.css';
 
@@ -7,11 +8,13 @@ const MemberList: React.FC = () => {
   const [members, setMembers] = useState<IMemberExtended[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 1. 회원 목록 로드 (GET /api/admin/members)
   const fetchMembers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('/api/admin/members');
-      // 백엔드 응답 구조에 맞게 데이터 추출
+      // apiClient의 baseURL(/api)이 적용되어 호출 경로는 /admin/members가 됨
+      const res = await apiClient.get('/admin/members');
+      
       const memberData = Array.isArray(res.data) ? res.data : res.data?.data;
       setMembers(Array.isArray(memberData) ? memberData : []);
     } catch (err) {
@@ -26,55 +29,49 @@ const MemberList: React.FC = () => {
     fetchMembers();
   }, []);
 
-  // 1. 권한 변경 함수 (인터페이스 타입 'USER' | 'ADMIN'에 맞춤)
-  const handleRoleChange = async (memberCode: number, currentRole: IMemberExtended['role']) => {
-    // IMemberExtended['role'] 타입을 사용하여 newRole의 타입 에러 해결
-    const newRole: IMemberExtended['role'] = currentRole === 'USER' ? 'ADMIN' : 'USER';
-    
-    if (!window.confirm(`회원의 권한을 ${newRole}로 변경하시겠습니까?`)) return;
+  // 2. 회원 상태 변경 함수 (PUT /api/admin/members/{email}/status)
+  // 백엔드 컨트롤러의 updateMemberStatus API와 연동
+  const handleStatusChange = async (email: string, currentStatus: string) => {
+    const nextStatus = currentStatus === 'Y' ? 'N' : 'Y';
+    const statusText = nextStatus === 'Y' ? '탈퇴' : '복구';
+
+    if (!window.confirm(`해당 회원을 ${statusText} 처리하시겠습니까?`)) return;
 
     try {
-      // 백엔드 API 호출 (DB에도 ROLE_ 없이 저장되는 경우)
-      await axios.put(`/api/admin/members/${memberCode}/role`, { role: newRole });
-      alert("권한이 변경되었습니다.");
+      // 백엔드: @PathVariable String email, @RequestParam String status
+      await apiClient.put(`/admin/members/${email}/status`, null, {
+        params: { status: nextStatus }
+      });
       
-      // 로컬 상태 업데이트
+      alert(`${statusText} 처리가 완료되었습니다.`);
+      
+      // 로컬 상태 즉시 업데이트 (사용자 경험 향상)
       setMembers(prev => 
-        prev.map(m => m.memberCode === memberCode ? { ...m, role: newRole } : m)
+        prev.map(m => m.email === email ? { ...m, isDeleted: nextStatus } : m)
       );
     } catch (err) {
-      console.error("권한 변경 에러:", err);
-      alert("변경 실패");
+      console.error("상태 변경 에러:", err);
+      alert("변경 처리에 실패했습니다.");
     }
   };
 
-  // 2. 스타일 함수 (React.CSSProperties 타입 명시)
-  const getSelectStyle = (isAdmin: boolean): React.CSSProperties => ({
-    padding: '4px',
-    borderRadius: '4px',
-    border: `1px solid ${isAdmin ? '#ff7300' : '#d9d9d9'}`,
-    backgroundColor: isAdmin ? '#fff7e6' : '#fff',
-    color: isAdmin ? '#ff7300' : '#333',
-    fontWeight: isAdmin ? 'bold' : 'normal'
-  });
-
-  if (loading) return <div className="p-4 text-white">로딩 중...</div>;
+  if (loading) return <div className="p-4 text-white">회원 정보를 불러오는 중...</div>;
 
   return (
     <div className="admin-card">
       <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', alignItems: 'center' }}>
-        <h3 style={{ margin: 0 }}>회원 및 권한 관리</h3>
+        <h3 style={{ margin: 0 }}>회원 및 상태 관리</h3>
         <button onClick={fetchMembers} className="refresh-btn">새로고침</button>
       </div>
 
       <table className="admin-table">
         <thead>
           <tr>
-            <th>코드</th>
             <th>이메일(이름)</th>
-            <th>연락처</th>
+            <th>연락처 / 차량번호</th>
             <th>등급</th>
             <th>권한</th>
+            <th>예치금</th>
             <th>상태</th>
             <th>관리</th>
           </tr>
@@ -82,43 +79,55 @@ const MemberList: React.FC = () => {
         <tbody>
           {members.length > 0 ? (
             members.map((member) => {
-              // 📍 'ROLE_ADMIN'이 아닌 'ADMIN'으로 비교 (인터페이스와 일치)
-              const isAdmin = member.role === 'ADMIN';
+              const isActive = member.isDeleted === 'N' || !member.isDeleted;
 
               return (
-                <tr key={member.memberCode}>
-                  <td>{member.memberCode}</td>
+                <tr key={member.email}>
                   <td>
                     <strong>{member.email}</strong><br/>
                     <small style={{ color: '#888' }}>({member.memberName})</small>
                   </td>
-                  <td style={{ fontSize: '12px' }}>{member.phoneNumber}</td>
+                  <td style={{ fontSize: '12px' }}>
+                    {member.phoneNumber}<br/>
+                    <span style={{ color: '#aaa' }}>{member.carNumber}</span>
+                  </td>
                   <td>
                     <span className={`grade-badge ${(member.grade || 'BRONZE').toLowerCase()}`}>
                       {member.grade || 'BRONZE'}
                     </span>
                   </td>
                   <td>
-                    <select 
-                      value={member.role} 
-                      onChange={(e) => handleRoleChange(member.memberCode, e.target.value as IMemberExtended['role'])}
-                      className={`role-select ${isAdmin ? 'admin-select' : ''}`}
-                      style={getSelectStyle(isAdmin)}
-                    >
-                      {/* 📍 value 값을 'USER', 'ADMIN'으로 수정 */}
-                      <option value="USER">USER</option>
-                      <option value="ADMIN">ADMIN</option>
-                    </select>
+                    <span className={`role-badge ${member.role?.toLowerCase()}`}>
+                      {member.role}
+                    </span>
+                  </td>
+                  <td style={{ textAlign: 'right', fontWeight: 'bold' }}>
+                    {/* 📍 point 대신 reserveFund 컬럼 대응 */}
+                    {(member.reserveFund ?? 0).toLocaleString()} P
                   </td>
                   <td>
                     {member.isDeleted === 'Y' ? (
-                      <span style={{ color: '#ff4d4f' }}>탈퇴</span>
+                      <span style={{ color: '#ff4d4f', fontWeight: 'bold' }}>탈퇴</span>
                     ) : (
-                      <span style={{ color: '#52c41a' }}>정상</span>
+                      <span style={{ color: '#52c41a', fontWeight: 'bold' }}>정상</span>
                     )}
                   </td>
                   <td>
-                    <button className="edit-btn-sm">수정</button>
+                    {/* 📍 관리 버튼을 탈퇴/복구 기능으로 연결 */}
+                    <button 
+                      className={`status-btn-sm ${member.isDeleted === 'Y' ? 'restore' : 'delete'}`}
+                      onClick={() => handleStatusChange(member.email, member.isDeleted)}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        border: '1px solid #ccc',
+                        backgroundColor: member.isDeleted === 'Y' ? '#e6f7ff' : '#fff1f0',
+                        color: member.isDeleted === 'Y' ? '#1890ff' : '#ff4d4f'
+                      }}
+                    >
+                      {member.isDeleted === 'Y' ? '복구' : '탈퇴'}
+                    </button>
                   </td>
                 </tr>
               );
