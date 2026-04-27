@@ -1,10 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // useNavigate 임포트 유지
 import { useAuth } from "../context/AuthContext"; 
 import "../css/mypageP.css";
 
 const MyPagep: React.FC = () => {
   const { user, loading } = useAuth();
+  const navigate = useNavigate(); // 1. 여기서 navigate 함수를 선언해야 합니다.
 
   if (loading) {
     return (
@@ -39,7 +40,6 @@ const MyPagep: React.FC = () => {
             <div className="profile-title">
               <h3>
                 {user.memberName}{" "}
-                {/* 상단 배지는 기존 badge-gold 디자인 유지 */}
                 <span className="badge-gold">
                   {user.role === "ROLE_ADMIN" ? "관리자" : "유저"}
                 </span>
@@ -63,7 +63,6 @@ const MyPagep: React.FC = () => {
             </div>
             <div className="info-item">
               <label>계정권한</label>
-              {/* 계정권한 텍스트 변환 적용 */}
               <div className="value">
                 {user.role === "ROLE_ADMIN" ? "관리자" : "유저"}
               </div>
@@ -81,7 +80,7 @@ const MyPagep: React.FC = () => {
           <div className="profile-actions">
             <button
               className="edit-btn"
-              onClick={() => alert("정보 수정 페이지 준비 중입니다.")}
+              onClick={() => navigate("/main/edit")} // 2. 선언한 navigate 변수를 사용합니다.
             >
               정보 수정하기
             </button>
