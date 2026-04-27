@@ -22,14 +22,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("user", JSON.stringify(userData));
   }, []);
 
-  // 3. 로그인 상태 확인 함수 (수정됨)
+  // 3. 로그인 상태 확인 함수
   const checkLoginStatus = useCallback(async () => {
-    // 📍 로그아웃 중이면 절대 서버에 다시 묻지 않음 (중요)
     if (isLoggingOut) return;
 
     setLoading(true);
     try {
-      // 로컬 데이터 먼저 복구 (UI 끊김 방지)
       const savedUser = localStorage.getItem("user");
       if (savedUser) {
         const parsed = JSON.parse(savedUser);
@@ -37,7 +35,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsLoggedIn(true);
       }
 
-      // 서버 동기화
       const res = await apiClient.get('/me'); 
       if (res.data) {
         setUser(res.data); 
@@ -45,7 +42,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("user", JSON.stringify(res.data));
       }
     } catch (err) {
-      // 로그아웃 중이 아닐 때만 상태 초기화
       if (!isLoggingOut) {
         setUser(null);
         setIsLoggedIn(false);
@@ -58,37 +54,58 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // 4. 로그아웃 함수
   const logout = async () => {
-    if (isLoggingOut) return; // 중복 클릭 방지
-    
-    if (!window.confirm("로그아웃 하시겠습니까?")) return; // 사용자 확인
+    if (isLoggingOut) return; 
+    if (!window.confirm("로그아웃 하시겠습니까?")) return; 
 
-    setIsLoggingOut(true); // 📍 즉시 로그아웃 상태로 전환
+    setIsLoggingOut(true); 
 
     try {
       await apiClient.post('/auth/logout');
     } catch (err) {
       console.error("서버 로그아웃 요청 실패:", err);
     } finally {
-      // 📍 모든 흔적 박멸
       localStorage.clear();
       sessionStorage.clear();
-      
       setUser(null);
       setIsLoggedIn(false);
-
       alert("성공적으로 로그아웃 되었습니다.");
-      
-      // 📍 메인으로 이동하며 페이지 완전히 새로고침 (상태 찌꺼기 제거)
       window.location.replace("/");
     }
   };
+
+  // 📍 5. 회원 정보 수정 함수 (여기가 추가되었습니다!)
+  const updateMember = useCallback(async (updatedData: any) => {
+    try {
+      // 서버의 @PutMapping("/member/update") 호출
+      await apiClient.put('/member/update', updatedData);
+      
+      // DB 수정 후 서버에서 최신 정보를 다시 가져와 전역 user 상태 동기화
+      await checkLoginStatus(); 
+      
+      return { success: true };
+    } catch (err) {
+      console.error("회원 정보 수정 실패:", err);
+      return { success: false, error: err };
+    }
+  }, [checkLoginStatus]);
 
   useEffect(() => {
     checkLoginStatus();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, isAdmin, checkLoginStatus, login, logout, loading }}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        isLoggedIn, 
+        isAdmin, 
+        checkLoginStatus, 
+        login, 
+        logout, 
+        updateMember, // 📍 value에도 반드시 등록되어야 함
+        loading 
+      }}
+    >
       {!loading ? children : (
         <div style={{ textAlign: 'center', marginTop: '100px', fontSize: '1.2rem', fontWeight: 'bold' }}>
           사용자 정보를 확인 중입니다...

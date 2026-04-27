@@ -15,7 +15,9 @@ import Communication from "../pages/Communication";
 import AdminPage from "../pages/AdminPage";
 import MyPagep from "../pages/MyPagep";
 import Membership from "../pages/Membership";
-import ReservationPage from "../pages/ReservationPage";                                                                                                                                                                                                                                                                                                                                                                                                                           
+import ReservationPage from "../pages/ReservationPage";
+import Editmember from "../pages/Editmember";
+
 
 const router = createBrowserRouter([
   // 1️⃣ [독립 페이지] Navbar/Footer가 없는 깨끗한 화면
@@ -49,6 +51,7 @@ const router = createBrowserRouter([
       { path: "mypage", element: <MyPage /> },
       { path: "mypagep", element: <MyPagep /> },
       { path: "admin", element: <AdminPage /> },
+      { path: "edit", element: <Editmember /> },
       
       // 별도의 로그인 페이지가 main 내부에 필요한 경우 유지
       { path: "login", element: <Login /> }, 

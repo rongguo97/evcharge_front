@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../css/Communication.css';
+import '../layout/Footer';
+import Footer from '../layout/Footer';
 // import '../css/커뮤니티.css'; // CSS 파일 경로에 맞게 수정하세요
 
 // ===================== 타입 정의 =====================
@@ -545,30 +547,7 @@ const Community: React.FC = () => {
         </div>
       </main>
 
-      {/* ===== FOOTER ===== */}
-      <footer className="footer">
-        <div className="footer-inner">
-          <div className="footer-logo">
-            <img src="/브랜드.png" alt="차카지 로고" />
-          </div>
-          <div className="footer-info">
-            <p><strong>회사이름 :</strong> 차카지</p>
-            <p><strong>대표이사 :</strong> 이팀이지</p>
-            <p><strong>사업자번호 :</strong> 123-4567-8910</p>
-            <p><strong>통신판매업신고 :</strong> 1238-4657-1236</p>
-            <p><strong>주소 :</strong> 부산 부산진구 중앙대로 00 OO빌딩</p>
-            <p><strong>E-mail :</strong> chakaji@mail.com</p>
-          </div>
-          <div className="footer-contact">
-            <p>영업및 협력문의</p>
-            <h3>1577 - 1234</h3>
-            <p>비즈니스 투자문의</p>
-            <h3>1577 - 1234</h3>
-            <p>고객센터</p>
-            <h3>1577 - 1234</h3>
-          </div>
-        </div>
-      </footer>
+<Footer />
     </div>
   );
 };
