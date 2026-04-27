@@ -80,7 +80,7 @@ function Header() {
             {isLoggedIn ? (
               <div className="user-info-nav">
                 <span className="user-name"><strong>{user?.memberName || user?.name || user?.username || '사용자'}</strong>님</span>
-                <button onClick={handleLogout} className="nav-log">logout</button>
+                <button onClick={handleLogout} className="nav-log">log</button>
               </div>
             ) : (
               <Link to="/main/door" className="nav-log">log</Link>
