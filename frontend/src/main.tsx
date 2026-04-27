@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App' // 확장자 .tsx는 생략 가능합니다.
 import './index.css'
