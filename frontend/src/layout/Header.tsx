@@ -83,7 +83,7 @@ function Header() {
                 <button onClick={handleLogout} className="nav-log">logout</button>
               </div>
             ) : (
-              <Link to="/" className="nav-log">login</Link>
+              <Link to="/" className="nav-log">log</Link>
             )}
           </div>
           <div className="header-util-space"></div>

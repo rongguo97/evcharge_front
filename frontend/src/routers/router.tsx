@@ -21,7 +21,7 @@ const router = createBrowserRouter([
   // 1️⃣ [독립 페이지] Navbar/Footer가 없는 깨끗한 화면
   {
     path: "/",
-    element: <Door />, // 인트로 및 로그인
+    element: <Home />, // 인트로 및 로그인
   },
   {
     path: "/membership", 
