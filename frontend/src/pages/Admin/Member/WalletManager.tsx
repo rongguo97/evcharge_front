@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import apiClient from '../../../api/axios'; // 📍 AuthContext와 동일한 인스턴스 사용
+import apiClient from '../../../api/axios'; 
 import { type IMemberExtended } from '../../../types/IMember';
 import '../../../css/AdminPage.css';
 
@@ -7,12 +7,15 @@ const WalletManager: React.FC = () => {
   const [members, setMembers] = useState<IMemberExtended[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 1. 초기 데이터 로드 (회원 목록을 가져와서 지갑 정보를 표시)
+  // 1. 데이터 로드
   const fetchMembers = async () => {
     setLoading(true);
     try {
-      // baseURL이 /api라고 가정하면, 호출 경로는 /admin/members가 됩니다.
+      // 📍 백엔드 /api/admin/members 엔드포인트 호출
       const res = await apiClient.get('/admin/members');
+      
+      console.log("서버 응답 데이터:", res.data); // 디버깅용: 데이터 구조 확인
+
       if (Array.isArray(res.data)) {
         setMembers(res.data);
       }
@@ -30,25 +33,24 @@ const WalletManager: React.FC = () => {
   // 2. 예치금(Reserve Fund) 수정 핸들러
   const handleUpdateBalance = async (email: string, currentBalance: number) => {
     const amount = window.prompt(
-      `현재 잔액: ${currentBalance.toLocaleString()}P\n수정할 금액을 입력하세요:`,
+      `대상: ${email}\n현재 잔액: ${currentBalance.toLocaleString()}P\n새로운 잔액을 입력하세요:`,
       String(currentBalance)
     );
 
-    // 취소 버튼을 누르지 않았고, 숫자인 경우에만 실행
     if (amount !== null && !isNaN(Number(amount))) {
       try {
-        // 백엔드: @PutMapping("/{email}/reserve-fund")
-        // @RequestBody AdminWalletDto.UpdateRequest 구조에 맞게 데이터 전송
+        // 📍 백엔드 AdminWalletDto.UpdateRequest 구조에 맞춤
         await apiClient.put(`/admin/wallets/${email}/reserve-fund`, {
           amount: Number(amount),
-          // 만약 DTO에 관리자 정보가 필수라면 여기에 추가 (예: adminId: 'admin')
+          adminEmail: "admin@example.com", // 필요 시 실제 관리자 이메일로 변경
+          adminId: 1 // 필요 시 실제 관리자 ID로 변경
         });
 
-        alert(`${email} 회원의 잔액이 수정되었습니다.`);
-        fetchMembers(); // 수정 후 목록 새로고침
+        alert(`수정이 완료되었습니다.`);
+        fetchMembers(); 
       } catch (err) {
         console.error("잔액 수정 실패:", err);
-        alert("잔액 수정 중 오류가 발생했습니다.");
+        alert("수정 권한이 없거나 오류가 발생했습니다.");
       }
     }
   };
@@ -59,45 +61,50 @@ const WalletManager: React.FC = () => {
     <div className="admin-card">
       <div className="table-header">
         <h3>지갑 및 잔액 관리</h3>
-        <p className="table-desc">회원별 예치금(BALANCE)을 관리합니다.</p>
+        <p className="table-desc">회원별 예치금(Reserve Fund)을 실시간으로 관리합니다.</p>
       </div>
       <table className="admin-table">
         <thead>
           <tr>
             <th>이메일(이름)</th>
-            <th>보유 포인트 (BALANCE)</th>
-            <th>관리</th>
+            <th style={{ textAlign: 'right' }}>보유 포인트</th>
+            <th style={{ textAlign: 'center' }}>관리</th>
           </tr>
         </thead>
         <tbody>
           {members.length > 0 ? (
-            members.map((member) => (
-              <tr key={member.email}>
-                <td>
-                  <div className="user-info">
-                    <strong>{member.email}</strong>
-                    <span style={{ fontSize: '0.9em', color: '#ccc', marginLeft: '5px' }}>
-                      ({member.memberName})
-                    </span>
-                  </div>
-                </td>
-                <td style={{ fontWeight: 'bold', color: '#4caf50', textAlign: 'right' }}>
-                  {(member.point ?? 0).toLocaleString()} P
-                </td>
-                <td>
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleUpdateBalance(member.email, member.point)}
-                  >
-                    잔액 수정
-                  </button>
-                </td>
-              </tr>
-            ))
+            members.map((member) => {
+              // 📍 백엔드 DTO 우선순위: reserveFund -> point -> 0 순서로 체크
+              const displayBalance = member.reserveFund ?? member.point ?? 0;
+
+              return (
+                <tr key={member.email}>
+                  <td>
+                    <div className="user-info">
+                      <strong>{member.email}</strong>
+                      <span className="member-name-span">
+                        ({member.memberName || '이름 없음'})
+                      </span>
+                    </div>
+                  </td>
+                  <td style={{ fontWeight: 'bold', color: '#4caf50', textAlign: 'right' }}>
+                    {displayBalance.toLocaleString()} P
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleUpdateBalance(member.email, displayBalance)}
+                    >
+                      잔액 수정
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td colSpan={3} style={{ textAlign: 'center', padding: '40px' }}>
-                등록된 지갑 정보가 없습니다.
+                조회된 회원 정보가 없습니다.
               </td>
             </tr>
           )}
