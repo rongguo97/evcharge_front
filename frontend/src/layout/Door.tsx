@@ -5,7 +5,6 @@ import { useAuth } from '../context/AuthContext';
 import doorVideo from '../image/door영상이미지.mp4';
 import '../css/door.css';
 
-
 export default function Door() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const navigate = useNavigate();

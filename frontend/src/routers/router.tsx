@@ -18,6 +18,7 @@ import Membership from "../pages/Membership";
 import ReservationPage from "../pages/ReservationPage";
 import Editmember from "../pages/Editmember";
 
+
 const router = createBrowserRouter([
   // 1️⃣ [독립 페이지] Navbar/Footer가 없는 깨끗한 화면
   {
