@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
+import React, { createContext, useState, useContext, useEffect, useMemo, useCallback } from 'react';
 import apiClient from '../api/axios'; 
 
 const AuthContext = createContext<any>(null);
@@ -7,51 +7,79 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); 
+  const [isLoggingOut, setIsLoggingOut] = useState(false); // 📍 로그아웃 상태 추가
 
-  // 📍 [2번 로직] 관리자 여부 판별 (user가 바뀔 때마다 자동으로 계산됨)
+  // 1. 관리자 여부 판별
   const isAdmin = useMemo(() => {
-    return user?.role?.toUpperCase() === "ROLE_ADMIN";
+    const role = user?.role?.toString().toUpperCase();
+    return role === "ROLE_ADMIN" || role === "ADMIN";
   }, [user]);
 
-  // 로그인 성공 시 호출할 함수
-  const login = (userData: any) => {
+  // 2. 로그인 함수
+  const login = useCallback((userData: any) => {
     setUser(userData);
     setIsLoggedIn(true);
-  };
+    localStorage.setItem("user", JSON.stringify(userData));
+  }, []);
 
-  // 로그인 상태 확인 함수
-  const checkLoginStatus = async () => {
+  // 3. 로그인 상태 확인 함수 (수정됨)
+  const checkLoginStatus = useCallback(async () => {
+    // 📍 로그아웃 중이면 절대 서버에 다시 묻지 않음 (중요)
+    if (isLoggingOut) return;
+
+    setLoading(true);
     try {
-      // 📍 백엔드 컨트롤러 경로 /api/me 에 맞춤
-      const res = await apiClient.get('/api/me'); 
-      
-      // 서버 응답 구조에 따라 데이터 추출 (res.data가 바로 MemberDto일 경우)
+      // 로컬 데이터 먼저 복구 (UI 끊김 방지)
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        setUser(parsed);
+        setIsLoggedIn(true);
+      }
+
+      // 서버 동기화
+      const res = await apiClient.get('/me'); 
       if (res.data) {
         setUser(res.data); 
         setIsLoggedIn(true);
-        console.log("인증 성공: ", res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
       }
     } catch (err) {
-      console.error("인증 실패 또는 로그인하지 않음");
-      setUser(null);
-      setIsLoggedIn(false);
+      // 로그아웃 중이 아닐 때만 상태 초기화
+      if (!isLoggingOut) {
+        setUser(null);
+        setIsLoggedIn(false);
+        localStorage.removeItem("user");
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [isLoggingOut]);
 
-  // 로그아웃 함수
+  // 4. 로그아웃 함수
   const logout = async () => {
+    if (isLoggingOut) return; // 중복 클릭 방지
+    
+    if (!window.confirm("로그아웃 하시겠습니까?")) return; // 사용자 확인
+
+    setIsLoggingOut(true); // 📍 즉시 로그아웃 상태로 전환
+
     try {
-      // 📍 백엔드 경로 /api/auth/logout 에 맞춤
-      await apiClient.post('/api/auth/logout');
+      await apiClient.post('/auth/logout');
     } catch (err) {
-      console.error("로그아웃 오류:", err);
+      console.error("서버 로그아웃 요청 실패:", err);
     } finally {
+      // 📍 모든 흔적 박멸
+      localStorage.clear();
+      sessionStorage.clear();
+      
       setUser(null);
       setIsLoggedIn(false);
-      alert("로그아웃 되었습니다.");
-      window.location.href = "/"; 
+
+      alert("성공적으로 로그아웃 되었습니다.");
+      
+      // 📍 메인으로 이동하며 페이지 완전히 새로고침 (상태 찌꺼기 제거)
+      window.location.replace("/");
     }
   };
 
@@ -60,11 +88,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    // 📍 value에 isAdmin을 추가했습니다.
     <AuthContext.Provider value={{ user, isLoggedIn, isAdmin, checkLoginStatus, login, logout, loading }}>
       {!loading ? children : (
         <div style={{ textAlign: 'center', marginTop: '100px', fontSize: '1.2rem', fontWeight: 'bold' }}>
-          잠시만 기다려주세요...
+          사용자 정보를 확인 중입니다...
         </div>
       )}
     </AuthContext.Provider>
