@@ -25,6 +25,18 @@
   font-size: 3rem;
 }
 
+/* // */
+.content h1 span {
+  display: inline-block; /* ← 이게 없으면 transform 자체가 안 먹힘 */
+  opacity: 0;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+.content h1.active span {
+  transform: translate(0, 0) rotate(0deg) !important;
+  opacity: 1;
+}
+/* // */
 /* 4. 로그인 박스: 내부 정렬 */
 .login-box {
   padding: 60px 80px;
