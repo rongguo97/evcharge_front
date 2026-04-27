@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import '../css/CustomerService.css' // 이전에 정리해드린 중복 제거된 css를 연결하세요.
-import '../layout/Footer';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext'; // 📍 AuthContext 연결
+import '../css/CustomerService.css';
 import Footer from '../layout/Footer';
 
 const CustomerCenter: React.FC = () => {
+  const { user, isLoggedIn } = useAuth(); // 📍 유저 정보 가져오기
+
   // 1. 폼 데이터 상태 관리
   const [formData, setFormData] = useState({
     inquiry_type: '',
@@ -13,7 +15,18 @@ const CustomerCenter: React.FC = () => {
     message: ''
   });
 
-  // 2. 입력값 변경 핸들러
+  // 2. [추가] 페이지 로드 시 또는 로그인 상태 변경 시 데이터 자동 채우기
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      setFormData(prev => ({
+        ...prev,
+        user_name: user.memberName || '', // 백엔드 필드명에 맞춰 수정 (memberName)
+        user_email: user.email || ''
+      }));
+    }
+  }, [user, isLoggedIn]);
+
+  // 3. 입력값 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
     setFormData(prev => ({
@@ -22,15 +35,20 @@ const CustomerCenter: React.FC = () => {
     }));
   };
 
-  // 3. 폼 제출 핸들러
+  // 4. 폼 제출 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('제출된 데이터:', formData);
-    alert('문의가 정상적으로 접수되었습니다.');
-    // 초기화 로직 등 추가 가능
+    alert(`${formData.user_name}님, 문의가 정상적으로 접수되었습니다.`);
+    
+    // 제출 후 초기화 (로그인 정보는 유지하고 제목/내용만 비우기)
+    setFormData(prev => ({
+      ...prev,
+      subject: '',
+      message: ''
+    }));
   };
 
-  // 4. 특정 섹션으로 이동하는 함수 (자주 묻는 질문 등)
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -40,7 +58,6 @@ const CustomerCenter: React.FC = () => {
 
   return (
     <div className="customer-center-page">
-      {/* Hero Section */}
       <section className="app-hero">
         <div className="container">
           <span className="badge">고객지원센터</span>
@@ -65,14 +82,14 @@ const CustomerCenter: React.FC = () => {
             <h3>커뮤니케이션</h3>
             <p>칭찬, 불만, 제안 등<br />소중한 의견을 듣습니다.</p>
           </div>
-          <div className="quick-card" onClick={() => {/* FAQ 페이지로 이동 로직 */}}>
+          <div className="quick-card" onClick={() => alert('FAQ 페이지 준비 중입니다.')}>
             <i className="fas fa-question-circle"></i>
             <h3>자주 묻는 질문</h3>
             <p>자주 발생하는 질문들을<br />모아두었습니다.</p>
           </div>
         </section>
 
-        {/* CS Info Section */}
+        {/* CS Info Section (전화번호 등) */}
         <section className="cs-info-section">
           <div className="cs-info-item">
             <i className="fas fa-phone-alt"></i>
@@ -106,28 +123,53 @@ const CustomerCenter: React.FC = () => {
                   <option value="error">오류 신고</option>
                 </select>
               </div>
+
+              {/* 이름 입력칸: 로그인 시 수정 불가(readOnly) */}
               <div className="form-group">
                 <label htmlFor="user_name">이름</label>
-                <input type="text" id="user_name" value={formData.user_name} onChange={handleChange} placeholder="이름을 입력하세요" required />
+                <input 
+                  type="text" 
+                  id="user_name" 
+                  value={formData.user_name} 
+                  onChange={handleChange} 
+                  placeholder="이름을 입력하세요" 
+                  required 
+                  readOnly={isLoggedIn} // 📍 로그인 시 읽기 전용
+                  className={isLoggedIn ? 'readonly-input' : ''} 
+                />
               </div>
+
+              {/* 이메일 입력칸: 로그인 시 수정 불가(readOnly) */}
               <div className="form-group">
                 <label htmlFor="user_email">이메일 주소</label>
-                <input type="email" id="user_email" value={formData.user_email} onChange={handleChange} placeholder="example@email.com" required />
+                <input 
+                  type="email" 
+                  id="user_email" 
+                  value={formData.user_email} 
+                  onChange={handleChange} 
+                  placeholder="example@email.com" 
+                  required 
+                  readOnly={isLoggedIn} // 📍 로그인 시 읽기 전용
+                  className={isLoggedIn ? 'readonly-input' : ''}
+                />
               </div>
+
               <div className="form-group">
                 <label htmlFor="subject">제목</label>
                 <input type="text" id="subject" value={formData.subject} onChange={handleChange} placeholder="제목을 입력하세요" required />
               </div>
+
               <div className="form-group">
                 <label htmlFor="message">내용</label>
                 <textarea id="message" value={formData.message} onChange={handleChange} placeholder="문의하실 내용을 상세히 적어주세요" required></textarea>
               </div>
+
               <button type="submit" className="btn-submit">문의하기 접수</button>
             </form>
           </div>
         </section>
       </main>
-      < Footer />
+      <Footer />
     </div>
   );
 };
