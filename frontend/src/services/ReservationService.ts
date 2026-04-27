@@ -1,62 +1,74 @@
-import apiClient from '../api/axios'; // 1. 공통 설정 임포트 (baseURL 등 포함)
+import apiClient from '../api/axios';
+
+/**
+ * [주의] apiClient의 baseURL 설정에 '/api'가 포함되어 있는지 확인하세요.
+ * 만약 포함되어 있지 않다면 아래 경로 앞에 '/api'를 붙여야 합니다.
+ * 여기서는 컨트롤러의 @RequestMapping("/api/reservation")을 기준으로 작성했습니다.
+ */
+const BASE_URL = '/reservation';
 
 const ReservationService = {
   
-  // 📍 1. 예약 시간 슬롯 조회 (충전소 및 날짜별)
-  getReservationsByDate: async (chargerId: number, date: string) => {
-    return await apiClient.get('/reservation/slots', {
+  // 📍 1. 예약 가능 슬롯 확인
+  getReservedSlots: async (chargerId: number, date: string) => {
+    const response = await apiClient.get(`${BASE_URL}/slots`, {
       params: { chargerId, date }
     });
+    return response.data; // 컨트롤러가 List<String> 반환
   },
 
   // 📍 2. 신규 예약 등록 (결제 포함)
-  createReservation: async (data: any) => {
-    return await apiClient.post('/reservation/add', null, {
-      params: {
-        email: data.email,
-        stationId: data.stationId,
-        startTime: data.startTime,
-        endTime: data.endTime
-      }
+  createReservation: async (data: { email: string; stationId: number; startTime: string; endTime: string }) => {
+    const response = await apiClient.post(`${BASE_URL}/add`, null, {
+      params: data // @RequestParam으로 받으므로 params에 전달
     });
+    return response.data;
   },
 
-  // 📍 3. 예약 전 예상 요금 가져오기
+  // 📍 3. 예약 전 예상 요금 조회
   getEstimatedFee: async (stationId: number, startTime: string, endTime: string) => {
-    return await apiClient.get('/reservation/estimate-fee', {
+    const response = await apiClient.get(`${BASE_URL}/estimate-fee`, {
       params: { stationId, startTime, endTime }
     });
+    return response.data;
   },
 
-  // 📍 4. 특정 사용자의 지갑 잔액 조회 (이메일 기준)
-  getUserWallet: async (email: string) => {
-    return await apiClient.get(`/wallet/${email}`);
-  },
-
-  // 📍 5. 현재 활성화된 예약 조회 (마이페이지 타이머 및 제어용)
+  // 📍 4. 현재 활성화된 예약 조회 (내 예약/타이머용)
   getCurrentReservation: async () => {
-    // 💡 백엔드의 @GetMapping("/current")와 매칭
-    return await apiClient.get('/reservation/current');
+    const response = await apiClient.get(`${BASE_URL}/current`);
+    return response.data; // ApiResponse<ReservationDto> 반환
   },
 
-  // 📍 6. 충전 시작 처리
-  startCharging: async (reservationId: number) => {
-    // 💡 백엔드의 @PutMapping("/{reservationId}/start")와 매칭
-    return await apiClient.put(`/reservation/${reservationId}/start`);
-  },
-
-  // 📍 7. 충전 종료 및 최종 정산 처리
-  endCharging: async (reservationId: number) => {
-    // 💡 백엔드의 @PutMapping("/{reservationId}/end")와 매칭
-    return await apiClient.put(`/reservation/${reservationId}/end`);
-  },
-
-  // 📍 8. [신규 추가] 내 예약 내역 전체 조회 (마이페이지 최근 예약 리포트용)
+  // 📍 5. 내 예약 히스토리 전체 조회
   getReservationHistory: async () => {
-    // 💡 백엔드 컨트롤러의 @GetMapping("/history")와 매칭
-    return await apiClient.get('/reservation/history');
+    const response = await apiClient.get(`${BASE_URL}/history`);
+    return response.data; // CMRespDto<List<ReservationDto>> 반환
+  },
+
+  // 📍 6. 충전 시작
+  startCharging: async (reservationId: number) => {
+    const response = await apiClient.put(`${BASE_URL}/${reservationId}/start`);
+    return response.data;
+  },
+
+  // 📍 7. 충전 종료
+  endCharging: async (reservationId: number) => {
+    const response = await apiClient.put(`${BASE_URL}/${reservationId}/end`);
+    return response.data;
+  },
+
+  // 📍 8. [신규 추가] 예약 취소 
+  // 백엔드: @PutMapping("/{reservationId}/cancel")
+  cancelReservation: async (reservationId: number) => {
+    const response = await apiClient.put(`${BASE_URL}/${reservationId}/cancel`);
+    return response.data;
+  },
+
+  // 📍 9. 지갑 잔액 조회 (백엔드 경로 확인 필요: /api/wallet 인지 확인)
+  getUserWallet: async (email: string) => {
+    const response = await apiClient.get(`/wallet/${email}`);
+    return response.data;
   }
-  
 };
 
 export default ReservationService;
