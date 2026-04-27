@@ -15,7 +15,7 @@ import Communication from "../pages/Communication";
 import AdminPage from "../pages/AdminPage";
 import MyPagep from "../pages/MyPagep";
 import Membership from "../pages/Membership";
-import ReservationPage from "../pages/ReservationPage";
+import ReservationPage from "../pages/ReservationPage";                                                                                                                                                                                                                                                                                                                                                                                                                           
 
 const router = createBrowserRouter([
   // 1️⃣ [독립 페이지] Navbar/Footer가 없는 깨끗한 화면
