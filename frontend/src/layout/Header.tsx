@@ -31,7 +31,7 @@ function Header() {
         <div className="container nav-wrapper">
           <div className="logo">
             <Link to="/main" style={{ textDecoration: "none", color: "inherit" }}>
-              CHARCAGE
+              CHARCARGE
             </Link>
           </div>
 
