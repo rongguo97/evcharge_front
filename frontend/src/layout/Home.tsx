@@ -59,7 +59,7 @@ const Home: React.FC = () => {
         <nav className="sidebar">
           <ul>
             {/* 💡 하드코딩된 #none 대신 실제 라우터 주소 연동 */}
-           <li><Link to="/main/reservation">충전소찾기</Link></li>
+           <li><Link to="/main/reservation">충전소예약</Link></li>
             <li><Link to="/main/brand">서비스개요</Link></li>
             <li><Link to="/main/app">APP서비스</Link></li>
             <li><Link to="/main/customer-center">서비스센터</Link></li>

@@ -141,9 +141,7 @@ const AdminPage: React.FC = () => {
             {/* 메뉴 아이디의 하이픈을 띄어쓰기로 바꾸어 제목 표시 */}
             <h2>{activeMenu.replace('-', ' ').toUpperCase()}</h2>
           </div>
-          <div className="header-right">
-             <button onClick={() => navigate('/main')} className="exit-btn">나가기</button>
-          </div>
+          
         </header>
         <div className="admin-content">
           {renderContent()}
