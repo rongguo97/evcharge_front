@@ -18,6 +18,7 @@ function App() {
                 충전의 시작부터 끝까지
                 <br />
                 <span>하나의 앱으로 간편하게</span>
+                <br /><br />
               </h1>
               <p>
                 전국 충전소 검색부터 예약, 결제까지
@@ -51,7 +52,7 @@ function App() {
 
           <div className="feature-grid">
             <div className="feature-item">
-              <div className="icon"></div>
+              <div className="icon">📍</div>
               <h3>실시간 위치 기반 찾기</h3>
               <p>
                 내 주변 가장 가까운 충전소와
@@ -60,7 +61,7 @@ function App() {
               </p>
             </div>
             <div className="feature-item">
-              <div className="icon"></div>
+              <div className="icon">📅</div>
               <h3>스마트 예약 시스템</h3>
               <p>
                 대기 시간 없이 원하는 시간에
@@ -69,7 +70,7 @@ function App() {
               </p>
             </div>
             <div className="feature-item">
-              <div className="icon"></div>
+              <div className="icon">💳</div>
               <h3>차카지 간편 결제 서비스</h3>
               <p>
                 간편결제로 간단하게
