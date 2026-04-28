@@ -250,8 +250,7 @@
           setMyBalance(walletRes.data.reserveFund || walletRes.data.result?.reserveFund || 0);
 
         } catch (error) {
-          console.error("결제 정보 로딩 실패:", error);
-          alert("금액 정보를 가져오지 못했습니다. 다시 시도해주세요.");
+        
         }
       };
 
