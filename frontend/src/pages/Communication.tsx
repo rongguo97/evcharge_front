@@ -189,9 +189,9 @@ const Community: React.FC = () => {
               <div className="board-toolbar">
                 <div className="search-box">
                   <input type="text" placeholder="게시글 검색..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-                  <button className="search-btn">🔍</button>
+                  <button className="search-btn"></button>
                 </div>
-                <button className="write-btn" onClick={() => setShowWriteForm(prev => !prev)}>✏️ 글쓰기</button>
+                <button className="write-btn" onClick={() => setShowWriteForm(prev => !prev)}>글쓰기</button>
               </div>
 
               {/* 글쓰기 폼 */}

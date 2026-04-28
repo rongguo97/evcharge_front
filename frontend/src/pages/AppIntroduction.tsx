@@ -51,7 +51,7 @@ function App() {
 
           <div className="feature-grid">
             <div className="feature-item">
-              <div className="icon">📍</div>
+              <div className="icon"></div>
               <h3>실시간 위치 기반 찾기</h3>
               <p>
                 내 주변 가장 가까운 충전소와
@@ -60,7 +60,7 @@ function App() {
               </p>
             </div>
             <div className="feature-item">
-              <div className="icon">📅</div>
+              <div className="icon"></div>
               <h3>스마트 예약 시스템</h3>
               <p>
                 대기 시간 없이 원하는 시간에
@@ -69,7 +69,7 @@ function App() {
               </p>
             </div>
             <div className="feature-item">
-              <div className="icon">💳</div>
+              <div className="icon"></div>
               <h3>차카지 간편 결제 서비스</h3>
               <p>
                 간편결제로 간단하게
