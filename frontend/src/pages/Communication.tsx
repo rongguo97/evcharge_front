@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/Communication.css';
 import Footer from '../layout/Footer';
-import { createPost } from '../api/communityApi';
+import { createPost, fetchAllPosts } from '../api/communityApi';
 import { useAuth } from '../context/AuthContext';
-
-// ===================== 타입 정의 =====================
-interface Comment {
-  id: number;
-  author: string;
-  date: string;
-  text: string;
-  likes: number;
-}
 
 interface Post {
   id: number | string;
@@ -23,54 +15,9 @@ interface Post {
   authorInitial: string;
   date: string;
   views: string;
-  likes: number;
-  comments: Comment[];
+  commentCount: number;
   liked: boolean;
 }
-
-const initialPosts: Post[] = [
-  {
-    id: 1,
-    category: '자유',
-    badge: 'NEW',
-    title: '테슬라 모델3 장거리 여행 후기 - 서울에서 부산까지!',
-    preview: '지난 주말 테슬라 모델3로 서울에서 부산까지 왕복 여행을 다녀왔습니다...',
-    author: '테슬라러버',
-    authorInitial: 'T',
-    date: '2026.04.20',
-    views: '342',
-    likes: 24,
-    liked: false,
-    comments: [{ id: 1, author: 'EV초보', date: '2026.04.20', text: '정말 유용한 정보네요!', likes: 3 }],
-  },
-  {
-    id: 2,
-    category: '후기',
-    title: 'EV DRIVE 앱으로 예약하고 처음 전기차 빌렸어요 🚗',
-    preview: '전기차를 처음 빌려봤는데 생각보다 훨씬 편리하더라고요...',
-    author: '초보드라이버',
-    authorInitial: '초',
-    date: '2026.04.19',
-    views: '218',
-    likes: 18,
-    liked: false,
-    comments: [],
-  },
-  {
-    id: 3,
-    category: '팁',
-    badge: 'HOT',
-    title: '겨울철 전기차 배터리 관리 꿀팁 모음 🔋',
-    preview: '겨울에 전기차 타시는 분들 배터리 걱정 많으시죠? 3년간 터득한 관리법...',
-    author: '배터리박사',
-    authorInitial: '배',
-    date: '2026.04.18',
-    views: '891',
-    likes: 31,
-    liked: true,
-    comments: [],
-  },
-];
 
 const categoryClassMap: Record<string, string> = {
   '자유': 'cat-free',
@@ -79,121 +26,117 @@ const categoryClassMap: Record<string, string> = {
   '공지': 'cat-notice',
 };
 
-// ===================== 메인 컴포넌트 =====================
 const Community: React.FC = () => {
   const { user } = useAuth();
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [activeTab, setActiveTab] = useState<string>('free');
-  const [openPostId, setOpenPostId] = useState<number | string | null>(null);
-  const [showWriteForm, setShowWriteForm] = useState(false);
-  const [sortType, setSortType] = useState<'latest' | 'likes' | 'comments'>('latest');
-  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState<Post[]>([]);
   const [filterCat, setFilterCat] = useState<string>('all');
-
+  const [showWriteForm, setShowWriteForm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [newPost, setNewPost] = useState({ category: '자유', title: '', content: '', author: '' });
-  const [commentInputs, setCommentInputs] = useState<Record<number | string, { author: string; text: string }>>({});
 
-  const togglePost = (id: number | string) => setOpenPostId(prev => (prev === id ? null : id));
-
-  const toggleLike = (id: number | string) => {
-    setPosts(prev => prev.map(p => p.id === id ? { ...p, liked: !p.liked, likes: p.liked ? p.likes - 1 : p.likes + 1 } : p));
+  const getRandomAnonymousName = () => {
+    const animals = ['사자', '호랑이', '토끼', '다람쥐', '곰', '여우', '판다', '코알라', '펭귄', '하마', '수달', '너구리', '고래', '햄스터', '강아지', '고양이'];
+    const randomIndex = Math.floor(Math.random() * animals.length);
+    return `익명의 ${animals[randomIndex]}`;
   };
 
-  const toggleCommentLike = (postId: number | string, commentId: number) => {
-    setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: p.comments.map(c => c.id === commentId ? { ...c, likes: c.likes + 1 } : c) } : p));
-  };
+  useEffect(() => {
+    const loadAllData = async () => {
+      try {
+        const data = await fetchAllPosts();
+        const formatted: Post[] = data.map((p: any) => {
+          const anonName = getRandomAnonymousName();
+          
+          // ── ✨ 카테고리 판별 로직 수정 ──
+          let finalCategory: Post['category'] = '자유';
+          if (p.isNotice === 1) {
+            finalCategory = '공지';
+          } else if (p.category === '후기' || p.category === '팁' || p.category === '자유') {
+            finalCategory = p.category;
+          }
 
-  const addComment = (postId: number | string) => {
-    const input = commentInputs[postId];
-    if (!input?.text?.trim()) return;
-    const newComment: Comment = {
-      id: Date.now(),
-      author: input.author || user?.name || '익명',
-      date: new Date().toLocaleDateString('ko-KR').replace(/\. /g, '.').slice(0, -1),
-      text: input.text,
-      likes: 0,
+          return {
+            id: p.cUuid ?? p.cuuid ?? p.C_UUID,
+            category: finalCategory,
+            title: p.title,
+            preview: p.content || "", 
+            author: anonName,
+            authorInitial: anonName.split(' ')[1][0],
+            date: p.insertTime ? p.insertTime.split('T')[0].replace(/-/g, '.') : "2026.04.28",
+            views: p.viewCount || "0",
+            commentCount: p.commentCount || 0,
+            liked: false,
+          };
+        });
+        setPosts(formatted);
+      } catch (err) {
+        console.error("목록 로딩 실패:", err);
+      }
     };
-    setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: [...p.comments, newComment] } : p));
-    setCommentInputs(prev => ({ ...prev, [postId]: { author: '', text: '' } }));
-  };
+    loadAllData();
+  }, []);
 
-  // ── 🚀 핵심: 새 글 등록 (ORA-01722 해결 및 UI 최적화) ──
   const handleWritePost = async () => {
     if (!newPost.title.trim() || !newPost.content.trim()) {
       return alert("제목과 내용을 모두 입력하세요.");
     }
-
-    // [수정] 백엔드 Integer 타입 기대에 맞춰 "Y" 대신 1 전송
     const postData = {
       email: user?.email || "anonymous@test.com",
       title: newPost.title,
       content: newPost.content,
-      isNotice: newPost.category === '공지' ? 1 : 0 
+      category: newPost.category, // 카테고리 데이터 추가 전송
+      isNotice: newPost.category === '공지' ? 1 : 0
     };
-
     try {
-      // 1. API 호출
-      const responseData = await createPost(postData); 
+      const res = await createPost(postData);
       alert("글이 성공적으로 등록되었습니다.");
-
-      // 2. 서버에서 받은 실제 cUuid를 활용하여 목록 업데이트
-      const post: Post = {
-        id: responseData.cUuid || Date.now(), 
+      
+      const anonName = getRandomAnonymousName();
+      const addedPost: Post = {
+        id: res.cUuid ?? res.cuuid ?? res.C_UUID,
         category: newPost.category as Post['category'],
-        title: responseData.title || newPost.title,
-        preview: (responseData.content || newPost.content).slice(0, 80) + '...',
-        author: user?.name || responseData.email?.split('@')[0] || '익명',
-        authorInitial: (user?.name || responseData.email || '익')[0].toUpperCase(),
-        date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/ /g, '').slice(0, -1),
+        title: res.title,
+        preview: res.content,
+        author: anonName,
+        authorInitial: anonName.split(' ')[1][0],
+        date: new Date().toLocaleDateString('ko-KR').replace(/\. /g, '.').slice(0, -1),
         views: '0',
-        likes: 0,
+        commentCount: 0,
         liked: false,
-        comments: [],
       };
-
-      setPosts(prev => [post, ...prev]);
+      setPosts(prev => [addedPost, ...prev]);
       setNewPost({ category: '자유', title: '', content: '', author: '' });
       setShowWriteForm(false);
     } catch (err: any) {
-      console.error("❌ 저장 실패:", err);
-      // 서버 에러 메시지를 사용자에게 보여줌
-      alert(`저장에 실패했습니다.\n사유: ${err.message || '서버 응답 오류'}`);
+      alert(`저장 실패: ${err.message}`);
     }
   };
-
-  const getSortedPosts = (list: Post[]) => {
-    const sorted = [...list];
-    if (sortType === 'likes') sorted.sort((a, b) => b.likes - a.likes);
-    else if (sortType === 'comments') sorted.sort((a, b) => b.comments.length - a.comments.length);
-    else sorted.sort((a, b) => {
-        if (typeof b.id === 'string' || typeof a.id === 'string') return 0;
-        return (b.id as number) - (a.id as number);
-    });
-    return sorted;
-  };
-
-  const filteredPosts = getSortedPosts(
-    posts.filter(p => (filterCat === 'all' || p.category === filterCat) && 
-    (p.title.includes(searchQuery) || p.preview.includes(searchQuery)))
-  );
 
   return (
     <div className="community-page-root">
       <section className="community-section">
         <div className="container">
           <div className="community-text-wrap">
-            <span className="badge">커뮤니티</span>
-            <h1>충전은 빠르게, 소통은 깊이 있게</h1>
-            <p>전기차 오너들의 생생한 경험과 정보를 나눠보세요.</p>
+            <span className="badge">COMMUNITY</span>
+            <h1>차카지 커뮤니티</h1>
+            <p>전기차 사용자들과 유용한 정보를 나누어 보세요.</p>
           </div>
         </div>
       </section>
 
-      <section className="tab-section">
+      <section className="tab-section" style={{ transform: 'translateY(-50px)' }}>
         <div className="container">
-          <div className="tab-wrap">
-            {[{ key: 'free', label: '자유게시판', val: '자유' }, { key: 'review', label: '이용후기', val: '후기' }, { key: 'tip', label: '충전 팁', val: '팁' }, { key: 'notice', label: '공지사항', val: '공지' }].map(tab => (
-              <button key={tab.key} className={`tab-btn${filterCat === tab.val ? ' active' : ''}`} onClick={() => setFilterCat(tab.val)}>{tab.label}</button>
+          <div className="tab-wrap" style={{ display: 'flex', width: '100%', justifyContent: 'center', flexWrap: 'nowrap', margin: 0, padding: 0 }}>
+            {['all', '자유', '후기', '팁', '공지'].map(cat => (
+              <button
+                key={cat}
+                className={`tab-btn${filterCat === cat ? ' active' : ''}`}
+                onClick={() => setFilterCat(cat)}
+                style={{ flex: 1, whiteSpace: 'nowrap', marginLeft: 0, padding: '18px 0', textAlign: 'center' }}
+              >
+                {cat === 'all' ? '전체' : cat === '자유' ? '자유게시판' : cat === '후기' ? '이용후기' : cat === '팁' ? '충전 팁' : '공지사항'}
+              </button>
             ))}
           </div>
         </div>
@@ -226,7 +169,7 @@ const Community: React.FC = () => {
                     </div>
                     <textarea className="form-textarea" placeholder="내용을 입력하세요." value={newPost.content} onChange={e => setNewPost(p => ({ ...p, content: e.target.value }))} />
                     <div className="form-row">
-                      <input type="text" className="form-input" placeholder="닉네임 (로그인 시 자동 적용)" value={user ? user.name : newPost.author} onChange={e => setNewPost(p => ({ ...p, author: e.target.value }))} disabled={!!user} />
+                      <input type="text" className="form-input" placeholder="작성자" value="익명 작성자" disabled />
                       <div className="form-actions">
                         <button className="btn-cancel" onClick={() => setShowWriteForm(false)}>취소</button>
                         <button className="btn-submit" onClick={handleWritePost}>등록하기</button>
@@ -236,50 +179,22 @@ const Community: React.FC = () => {
                 </div>
               )}
 
-              <div className="sort-bar">
-                <span className="post-count">전체 <strong>{filteredPosts.length}</strong>개</span>
-                <div className="sort-btns">
-                  {['latest', 'likes', 'comments'].map((type, i) => (
-                    <button key={type} className={`sort-btn${sortType === type ? ' active' : ''}`} onClick={() => setSortType(type as any)}>{['최신순', '인기순', '댓글순'][i]}</button>
-                  ))}
-                </div>
-              </div>
-
               <div className="post-list">
-                {filteredPosts.map(post => (
+                {posts.filter(p => (filterCat === 'all' || p.category === filterCat) && (p.title.includes(searchQuery) || p.preview.includes(searchQuery))).map(post => (
                   <div key={post.id} className="post-card">
                     <div className="post-header">
                       <span className={`post-category ${categoryClassMap[post.category]}`}>{post.category}</span>
-                      <button className={`like-btn${post.liked ? ' liked' : ''}`} onClick={() => toggleLike(post.id)}>
-                        <span>{post.liked ? '❤️' : '🤍'}</span> {post.likes}
-                      </button>
                     </div>
-                    <h3 className="post-title" onClick={() => togglePost(post.id)}>{post.title}</h3>
+                    <h3 className="post-title" onClick={() => navigate(`/main/community/${post.id}`)}>{post.title}</h3>
                     <p className="post-preview">{post.preview}</p>
                     <div className="post-footer">
-                      <div className="avatar">{post.authorInitial}</div>
-                      <span className="author-name">{post.author}</span>
-                      <span className="post-date">{post.date}</span>
-                      <div className="post-stats">👁 {post.views} 💬 {post.comments.length}</div>
-                    </div>
-                    {openPostId === post.id && (
-                      <div className="comment-section">
-                        {post.comments.map(c => (
-                          <div key={c.id} className="comment-item">
-                            <div className="comment-body">
-                              <strong>{c.author}</strong> <span>{c.text}</span>
-                              <button onClick={() => toggleCommentLike(post.id, c.id)}>👍 {c.likes}</button>
-                            </div>
-                          </div>
-                        ))}
-                        <div className="comment-write">
-                          <input type="text" placeholder="댓글 내용" value={commentInputs[post.id]?.text || ''} 
-                            onChange={e => setCommentInputs(prev => ({ ...prev, [post.id]: { ...prev[post.id], text: e.target.value } }))} 
-                            onKeyPress={e => e.key === 'Enter' && addComment(post.id)} />
-                          <button onClick={() => addComment(post.id)}>등록</button>
-                        </div>
+                      <div className="post-author-info">
+                        <div className="avatar">{post.authorInitial}</div>
+                        <span className="author-name">{post.author}</span>
+                        <span className="post-date">{post.date}</span>
                       </div>
-                    )}
+                      <div className="post-stats">👁 {post.views} 💬 {post.commentCount}</div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -287,20 +202,23 @@ const Community: React.FC = () => {
 
             <aside className="community-sidebar">
               <div className="sidebar-card">
-                <h4>🔥 인기 게시글</h4>
-                <ul className="popular-list">
-                  {posts.slice(0, 5).sort((a, b) => b.likes - a.likes).map((p, idx) => (
-                    <li key={p.id} onClick={() => togglePost(p.id)}>{idx + 1}. {p.title}</li>
-                  ))}
-                </ul>
+                <h3 className="sidebar-title">커뮤니티 통계</h3>
+                <div className="stats-grid">
+                  <div className="stat-item">
+                    <div className="stat-num">{posts.length}</div>
+                    <div className="stat-label">전체 게시글</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className="stat-num">{posts.filter(p => p.category === '공지').length}</div>
+                    <div className="stat-label">공지사항</div>
+                  </div>
+                </div>
               </div>
-              <div className="sidebar-card">
-                <h4>📂 카테고리</h4>
-                <ul className="category-list">
-                  {['all', '자유', '후기', '팁', '공지'].map(cat => (
-                    <li key={cat} className={filterCat === cat ? 'active-cat' : ''} onClick={() => setFilterCat(cat)}>{cat === 'all' ? '전체' : cat}</li>
-                  ))}
-                </ul>
+              <div className="sidebar-banner">
+                <div className="banner-icon">⚡</div>
+                <h4>차카지 꿀팁</h4>
+                <p>급속 충전기 사용 시 배터리 수명을 지키는 방법을 알아보세요!</p>
+                <button className="banner-btn">자세히 보기</button>
               </div>
             </aside>
           </div>

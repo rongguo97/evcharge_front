@@ -1,32 +1,48 @@
 // src/api/communityApi.ts
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-// 백엔드 컨트롤러 @RequestMapping("/api/community/posts")와 일치
-const BASE_URL = `${API_URL}/api/community/posts`; 
-
-export const createPost = async (data: any) => {
-  console.log("🚀 전송 데이터 확인:", data);
-  
-  const res = await fetch(BASE_URL, {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
-    const errorText = await res.text();
-    // 서버에서 보낸 에러 메시지가 있으면 그것을, 없으면 기본 메시지 반환
-    throw new Error(errorText || '서버 저장 중 알 수 없는 에러가 발생했습니다.');
-  }
-
-  return res.json();
+// 1. 전체 게시글 조회
+export const fetchAllPosts = async () => {
+  const response = await fetch('/api/community'); // 백엔드 @GetMapping과 일치
+  if (!response.ok) throw new Error('목록 로드 실패');
+  return response.json();
 };
 
-export const fetchAllPosts = async () => {
-  const res = await fetch(BASE_URL);
-  if (!res.ok) throw new Error('게시글을 불러오는데 실패했습니다.');
-  return res.json();
+// 2. 게시글 상세 조회
+export const fetchPostByUuid = async (cUuid: string | number) => {
+  const response = await fetch(`/api/community/${cUuid}`); // 백엔드 @GetMapping("/{cUuid}")
+  if (!response.ok) throw new Error('상세조회 실패');
+  return response.json();
+};
+
+// 3. 게시글 수정
+export const updatePost = async (id: number | string, updateData: any) => {
+  const response = await fetch(`/api/community/${id}/update`, { // 백엔드 @PutMapping("/{cUuid}/update")
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updateData),
+  });
+  if (!response.ok) throw new Error('수정 실패');
+  return response.json();
+};
+
+// 4. 게시글 등록
+export const createPost = async (postData: any) => {
+  const response = await fetch('/api/community', { // 백엔드 @PostMapping
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(postData),
+  });
+  if (!response.ok) throw new Error('등록 실패');
+  return response.json();
+};
+export const deletePost = async (id: number | string) => {
+  const response = await fetch(`/api/community/${id}/delete`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('게시글 삭제에 실패했습니다.');
+  }
+  // 204 No Content 응답은 본문이 없으므로 response.json()을 호출하지 않습니다.
+  return true;
 };
