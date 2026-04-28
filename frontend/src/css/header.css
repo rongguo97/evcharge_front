@@ -52,6 +52,22 @@ header:hover .main-menu a { color:#5300c7 !important; }
 
 .mobile-only-sub { display: none; } /* PC에선 숨김 */
 
+.mobile-only-sub {
+  padding: 5px;
+  margin: 2px;
+  list-style: none;
+}
+
+.mobile-only-sub li {
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-only-sub li a {
+  display: block;
+  padding: 2px 7px !important; /* 좌측 padding을 통일 */
+}
+
 /* PC 메가 메뉴 패널 */
 .mega-menu-panel {
     position: absolute; top: 100px; left: 0; width: 100%; 
