@@ -26,6 +26,21 @@ const categoryClassMap: Record<string, string> = {
   '공지': 'cat-notice',
 };
 
+// ── ✅ DB에서 받은 데이터를 프론트 카테고리로 변환 (유지 로직 핵심) ──
+const resolveCategory = (p: any): Post['category'] => {
+  // 1. 공지사항 여부 우선 체크
+  if (p.isNotice === 1 || p.is_notice === 1) return '공지';
+  
+  // 2. DB에 저장된 category 값이 유효한지 체크
+  const valid = ['자유', '후기', '팁', '공지'];
+  if (p.category && valid.includes(p.category)) {
+    return p.category as Post['category'];
+  }
+  
+  // 3. 기본값
+  return '자유';
+};
+
 const Community: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -35,32 +50,28 @@ const Community: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [newPost, setNewPost] = useState({ category: '자유', title: '', content: '', author: '' });
 
+  // ── 페이지네이션 state ──
+  const [currentPage, setCurrentPage] = useState(1);
+  const POSTS_PER_PAGE = 3;
+  const PAGE_GROUP = 10;
+
   const getRandomAnonymousName = () => {
     const animals = ['사자', '호랑이', '토끼', '다람쥐', '곰', '여우', '판다', '코알라', '펭귄', '하마', '수달', '너구리', '고래', '햄스터', '강아지', '고양이'];
-    const randomIndex = Math.floor(Math.random() * animals.length);
-    return `익명의 ${animals[randomIndex]}`;
+    return `익명의 ${animals[Math.floor(Math.random() * animals.length)]}`;
   };
 
+  // ── 게시글 목록 로딩 ──
   useEffect(() => {
     const loadAllData = async () => {
       try {
         const data = await fetchAllPosts();
         const formatted: Post[] = data.map((p: any) => {
           const anonName = getRandomAnonymousName();
-          
-          // ── ✨ 카테고리 판별 로직 수정 ──
-          let finalCategory: Post['category'] = '자유';
-          if (p.isNotice === 1) {
-            finalCategory = '공지';
-          } else if (p.category === '후기' || p.category === '팁' || p.category === '자유') {
-            finalCategory = p.category;
-          }
-
           return {
             id: p.cUuid ?? p.cuuid ?? p.C_UUID,
-            category: finalCategory,
+            category: resolveCategory(p),   // ✅ DB의 category 컬럼 값을 최우선 반영
             title: p.title,
-            preview: p.content || "", 
+            preview: p.content || "",
             author: anonName,
             authorInitial: anonName.split(' ')[1][0],
             date: p.insertTime ? p.insertTime.split('T')[0].replace(/-/g, '.') : "2026.04.28",
@@ -77,6 +88,12 @@ const Community: React.FC = () => {
     loadAllData();
   }, []);
 
+  // ── 탭/검색 변경 시 1페이지로 초기화 ──
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterCat, searchQuery]);
+
+  // ── 게시글 등록 ──
   const handleWritePost = async () => {
     if (!newPost.title.trim() || !newPost.content.trim()) {
       return alert("제목과 내용을 모두 입력하세요.");
@@ -85,17 +102,17 @@ const Community: React.FC = () => {
       email: user?.email || "anonymous@test.com",
       title: newPost.title,
       content: newPost.content,
-      category: newPost.category, // 카테고리 데이터 추가 전송
-      isNotice: newPost.category === '공지' ? 1 : 0
+      category: newPost.category,                         
+      isNotice: newPost.category === '공지' ? 1 : 0,       
     };
     try {
       const res = await createPost(postData);
       alert("글이 성공적으로 등록되었습니다.");
-      
+
       const anonName = getRandomAnonymousName();
       const addedPost: Post = {
         id: res.cUuid ?? res.cuuid ?? res.C_UUID,
-        category: newPost.category as Post['category'],
+        category: resolveCategory({ ...res, category: newPost.category }),  
         title: res.title,
         preview: res.content,
         author: anonName,
@@ -108,10 +125,30 @@ const Community: React.FC = () => {
       setPosts(prev => [addedPost, ...prev]);
       setNewPost({ category: '자유', title: '', content: '', author: '' });
       setShowWriteForm(false);
+      setCurrentPage(1);
     } catch (err: any) {
       alert(`저장 실패: ${err.message}`);
     }
   };
+
+  // ── 필터링 ──
+  const filteredPosts = posts.filter(p =>
+    (filterCat === 'all' || p.category === filterCat) &&
+    (p.title.includes(searchQuery) || p.preview.includes(searchQuery))
+  );
+
+  // ── 페이지네이션 계산 ──
+  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  const paginatedPosts = filteredPosts.slice(
+    (currentPage - 1) * POSTS_PER_PAGE,
+    currentPage * POSTS_PER_PAGE
+  );
+  const pageGroupStart = Math.floor((currentPage - 1) / PAGE_GROUP) * PAGE_GROUP + 1;
+  const pageGroupEnd = Math.min(pageGroupStart + PAGE_GROUP - 1, totalPages);
+  const pageNumbers = Array.from(
+    { length: pageGroupEnd - pageGroupStart + 1 },
+    (_, i) => pageGroupStart + i
+  );
 
   return (
     <div className="community-page-root">
@@ -125,6 +162,7 @@ const Community: React.FC = () => {
         </div>
       </section>
 
+      {/* 탭 메뉴 */}
       <section className="tab-section" style={{ transform: 'translateY(-50px)' }}>
         <div className="container">
           <div className="tab-wrap" style={{ display: 'flex', width: '100%', justifyContent: 'center', flexWrap: 'nowrap', margin: 0, padding: 0 }}>
@@ -146,6 +184,8 @@ const Community: React.FC = () => {
         <div className="container">
           <div className="community-layout">
             <div className="board-area">
+
+              {/* 검색 & 글쓰기 */}
               <div className="board-toolbar">
                 <div className="search-box">
                   <input type="text" placeholder="게시글 검색..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
@@ -154,20 +194,31 @@ const Community: React.FC = () => {
                 <button className="write-btn" onClick={() => setShowWriteForm(prev => !prev)}>✏️ 글쓰기</button>
               </div>
 
+              {/* 글쓰기 폼 */}
               {showWriteForm && (
                 <div className="write-form-wrap">
                   <div className="write-form-card">
                     <h3 className="form-title">새 글 작성</h3>
                     <div className="form-row">
-                      <select className="form-select" value={newPost.category} onChange={e => setNewPost(p => ({ ...p, category: e.target.value as any }))}>
+                      <select
+                        className="form-select"
+                        value={newPost.category}
+                        onChange={e => setNewPost(p => ({ ...p, category: e.target.value as any }))}
+                      >
                         <option value="자유">자유게시판</option>
                         <option value="후기">이용후기</option>
                         <option value="팁">충전 팁</option>
                         <option value="공지">공지사항</option>
                       </select>
-                      <input type="text" className="form-input" placeholder="제목을 입력하세요" value={newPost.title} onChange={e => setNewPost(p => ({ ...p, title: e.target.value }))} />
+                      <input
+                        type="text" className="form-input" placeholder="제목을 입력하세요"
+                        value={newPost.title} onChange={e => setNewPost(p => ({ ...p, title: e.target.value }))}
+                      />
                     </div>
-                    <textarea className="form-textarea" placeholder="내용을 입력하세요." value={newPost.content} onChange={e => setNewPost(p => ({ ...p, content: e.target.value }))} />
+                    <textarea
+                      className="form-textarea" placeholder="내용을 입력하세요."
+                      value={newPost.content} onChange={e => setNewPost(p => ({ ...p, content: e.target.value }))}
+                    />
                     <div className="form-row">
                       <input type="text" className="form-input" placeholder="작성자" value="익명 작성자" disabled />
                       <div className="form-actions">
@@ -179,8 +230,9 @@ const Community: React.FC = () => {
                 </div>
               )}
 
+              {/* 게시글 목록 - 페이지당 3개 */}
               <div className="post-list">
-                {posts.filter(p => (filterCat === 'all' || p.category === filterCat) && (p.title.includes(searchQuery) || p.preview.includes(searchQuery))).map(post => (
+                {paginatedPosts.map(post => (
                   <div key={post.id} className="post-card">
                     <div className="post-header">
                       <span className={`post-category ${categoryClassMap[post.category]}`}>{post.category}</span>
@@ -197,9 +249,38 @@ const Community: React.FC = () => {
                     </div>
                   </div>
                 ))}
+
+                {paginatedPosts.length === 0 && (
+                  <div style={{ textAlign: 'center', padding: '40px', color: '#aaa' }}>
+                    게시글이 없습니다.
+                  </div>
+                )}
               </div>
+
+              {/* 페이지네이션 */}
+              {totalPages > 0 && (
+                <div className="pagination">
+                  <button className="page-btn" onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>‹</button>
+
+                  {pageGroupStart > 1 && (
+                    <><button className="page-btn" onClick={() => setCurrentPage(1)}>1</button><span className="page-ellipsis">...</span></>
+                  )}
+
+                  {pageNumbers.map(n => (
+                    <button key={n} className={`page-btn${currentPage === n ? ' active' : ''}`} onClick={() => setCurrentPage(n)}>{n}</button>
+                  ))}
+
+                  {pageGroupEnd < totalPages && (
+                    <><span className="page-ellipsis">...</span><button className="page-btn" onClick={() => setCurrentPage(totalPages)}>{totalPages}</button></>
+                  )}
+
+                  <button className="page-btn" onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>›</button>
+                </div>
+              )}
+
             </div>
 
+            {/* 사이드바 */}
             <aside className="community-sidebar">
               <div className="sidebar-card">
                 <h3 className="sidebar-title">커뮤니티 통계</h3>
@@ -229,4 +310,4 @@ const Community: React.FC = () => {
   );
 };
 
-export default Community;
+export default Community; 

@@ -91,7 +91,7 @@ const CommunityDetail: React.FC = () => {
       const updatedData = await updatePost(post.id || cUuid, { 
         title: editTitle, 
         content: editContent,
-        category: post.category, // 카테고리 유지
+        category: post.category, 
         isNotice: post.isNotice 
       });
       setPost(updatedData); 
@@ -105,8 +105,14 @@ const CommunityDetail: React.FC = () => {
   if (loading) return <div className="loading-container">데이터를 불러오는 중...</div>;
   if (!post) return null;
 
-  // ── ✨ 상세페이지 카테고리 표시 로직 수정 ──
-  const displayCategory = post.isNotice === 1 ? '공지' : (post.category || '자유게시판');
+  const getDisplayCategory = () => {
+    if (post.isNotice === 1 || post.is_notice === 1) return '공지';
+    const valid = ['자유', '후기', '팁'];
+    if (post.category && valid.includes(post.category)) return post.category;
+    return '자유';
+  };
+
+  const displayCategory = getDisplayCategory();
 
   return (
     <div className="community-page-root">
@@ -145,7 +151,10 @@ const CommunityDetail: React.FC = () => {
                 </div>
 
                 <div className="detail-header" style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '25px' }}>
-                  <span className={`post-category ${post.isNotice === 1 ? 'cat-notice' : 'cat-free'}`} style={{ marginBottom: '15px', display: 'inline-block' }}>
+                  <span className={`post-category ${displayCategory === '공지' ? 'cat-notice' : 
+                                   displayCategory === '후기' ? 'cat-review' : 
+                                   displayCategory === '팁' ? 'cat-tip' : 'cat-free'}`} 
+                        style={{ marginBottom: '15px', display: 'inline-block' }}>
                     {displayCategory}
                   </span>
                   
@@ -164,9 +173,12 @@ const CommunityDetail: React.FC = () => {
                       <span className="post-date" style={{ fontSize: '0.85rem', color: '#999' }}>{post.insertTime?.split('T')[0]}</span>
                     </div>
 
-                    <button onClick={() => { setLiked(!liked); setLikeCount(prev => liked ? prev - 1 : prev + 1); }} className={`like-btn ${liked ? 'liked' : ''}`} style={{ marginLeft: '20px', border: '1px solid #eee', padding: '6px 15px', borderRadius: '20px', backgroundColor: liked ? '#fff1f1' : '#fff', cursor: 'pointer' }}>
-                      <span>{liked ? '❤️' : '🤍'}</span>
-                      <span style={{ marginLeft: '6px', fontWeight: 'bold', color: liked ? '#ff4d4f' : '#666' }}>{likeCount}</span>
+                    {/* ✅ 하트 아이콘 및 색상 변경 (보라색 테마) */}
+                    <button onClick={() => { setLiked(!liked); setLikeCount(prev => liked ? prev - 1 : prev + 1); }} 
+                            className={`like-btn ${liked ? 'liked' : ''}`} 
+                            style={{ marginLeft: '20px', border: `1px solid ${liked ? '#9b72cf' : '#eee'}`, padding: '6px 15px', borderRadius: '20px', backgroundColor: liked ? '#faf5ff' : '#fff', cursor: 'pointer', transition: '0.3s' }}>
+                      <span>💜</span>
+                      <span style={{ marginLeft: '6px', fontWeight: 'bold', color: liked ? '#9b72cf' : '#666' }}>{likeCount}</span>
                     </button>
 
                     <div style={{ marginLeft: 'auto', display: 'flex', gap: '15px', color: '#666', fontSize: '0.9rem' }}>
