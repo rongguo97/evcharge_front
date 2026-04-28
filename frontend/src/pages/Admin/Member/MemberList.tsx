@@ -1,35 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// 📍 인증 정보가 담긴 apiClient 사용
+import apiClient from '../../../api/axios'; 
 import { type IMemberExtended } from '../../../types/IMember';
-import '../../../css/AdminPage.css'; // 스타일링을 위한 CSS 파일 (생성 필요)
-
-// ... 상단 import 생략
+import '../../../css/AdminPage.css';
 
 const MemberList: React.FC = () => {
   const [members, setMembers] = useState<IMemberExtended[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 1. 회원 목록 로드 (GET /api/admin/members)
+  const fetchMembers = async () => {
+    try {
+      setLoading(true);
+      // apiClient의 baseURL(/api)이 적용되어 호출 경로는 /admin/members가 됨
+      const res = await apiClient.get('/admin/members');
+      
+      const memberData = Array.isArray(res.data) ? res.data : res.data?.data;
+      setMembers(Array.isArray(memberData) ? memberData : []);
+    } catch (err) {
+      console.error("회원 목록 로드 실패:", err);
+      setMembers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const res = await axios.get('/api/admin/members');
-        if (Array.isArray(res.data)) {
-          setMembers(res.data);
-        }
-      } catch (err) {
-        console.error("회원 목록 로드 실패:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchMembers();
   }, []);
 
-  const handleRoleChange = (_memberCode: number, currentRole: string) => {
-    const newRole = currentRole === 'USER' ? 'ADMIN' : 'USER';
-    if (window.confirm(`권한을 ${newRole}로 변경하시겠습니까?`)) {
-      // axios.put(`/api/admin/members/${memberCode}/role`, { role: newRole })
-      alert("권한이 변경되었습니다.");
+  // 2. 회원 상태 변경 함수 (PUT /api/admin/members/{email}/status)
+  // 백엔드 컨트롤러의 updateMemberStatus API와 연동
+  const handleStatusChange = async (email: string, currentStatus: string) => {
+    const nextStatus = currentStatus === 'Y' ? 'N' : 'Y';
+    const statusText = nextStatus === 'Y' ? '탈퇴' : '복구';
+
+    if (!window.confirm(`해당 회원을 ${statusText} 처리하시겠습니까?`)) return;
+
+    try {
+      // 백엔드: @PathVariable String email, @RequestParam String status
+      await apiClient.put(`/admin/members/${email}/status`, null, {
+        params: { status: nextStatus }
+      });
+      
+      alert(`${statusText} 처리가 완료되었습니다.`);
+      
+      // 로컬 상태 즉시 업데이트 (사용자 경험 향상)
+      setMembers(prev => 
+        prev.map(m => m.email === email ? { ...m, isDeleted: nextStatus } : m)
+      );
+    } catch (err) {
+      console.error("상태 변경 에러:", err);
+      alert("변경 처리에 실패했습니다.");
     }
   };
 
@@ -37,71 +59,84 @@ const MemberList: React.FC = () => {
 
   return (
     <div className="admin-card">
-      <div className="table-header">
-        <h3>회원 및 권한 관리</h3>
-        <p className="table-desc">회원 데이터와 권한을 통합 관리합니다.</p>
+      <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', alignItems: 'center' }}>
+        <h3 style={{ margin: 0 }}>회원 및 상태 관리</h3>
+        <button onClick={fetchMembers} className="refresh-btn">새로고침</button>
       </div>
 
       <table className="admin-table">
         <thead>
           <tr>
-            <th>코드</th>
             <th>이메일(이름)</th>
             <th>연락처 / 차량번호</th>
-            <th>등급(GRADE)</th>
-            <th>권한(ROLE)</th>
-            <th>보유 포인트</th>
+            <th>등급</th>
+            <th>권한</th>
+            <th>예치금</th>
             <th>상태</th>
             <th>관리</th>
           </tr>
         </thead>
         <tbody>
           {members.length > 0 ? (
-            members.map((member) => (
-              <tr key={member.memberCode}>
-                <td>{member.memberCode}</td>
-                <td>
-                  <div className="user-info">
-                    <span className="user-id" style={{ fontWeight: 'bold' }}>{member.email}</span>
-                    <span className="user-name">({member.memberName})</span>
-                  </div>
-                </td>
-                <td style={{ fontSize: '12px' }}>
-                  {member.phoneNumber}<br/>
-                  <span style={{ color: '#aaa' }}>{member.carNumber}</span>
-                </td>
-                <td>
-                  <span className={`grade-badge ${member.grade.toLowerCase()}`}>
-                    {member.grade}
-                  </span>
-                </td>
-                <td>
-                  <select 
-                    value={member.role} 
-                    onChange={() => handleRoleChange(member.memberCode, member.role)}
-                    className="role-select"
-                  >
-                    <option value="USER">USER</option>
-                    <option value="ADMIN">ADMIN</option>
-                  </select>
-                </td>
-                <td className="text-right">
-                  {member.point?.toLocaleString() ?? 0} P
-                </td>
-                <td>
-                  {member.isDeleted === 'Y' ? 
-                    <span className="status-deleted">탈퇴</span> : 
-                    <span className="status-active">정상</span>
-                  }
-                </td>
-                <td>
-                  <button className="edit-btn-sm">수정</button>
-                </td>
-              </tr>
-            ))
+            members.map((member) => {
+              const isActive = member.isDeleted === 'N' || !member.isDeleted;
+
+              return (
+                <tr key={member.email}>
+                  <td>
+                    <strong>{member.email}</strong><br/>
+                    <small style={{ color: '#888' }}>({member.memberName})</small>
+                  </td>
+                  <td style={{ fontSize: '12px' }}>
+                    {member.phoneNumber}<br/>
+                    <span style={{ color: '#aaa' }}>{member.carNumber}</span>
+                  </td>
+                  <td>
+                    <span className={`grade-badge ${(member.grade || 'BRONZE').toLowerCase()}`}>
+                      {member.grade || 'BRONZE'}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`role-badge ${member.role?.toLowerCase()}`}>
+                      {member.role}
+                    </span>
+                  </td>
+                  <td style={{ textAlign: 'right', fontWeight: 'bold' }}>
+                    {/* 📍 point 대신 reserveFund 컬럼 대응 */}
+                    {(member.reserveFund ?? 0).toLocaleString()} P
+                  </td>
+                  <td>
+                    {member.isDeleted === 'Y' ? (
+                      <span style={{ color: '#ff4d4f', fontWeight: 'bold' }}>탈퇴</span>
+                    ) : (
+                      <span style={{ color: '#52c41a', fontWeight: 'bold' }}>정상</span>
+                    )}
+                  </td>
+                  <td>
+                    {/* 📍 관리 버튼을 탈퇴/복구 기능으로 연결 */}
+                    <button 
+                      className={`status-btn-sm ${member.isDeleted === 'Y' ? 'restore' : 'delete'}`}
+                      onClick={() => handleStatusChange(member.email, member.isDeleted)}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        border: '1px solid #ccc',
+                        backgroundColor: member.isDeleted === 'Y' ? '#e6f7ff' : '#fff1f0',
+                        color: member.isDeleted === 'Y' ? '#1890ff' : '#ff4d4f'
+                      }}
+                    >
+                      {member.isDeleted === 'Y' ? '복구' : '탈퇴'}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
-              <td colSpan={8} className="text-center p-10">조회된 회원이 없습니다.</td>
+              <td colSpan={7} style={{ textAlign: 'center', padding: '30px', color: '#aaa' }}>
+                회원 데이터가 없습니다.
+              </td>
             </tr>
           )}
         </tbody>

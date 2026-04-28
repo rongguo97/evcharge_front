@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // 권한 확인을 위해 추가
+import { useAuth } from '../context/AuthContext'; 
 import '../css/AdminPage.css';
 
-// 관리자용 서브 컴포넌트들
+// 관리자용 서브 컴포넌트 임포트
 import MemberList from '../pages/Admin/Member/MemberList';
 import WalletManager from '../pages/Admin/Member/WalletManager';
 import WithdrawManager from '../pages/Admin/Member/WithdrawManager';
@@ -12,25 +12,25 @@ import Log from '../pages/Admin/Community/ActivityLog';
 import AdminChart from '../pages/Admin/DashBoard/AdminChart';
 import StatsAnalysis from '../pages/Admin/DashBoard/StatsAnalysis';
 import PaymentAudit from '../pages/Admin/Payment/PaymentAudit';
+import NoticeManager from '../pages/Admin/Community/NoticeManager'; // 📍 새로 추가된 공지사항 컴포넌트
 
 const AdminPage: React.FC = () => {
-  const { user, loading } = useAuth(); //  유저 정보와 로딩 상태 가져오기
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [activeMenu, setActiveMenu] = useState("charts"); // 기본 화면: 차트
+  const [activeMenu, setActiveMenu] = useState("charts"); 
   
+  // 메뉴 아코디언 상태 관리
   const [openMenus, setOpenMenus] = useState({
-    member: true, // 기본으로 첫 메뉴는 열어둠
+    member: true,
     operation: false,
     payment: false,
     stats: true,
-    security: false
+    community: false, // 📍 공지사항/로그를 위한 메뉴 추가
   });
 
   // 🔒 보안 로직: 관리자 권한 확인
   useEffect(() => {
     if (!loading) {
-      // 1. 로그인이 안 되어 있거나
-      // 2. 역할(Role)이 ADMIN이 아니면 메인으로 튕겨냄
       if (!user || user.role !== 'ROLE_ADMIN') {
         alert("관리자 권한이 없습니다.");
         navigate('/main'); 
@@ -45,6 +45,7 @@ const AdminPage: React.FC = () => {
     setOpenMenus(prev => ({ ...prev, [menuName]: !prev[menuName] }));
   };
 
+  // 메뉴 클릭 시 컨텐츠 렌더링 스위치
   const renderContent = () => {
     switch (activeMenu) {
       case "member-list": return <MemberList />;
@@ -55,6 +56,7 @@ const AdminPage: React.FC = () => {
       case "charts": return <AdminChart />;
       case "analysis": return <StatsAnalysis />;
       case "log": return <Log />;
+      case "notice": return <NoticeManager />; // 📍 공지사항 관리 연결
       default: return <AdminChart />;
     }
   };
@@ -68,7 +70,6 @@ const AdminPage: React.FC = () => {
           <span>Admin System</span>
         </div>
         
-        {/* 관리자 프로필 표시 (DB 데이터) */}
         <div className="admin-profile-summary">
           <p className="admin-name">{user.memberName} 관리자님</p>
           <p className="admin-email">{user.email}</p>
@@ -76,6 +77,7 @@ const AdminPage: React.FC = () => {
 
         <nav className="admin-nav">
           <ul>
+            {/* 1. 회원 및 권한 관리 */}
             <li className={`has-sub ${openMenus.member ? 'open' : ''}`}>
               <div className="menu-title" onClick={() => toggleMenu('member')}>회원 및 권한 관리</div>
               {openMenus.member && (
@@ -87,6 +89,7 @@ const AdminPage: React.FC = () => {
               )}
             </li>
 
+            {/* 2. 서비스 운영 관리 */}
             <li className={`has-sub ${openMenus.operation ? 'open' : ''}`}>
               <div className="menu-title" onClick={() => toggleMenu('operation')}>서비스 운영 관리</div>
               {openMenus.operation && (
@@ -96,6 +99,7 @@ const AdminPage: React.FC = () => {
               )}
             </li>
 
+            {/* 3. 매출 및 결제 관리 */}
             <li className={`has-sub ${openMenus.payment ? 'open' : ''}`}>
               <div className="menu-title" onClick={() => toggleMenu('payment')}>매출 및 결제 관리</div>
               {openMenus.payment && (
@@ -105,6 +109,18 @@ const AdminPage: React.FC = () => {
               )}
             </li>
 
+            {/* 4. 커뮤니티 및 시스템 관리 (추가됨) */}
+            <li className={`has-sub ${openMenus.community ? 'open' : ''}`}>
+              <div className="menu-title" onClick={() => toggleMenu('community')}>커뮤니티 및 시스템</div>
+              {openMenus.community && (
+                <ul className="sub-menu-list">
+                  <li className={activeMenu === "notice" ? "active" : ""} onClick={() => setActiveMenu("notice")}>공지사항 관리</li>
+                  <li className={activeMenu === "log" ? "active" : ""} onClick={() => setActiveMenu("log")}>시스템 활동 로그</li>
+                </ul>
+              )}
+            </li>
+
+            {/* 5. 통계 분석 */}
             <li className={`has-sub ${openMenus.stats ? 'open' : ''}`}>
               <div className="menu-title" onClick={() => toggleMenu('stats')}>통계 분석</div>
               {openMenus.stats && (
@@ -122,6 +138,7 @@ const AdminPage: React.FC = () => {
       <main className="admin-main">
         <header className="admin-header">
           <div className="header-left">
+            {/* 메뉴 아이디의 하이픈을 띄어쓰기로 바꾸어 제목 표시 */}
             <h2>{activeMenu.replace('-', ' ').toUpperCase()}</h2>
           </div>
           <div className="header-right">
