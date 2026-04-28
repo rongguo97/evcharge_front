@@ -31,7 +31,7 @@ function Header() {
         <div className="container nav-wrapper">
           <div className="logo">
             <Link to="/main" style={{ textDecoration: "none", color: "inherit" }}>
-              CHARCAGE
+              CHARCARGE
             </Link>
           </div>
 
@@ -71,6 +71,7 @@ function Header() {
                   <li><Link to="/main/faq">자주묻는질문</Link></li>
                   <li><Link to="/main/community">커뮤니티</Link></li>
                   <li><Link to="/main/customer-center">고객센터</Link></li>
+                  <li><Link to="/main/door">로그인</Link></li>
                 </ul>
               </li>
             </ul>
@@ -111,6 +112,7 @@ function Header() {
                 <li><Link to="/main/faq">자주묻는질문</Link></li>
                 <li><Link to="/main/community">커뮤니티</Link></li>
                 <li><Link to="/main/customer-center">고객센터</Link></li>
+               
               </ul>
             </div>
           </div>
