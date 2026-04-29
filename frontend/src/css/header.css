@@ -215,11 +215,11 @@ header:hover .main-menu a { color:#5300c7 !important; }
 .nav-right { display: flex; align-items: center; z-index: 3001; }
 
 .nav-log {
-  width: 45px; height: 45px; background: var(--white-10); border-radius: 50%;
+  width: 50px; height: 35px; background: var(--white-10); border-radius: 5%;
   display: flex; align-items: center; justify-content: center;
   font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
   cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
-  color: #e2dcff; transform: translateX(350px);
+  color: #e2dcff; transform: translateX(240px);
 }
 
 .user-info-nav {
@@ -228,11 +228,11 @@ header:hover .main-menu a { color:#5300c7 !important; }
 }
 
 .user-name {
-    width: 55px; height: 45px; background: var(--white-10); border-radius: 50%;
+    width: 65px; height: 35px; background: var(--white-10); border-radius: 5%;
     display: flex; align-items: center; justify-content: center;
     font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
     cursor: pointer; transition: var(--transition); border: 1px solid var(--white-30);
-    color: #e2dcff; transform: translateX(500px);
+    color: #e2dcff; transform: translateX(230px);
 }
 
 /* PC에서 모바일 로그인 숨기기 */

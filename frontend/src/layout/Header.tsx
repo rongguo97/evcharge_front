@@ -97,7 +97,7 @@ function Header() {
               <ul><li><Link to="/main/brand">브랜드 소개</Link></li></ul>
             </div>
             <div className="panel-column">
-              <ul><li><Link to="/main/reservation">충전소 찾기</Link></li></ul>
+              <ul><li><Link to="/main/reservation">충전소 예약</Link></li></ul>
             </div>
             <div className="panel-column">
               <ul>

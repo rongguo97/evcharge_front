@@ -16,6 +16,7 @@
   import Membership from "../pages/Membership";
   import ReservationPage from "../pages/ReservationPage";
   import Editmember from "../pages/Editmember";
+import CommunityDetail from "../pages/CommunityDetail";
 
 
   const router = createBrowserRouter([
@@ -43,7 +44,7 @@
         { path: "app", element: <App /> },
         { path: "notice", element: <Notice /> },
         { path: "faq", element: <FAQ /> },
-        { path: "community", element: <Communication /> },
+        
         { path: "customer-center", element: <CustomerCenter /> },
         { path: "editmember", element: <Editmember /> },
         
@@ -55,6 +56,10 @@
         
         // 별도의 로그인 페이지가 main 내부에 필요한 경우 유지
         { path: "login", element: <Login /> }, 
+        // 커뮤니티
+       { path: "community", element: <Communication /> },
+       { path: "community/:cUuid", element: <CommunityDetail /> },
+       
       ],
     },
     

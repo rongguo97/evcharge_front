@@ -124,6 +124,7 @@ const Pricing: React.FC = () => {
                 <br />
                 <span>차카지 충전 요금 안내</span>
               </h1>
+              <br /><br />
               <h3>복잡한 요금제는 잊으세요. 차카지는 합리적입니다.</h3>
               <br />
               <h3>
