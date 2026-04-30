@@ -68,10 +68,7 @@ const Home: React.FC = () => {
         
         <div className="main-content">
           <h1>READY TO CHARGE</h1>
-          {/* 로그인 상태에 따라 버튼 추가 노출 가능 */}
-          {!isLoggedIn && (
-            <a href="/login" className="main-start-btn">지금 시작하기</a>
-          )}
+        
         </div>
       </main>
 
