@@ -21,7 +21,7 @@ import { statusColorMap } from "../common/statusColorMap";
 const StationList = () => {
   // 네비게이트 함수 초기화
   const navigate = useNavigate();
-    // 상태 관리 (State) 
+    // 상태 관리 (State)
   const [map, setMap] = useState<any>(null); // 카카오 맵 객체
   const [stations, setStations] = useState<IStation[]>([]); // 서버에서 가져온 원본 충전소 데이터
   const [searchTerm, setSearchTerm] = useState(""); // 검색창 입력값
